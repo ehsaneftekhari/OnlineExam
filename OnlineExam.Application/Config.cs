@@ -1,10 +1,9 @@
 ﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
-using OnlineExam.Application.Contract.IServices;
+using OnlineExam.Application.Contract.Markers;
 using OnlineExam.Application.IMappers;
 using OnlineExam.Application.Mappers;
-using OnlineExam.Application.Services;
 
 namespace OnlineExam.Application
 {
@@ -12,11 +11,21 @@ namespace OnlineExam.Application
     {
         public static void RegisterServices(IServiceCollection serviceDescriptors, out AutofacServiceProviderFactory autoFacServiceProviderFactory)
         {
-            autoFacServiceProviderFactory = new AutofacServiceProviderFactory
-                (
+            var registrationReflectionHelper = new ReflectionHelper();
+
+            autoFacServiceProviderFactory = new AutofacServiceProviderFactory(
                     x =>
                     {
-                        x.RegisterType<ExamService>().As<IExamService>().InstancePerLifetimeScope();
+                        x.RegisterInstance(registrationReflectionHelper).SingleInstance();
+
+                        var implementationsContract = registrationReflectionHelper.GetImplementationContractInterfaces(typeof(IApplicationContractMarker));
+
+                        foreach ((var impelimention, var ContractInterface) in implementationsContract)
+                        {
+                            var registrationBuilder = x.RegisterType(impelimention)
+                                                       .As(ContractInterface)
+                                                       .InstancePerLifetimeScope();
+                        }
                     }
                 );
 
