@@ -361,3 +361,7 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# appsettings
+OnlineExam.EndPoint.API/appsettings.Development.json
+OnlineExam.EndPoint.API/appsettings.json
