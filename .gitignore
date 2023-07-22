@@ -367,6 +367,4 @@ OnlineExam.EndPoint.API/appsettings.Development.json
 OnlineExam.EndPoint.API/appsettings.json
 
 # SQL EntityFrameworkCore migrations
-OnlineExam.Infrastructure/Migrations/20230722180524_initialAndAddExam.cs
-OnlineExam.Infrastructure/Migrations/20230722180524_initialAndAddExam.Designer.cs
-OnlineExam.Infrastructure/Migrations/OnlineExamContextModelSnapshot.cs
+OnlineExam.Infrastructure/Migrations
