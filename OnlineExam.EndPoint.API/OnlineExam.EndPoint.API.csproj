@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\OnlineExam.Application.Contract\OnlineExam.Application.Contract.csproj" />
+		<ProjectReference Include="..\OnlineExam.Application\OnlineExam.Application.csproj" />
+		<ProjectReference Include="..\OnlineExam.Infrastructure\OnlineExam.Infrastructure.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Update="appsettings.template.Development.json">
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</Content>
+		<Content Update="appsettings.template.json">
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</Content>
+	</ItemGroup>
+
+</Project>
