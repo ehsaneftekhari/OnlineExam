@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using OnlineExam.Application.Contract.IServices;
 using OnlineExam.Application.IMappers;
 using OnlineExam.Application.Mappers;
@@ -8,9 +10,17 @@ namespace OnlineExam.Application
 {
     public class Config
     {
-        public static void RegisterServices(IServiceCollection serviceDescriptors)
+        public static void RegisterServices(IServiceCollection serviceDescriptors, out AutofacServiceProviderFactory autoFacServiceProviderFactory)
         {
-            serviceDescriptors.AddScoped<IExamService, ExamService>();
+            autoFacServiceProviderFactory = new AutofacServiceProviderFactory
+                (
+                    x =>
+                    {
+                        x.RegisterType<ExamService>().As<IExamService>().InstancePerLifetimeScope();
+                    }
+                );
+
+            //serviceDescriptors.AddScoped<IExamService, ExamService>();
             serviceDescriptors.AddScoped<IExamMapper, ExamMapper>();
         }
     }
