@@ -2,6 +2,6 @@
 {
     public interface IGetRepository<TEntity> where TEntity : class
     {
-        TEntity GetById(int id);
+        TEntity? GetById(int id);
     }
 }

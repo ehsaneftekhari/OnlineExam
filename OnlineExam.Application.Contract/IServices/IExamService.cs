@@ -6,8 +6,10 @@ namespace OnlineExam.Application.Contract.IServices
     {
         bool Add(AddExamDTO dTO);
 
-        ShowExamDTO GetById(int id);
+        ShowExamDTO? GetById(int id);
 
         bool Update(UpdateExamDTO dTO);
+
+        bool Delete(int id);
     }
 }
