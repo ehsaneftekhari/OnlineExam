@@ -12,18 +12,6 @@ namespace OnlineExam.Application
                 .Select(t => (t, t.GetInterfaces().FirstOrDefault(it => it.IsAssignableTo(ContractInterfaceMarker))!));
         }
 
-        internal List<string> GetAttributeMarkedMethodsNames<TClassMarker, TAttribute>()
-        {
-            return GetAttributeMarkedMethodsNames(typeof(TClassMarker), typeof(TAttribute));
-        }
-
-        internal List<string> GetAttributeMarkedMethodsNames(Type classMarkerType, Type attributeType)
-        {
-            return GetAttributeMarkedMethods(classMarkerType, attributeType)
-                    .Select(m => string.Format("{0}.{1}", m.DeclaringType?.Name, m.Name))
-                    .ToList();
-        }
-
         internal IEnumerable<MethodInfo> GetAttributeMarkedMethods<TClassMarker, TAttribute>()
         {
             return GetAttributeMarkedMethods(typeof(TClassMarker), typeof(TAttribute));
