@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using OnlineExam.Application.Contract.DTOs;
 using OnlineExam.Application.Contract.IServices;
 
@@ -46,6 +46,10 @@ namespace OnlineExam.EndPoint.API.Controllers
             if (_examService.Update(exam))
                 return Ok("Updated");
             
+            if(_examService.GetById(exam.Id) == null)
+                return BadRequest($"there is no exam by id {exam.Id}");
+
+            throw new Exception();
             return BadRequest("Did not updated");
         }
     }

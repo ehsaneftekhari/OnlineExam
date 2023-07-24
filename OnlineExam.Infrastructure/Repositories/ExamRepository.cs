@@ -1,4 +1,4 @@
-﻿using OnlineExam.Infrastructure.Contexts;
+using OnlineExam.Infrastructure.Contexts;
 using OnlineExam.Infrastructure.Contract.IRepositories;
 using OnlineExam.Model.Models;
 
@@ -20,7 +20,8 @@ namespace OnlineExam.Infrastructure.Repositories
             return _context.SaveChanges();
         }
 
-        public Exam GetById(int id)
+
+        public Exam? GetById(int id)
         {
             return _context.Exam.FirstOrDefault(x => x.Id == id);
         }
