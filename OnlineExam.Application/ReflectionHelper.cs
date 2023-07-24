@@ -4,7 +4,7 @@ namespace OnlineExam.Application
 {
     internal class ReflectionHelper
     {
-        public IEnumerable<(Type Impelimention, Type ContractInterface)> GetImplementationContractInterfaces(Type ContractInterfaceMarker)
+        internal IEnumerable<(Type Impelimention, Type ContractInterface)> GetImplementationContractInterfaces(Type ContractInterfaceMarker)
         {
             return Assembly.GetExecutingAssembly()
                 .GetTypes()
@@ -12,40 +12,59 @@ namespace OnlineExam.Application
                 .Select(t => (t, t.GetInterfaces().FirstOrDefault(it => it.IsAssignableTo(ContractInterfaceMarker))!));
         }
 
-        public List<string> GetAttributeAssignedMethodsNames<TClassMarker, TAttribute>()
+        internal List<string> GetAttributeMarkedMethodsNames<TClassMarker, TAttribute>()
         {
-            return GetAttributeAssignedMethodsNames(typeof(TClassMarker), typeof(TAttribute));
+            return GetAttributeMarkedMethodsNames(typeof(TClassMarker), typeof(TAttribute));
         }
 
-        public List<string> GetAttributeAssignedMethodsNames(Type classMarkerType, Type attributeType)
+        internal List<string> GetAttributeMarkedMethodsNames(Type classMarkerType, Type attributeType)
         {
-            return GetAttributeAssignedMethods(classMarkerType, attributeType)
+            return GetAttributeMarkedMethods(classMarkerType, attributeType)
                     .Select(m => string.Format("{0}.{1}", m.DeclaringType?.Name, m.Name))
                     .ToList();
         }
 
-        public IEnumerable<MethodInfo> GetAttributeAssignedMethods<TClassMarker, TAttribute>()
+        internal IEnumerable<MethodInfo> GetAttributeMarkedMethods<TClassMarker, TAttribute>()
         {
-            return GetAttributeAssignedMethods(typeof(TClassMarker), typeof(TAttribute));
+            return GetAttributeMarkedMethods(typeof(TClassMarker), typeof(TAttribute));
         }
 
-        public IEnumerable<MethodInfo> GetAttributeAssignedMethods(Type classMarkerType, Type attributeType)
+        internal IEnumerable<MethodInfo> GetAttributeMarkedMethods(Type classMarkerType, Type attributeType)
         {
-            return GetAssignedTypes(classMarkerType)
+            return GetMarkedTypes(classMarkerType)
                   .SelectMany(t => t.GetMethods())
-                  .Where(mi => mi.GetCustomAttribute(attributeType) != null);
+                  .Where(mi => HasAttribute(mi, attributeType));
         }
 
-        public IEnumerable<Type> GetAssignedTypes<TClassMarker>()
+        internal IEnumerable<Type> GetMarkedTypes<TClassMarker>()
         {
-            return GetAssignedTypes(typeof(TClassMarker));
+            return GetMarkedTypes(typeof(TClassMarker));
         }
 
-        public IEnumerable<Type> GetAssignedTypes(Type classMarkerType)
+        internal IEnumerable<Type> GetMarkedTypes(Type classMarkerType)
         {
             return Assembly.GetExecutingAssembly()
                    .GetTypes()
                    .Where(t => t.IsAssignableTo(classMarkerType) && !t.IsInterface);
+        }
+
+        internal bool HasAttribute(Type targetClassType, Type attributeType)
+        {
+            if (attributeType == null && attributeType == null)
+                throw new ArgumentNullException();
+
+            //if (!targetClassType.IsInterface)
+            //    throw new ArgumentException($"{nameof(targetClassType)} should not be Interface");
+
+            return targetClassType.GetMethods().Any(m => HasAttribute(m, attributeType));
+        }
+
+        internal bool HasAttribute(MethodInfo targetMethod, Type attributeType) 
+        {
+            if (!attributeType.IsAssignableTo(typeof(Attribute)))
+                throw new ArgumentException($"{nameof(attributeType)} should be assignable to {typeof(Attribute)}");
+
+            return targetMethod.GetCustomAttribute(attributeType) != null;
         }
     }
 }
