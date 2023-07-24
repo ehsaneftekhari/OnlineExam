@@ -1,4 +1,4 @@
-﻿using Autofac;
+using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using OnlineExam.Application.Contract.Markers;
@@ -29,7 +29,7 @@ namespace OnlineExam.Application
                     }
                 );
 
-            //serviceDescriptors.AddScoped<IExamService, ExamService>();
+            serviceDescriptors.AddScoped<IExamHistoryMapper, ExamHistoryMapper>();
             serviceDescriptors.AddScoped<IExamMapper, ExamMapper>();
         }
     }
