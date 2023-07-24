@@ -1,4 +1,4 @@
-using OnlineExam.Application.Contract.DTOs;
+﻿using OnlineExam.Application.Contract.DTOs;
 
 namespace OnlineExam.Application.Contract.IServices
 {
@@ -9,5 +9,7 @@ namespace OnlineExam.Application.Contract.IServices
         ShowExamDTO? GetById(int id);
 
         bool Update(UpdateExamDTO dTO);
+
+        bool Delete(int id);
     }
 }
