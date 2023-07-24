@@ -10,10 +10,14 @@ namespace OnlineExam.EndPoint.API
             builder.Services.AddSwaggerGen();
 
             // Add services to the container.
-            Application.Config.RegisterServices(builder.Services);
-            Infrastructure.Config.RegisterServices(builder.Services, builder.Configuration.GetConnectionString("OnlineExamConnectionStrings"));
-            //builder.Services.AddAuthorization();
 
+            Application.Config.RegisterServices(builder.Services, out var autoFacServiceProviderFactory);
+            builder.Host.UseServiceProviderFactory(autoFacServiceProviderFactory);
+
+            Infrastructure.Config.RegisterServices(builder.Services, builder.Configuration.GetConnectionString("OnlineExamConnectionStrings"));
+            
+            //builder.Services.AddAuthorization();
+            
 
             var app = builder.Build();
 
