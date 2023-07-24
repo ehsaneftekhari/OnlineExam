@@ -1,4 +1,4 @@
-using OnlineExam.Application.Contract.DTOs;
+﻿using OnlineExam.Application.Contract.DTOs;
 using OnlineExam.Application.Contract.IServices;
 using OnlineExam.Application.IMappers;
 using OnlineExam.Infrastructure.Contract.IRepositories;
@@ -24,6 +24,11 @@ namespace OnlineExam.Application.Services
             var newExam = _examMapper.AddDTOToEntity(dTO);
             newExam!.CreatorUserId = "1";
             return _examRepository.Add(newExam) == 1;
+        }
+
+        public bool Delete(int id)
+        {
+            return _examRepository.Delete(id) == 1;
         }
 
         public ShowExamDTO? GetById(int id)
