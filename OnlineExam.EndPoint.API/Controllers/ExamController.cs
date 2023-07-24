@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using OnlineExam.Application.Contract.DTOs;
 using OnlineExam.Application.Contract.IServices;
 
@@ -50,7 +50,18 @@ namespace OnlineExam.EndPoint.API.Controllers
                 return BadRequest($"there is no exam by id {exam.Id}");
 
             throw new Exception();
-            return BadRequest("Did not updated");
+        }
+
+        [HttpDelete("Delete")]
+        public IActionResult Delete(int id)
+        {
+            if (id < 0)
+                return BadRequest("id can not be less than zero");
+
+            if(_examService.Delete(id))
+                return Ok("Deleted");
+
+            return BadRequest($"there is no exam by id {id} to deleted");
         }
     }
 }
