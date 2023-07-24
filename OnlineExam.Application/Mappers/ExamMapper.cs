@@ -6,7 +6,7 @@ namespace OnlineExam.Application.Mappers
 {
     internal class ExamMapper : IExamMapper
     {
-        public Exam AddDTOToEntity(AddExamDTO addExamDTO)
+        public Exam? AddDTOToEntity(AddExamDTO? addExamDTO)
         {
             if (addExamDTO != null)
                 return new()
@@ -19,7 +19,7 @@ namespace OnlineExam.Application.Mappers
             return null;
         }
 
-        public ShowExamDTO EntityToShowDTO(Exam entity)
+        public ShowExamDTO? EntityToShowDTO(Exam? entity)
         {
             if (entity != null)
                 return new()
@@ -38,7 +38,7 @@ namespace OnlineExam.Application.Mappers
         {
             if (@new != null || old != null)
             {
-                if (@new.Title != null)
+                if (@new!.Title != null)
                     old.Title = @new.Title;
 
                 if (@new.Start.HasValue)

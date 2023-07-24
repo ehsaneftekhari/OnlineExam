@@ -46,7 +46,22 @@ namespace OnlineExam.EndPoint.API.Controllers
             if (_examService.Update(exam))
                 return Ok("Updated");
             
-            return BadRequest("Did not updated");
+            if(_examService.GetById(exam.Id) == null)
+                return BadRequest($"there is no exam by id {exam.Id}");
+
+            throw new Exception();
+        }
+
+        [HttpDelete("Delete")]
+        public IActionResult Delete(int id)
+        {
+            if (id < 0)
+                return BadRequest("id can not be less than zero");
+
+            if(_examService.Delete(id))
+                return Ok("Deleted");
+
+            return BadRequest($"there is no exam by id {id} to deleted");
         }
     }
 }
