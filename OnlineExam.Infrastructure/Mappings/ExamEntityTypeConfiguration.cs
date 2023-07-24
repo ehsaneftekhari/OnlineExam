@@ -27,6 +27,11 @@ namespace OnlineExam.Infrastructure.Mappings
             builder.Property(p => p.Published)
                .IsRequired()
                .HasColumnType<bool>(nameof(SqlDbType.Bit));
+
+            builder.ToTable(tableBuilder =>
+                    {
+                        tableBuilder.IsTemporal();
+                    });
         }
     }
 }
