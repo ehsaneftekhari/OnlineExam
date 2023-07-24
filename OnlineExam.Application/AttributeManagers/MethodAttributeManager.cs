@@ -1,4 +1,7 @@
-﻿namespace OnlineExam.Application.AttributeManagers
+﻿using System.Reflection;
+using System.Xml.Linq;
+
+namespace OnlineExam.Application.AttributeManagers
 {
     internal class MethodAttributeManager<TAttribute> where TAttribute : Attribute
     {
@@ -9,17 +12,20 @@
 
             this.classMarkerType = classMarkerType;
 
-            reflectionHelper.GetAttributeMarkedMethodsNames(classMarkerType, typeof(TAttribute))
-                .ForEach(m => methodsNames.Add(m));
+            reflectionHelper.GetAttributeMarkedMethods(classMarkerType, AttributeType)
+                    .Select(mi => GetMethodNameByMethodInfo(mi))
+                    .ToList()
+                    .ForEach(mn => methodsNames.Add(mn));
         }
 
         public Type classMarkerType { get; private set; }
 
         public Type AttributeType => typeof(TAttribute);
 
-        public bool HasMethod(string name)
-        {
-            return methodsNames.TryGetValue(name, out _);
-        }
+        public bool HasMethod(MethodInfo methodInfo) => HasMethod(GetMethodNameByMethodInfo(methodInfo));
+
+        public bool HasMethod(string name) => methodsNames.TryGetValue(name, out _);
+
+        private string GetMethodNameByMethodInfo(MethodInfo methodInfo) => string.Format("{0}.{1}", methodInfo.DeclaringType?.Name, methodInfo.Name);
     }
 }

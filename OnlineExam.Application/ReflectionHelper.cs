@@ -12,18 +12,6 @@ namespace OnlineExam.Application
                 .Select(t => (t, t.GetInterfaces().FirstOrDefault(it => it.IsAssignableTo(ContractInterfaceMarker))!));
         }
 
-        internal List<string> GetAttributeMarkedMethodsNames<TClassMarker, TAttribute>()
-        {
-            return GetAttributeMarkedMethodsNames(typeof(TClassMarker), typeof(TAttribute));
-        }
-
-        internal List<string> GetAttributeMarkedMethodsNames(Type classMarkerType, Type attributeType)
-        {
-            return GetAttributeMarkedMethods(classMarkerType, attributeType)
-                    .Select(m => string.Format("{0}.{1}", m.DeclaringType?.Name, m.Name))
-                    .ToList();
-        }
-
         internal IEnumerable<MethodInfo> GetAttributeMarkedMethods<TClassMarker, TAttribute>()
         {
             return GetAttributeMarkedMethods(typeof(TClassMarker), typeof(TAttribute));
@@ -33,7 +21,7 @@ namespace OnlineExam.Application
         {
             return GetMarkedTypes(classMarkerType)
                   .SelectMany(t => t.GetMethods())
-                  .Where(mi => HasAttribute(mi, attributeType));
+                  .Where(mi => MethodHasAttribute(mi, attributeType));
         }
 
         internal IEnumerable<Type> GetMarkedTypes<TClassMarker>()
@@ -48,18 +36,18 @@ namespace OnlineExam.Application
                    .Where(t => t.IsAssignableTo(classMarkerType) && !t.IsInterface);
         }
 
-        internal bool HasAttribute(Type targetClassType, Type attributeType)
+        internal bool ClassHasAttribute(Type targetClassType, Type attributeType)
         {
             if (attributeType == null && attributeType == null)
                 throw new ArgumentNullException();
 
-            //if (!targetClassType.IsInterface)
-            //    throw new ArgumentException($"{nameof(targetClassType)} should not be Interface");
+            if (targetClassType.IsInterface)
+                throw new ArgumentException($"{nameof(targetClassType)} should not be Interface");
 
-            return targetClassType.GetMethods().Any(m => HasAttribute(m, attributeType));
+            return targetClassType.GetMethods().Any(m => MethodHasAttribute(m, attributeType));
         }
 
-        internal bool HasAttribute(MethodInfo targetMethod, Type attributeType) 
+        internal bool MethodHasAttribute(MethodInfo targetMethod, Type attributeType) 
         {
             if (!attributeType.IsAssignableTo(typeof(Attribute)))
                 throw new ArgumentException($"{nameof(attributeType)} should be assignable to {typeof(Attribute)}");
