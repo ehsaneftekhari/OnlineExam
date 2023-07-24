@@ -1,4 +1,4 @@
-﻿using OnlineExam.Application.Contract.DTOs;
+using OnlineExam.Application.Contract.DTOs;
 
 namespace OnlineExam.Application.Contract.IServices
 {
@@ -6,7 +6,7 @@ namespace OnlineExam.Application.Contract.IServices
     {
         bool Add(AddExamDTO dTO);
 
-        ShowExamDTO GetById(int id);
+        ShowExamDTO? GetById(int id);
 
         bool Update(UpdateExamDTO dTO);
     }
