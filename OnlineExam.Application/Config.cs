@@ -1,4 +1,4 @@
-using Autofac;
+﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using OnlineExam.Application.Contract.Markers;
@@ -20,9 +20,9 @@ namespace OnlineExam.Application
 
                         var implementationsContract = registrationReflectionHelper.GetImplementationContractInterfaces(typeof(IApplicationContractMarker));
 
-                        foreach ((var impelimention, var ContractInterface) in implementationsContract)
+                        foreach ((var implementation, var ContractInterface) in implementationsContract)
                         {
-                            var registrationBuilder = x.RegisterType(impelimention)
+                            var registrationBuilder = x.RegisterType(implementation)
                                                        .As(ContractInterface)
                                                        .InstancePerLifetimeScope();
                         }
