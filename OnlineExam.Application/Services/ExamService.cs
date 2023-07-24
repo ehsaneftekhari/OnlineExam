@@ -1,4 +1,5 @@
-﻿using OnlineExam.Application.Contract.DTOs;
+﻿using OnlineExam.Application.Attributes;
+using OnlineExam.Application.Contract.DTOs;
 using OnlineExam.Application.Contract.IServices;
 using OnlineExam.Application.IMappers;
 using OnlineExam.Infrastructure.Contract.IRepositories;
@@ -16,6 +17,7 @@ namespace OnlineExam.Application.Services
             this._examMapper = examMapper;
         }
 
+        [TransactionUnitOfWork]
         public bool Add(AddExamDTO dTO)
         {
             var newExam = _examMapper.AddDTOToEntity(dTO);
