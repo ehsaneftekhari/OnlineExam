@@ -1,4 +1,4 @@
-﻿using OnlineExam.Application.Contract.DTOs;
+﻿using OnlineExam.Application.Contract.DTOs.ExamDTOs;
 using OnlineExam.Model.Models;
 
 namespace OnlineExam.Application.IMappers

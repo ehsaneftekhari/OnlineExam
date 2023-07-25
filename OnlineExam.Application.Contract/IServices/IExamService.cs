@@ -1,4 +1,4 @@
-﻿using OnlineExam.Application.Contract.DTOs;
+﻿using OnlineExam.Application.Contract.DTOs.ExamDTOs;
 
 namespace OnlineExam.Application.Contract.IServices
 {
