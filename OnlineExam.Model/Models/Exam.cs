@@ -3,11 +3,12 @@
     public class Exam
     {
         public int Id { get; set; }
-        public string CreatorUserId { get; set; }
-        public string Title { get; set; }
+        public string CreatorUserId { get; set; } = null!;
+        public string Title { get; set; } = null!;
         public DateTime Start { get; set; }
         public DateTime End { get; set; }
         public bool Published { get; set; }
-        public virtual ICollection<Section> Sections { get; set; } = new List<Section>();
+        public ICollection<Section> Sections { get; set; } = new List<Section>();
+        public ICollection<ExamTag> ExamTags { get; set; } = new HashSet<ExamTag>();
     }
 }
