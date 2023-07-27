@@ -24,6 +24,7 @@ namespace OnlineExam.Application.Mappers
             if (entity != null)
                 return new()
                 {
+                    Id = entity.Id,
                     Title = entity.Title,
                     Start = entity.Start,
                     End = entity.End,

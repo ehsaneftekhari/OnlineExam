@@ -35,6 +35,7 @@ namespace OnlineExam.Application.Mappers
 
                 return new()
                 {
+                    Id = entity.Id,
                     Title = entity.Title,
                     Order = entity.Order,
                     RandomizeQuestions = entity.RandomizeQuestions,
