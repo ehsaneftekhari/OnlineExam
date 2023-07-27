@@ -28,7 +28,10 @@ namespace OnlineExam.Application.Services
 
         public bool Delete(int id)
         {
-            return _examRepository.Delete(id) == 1;
+            var exam = _examRepository.GetWithSectionsLoaded(id);
+            if(exam == null || exam.Sections.Count != 0)
+                return false;
+            return _examRepository.DeleteByEntity(exam) == 1;
         }
 
         public ShowExamDTO? GetById(int id)

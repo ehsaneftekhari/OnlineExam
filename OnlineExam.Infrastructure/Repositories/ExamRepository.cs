@@ -1,4 +1,5 @@
-﻿using OnlineExam.Infrastructure.Contexts;
+﻿using Microsoft.EntityFrameworkCore;
+using OnlineExam.Infrastructure.Contexts;
 using OnlineExam.Infrastructure.Contract.IRepositories;
 using OnlineExam.Model.Models;
 
@@ -20,27 +21,19 @@ namespace OnlineExam.Infrastructure.Repositories
             return _context.SaveChanges();
         }
 
-        public int Delete(int id)
+        public int DeleteByEntity(Exam exam)
         {
-            var exam = _context.Exam.FirstOrDefault(x => x.Id == id);
             if (exam != null)
             {
                 _context.Remove(exam);
                 return _context.SaveChanges();
             }
             return 0;
+        }
 
-            //try
-            //{
-            //    var exam = new Exam() { Id = id };
-            //    _context.Exam.Attach(exam);
-            //    _context.Remove(exam);
-            //    return _context.SaveChanges();
-            //}
-            //catch
-            //{
-            //    return 0;
-            //}
+        public Exam? GetWithSectionsLoaded(int id)
+        {
+            return _context.Exam.Include(x => x.Sections).FirstOrDefault(x => x.Id == id);
         }
 
         public Exam? GetById(int id)
