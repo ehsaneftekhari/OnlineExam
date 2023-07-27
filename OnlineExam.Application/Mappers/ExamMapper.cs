@@ -9,6 +9,7 @@ namespace OnlineExam.Application.Mappers
         public Exam? AddDTOToEntity(AddExamDTO? addExamDTO)
         {
             if (addExamDTO != null)
+            {
                 return new()
                 {
                     Title = addExamDTO.Title,
@@ -16,6 +17,7 @@ namespace OnlineExam.Application.Mappers
                     End = addExamDTO.End,
                     Published = addExamDTO.Published
                 };
+            }
             return null;
         }
 
@@ -51,6 +53,12 @@ namespace OnlineExam.Application.Mappers
                 if (@new.Published.HasValue)
                     old.Published = @new.Published.Value;
             }
+        }
+
+        public void UpdateExamTags(Exam exam, IEnumerable<int> tagIds)
+        {
+            exam.ExamTags.Clear();
+            tagIds.ToList().ForEach(tagId => exam.ExamTags.Add(new ExamTag() { ExamId = exam.Id, TagId = tagId }));
         }
     }
 }

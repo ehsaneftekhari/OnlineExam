@@ -2,6 +2,7 @@
 using OnlineExam.Application.Contract.IServices;
 using OnlineExam.Application.IMappers;
 using OnlineExam.Infrastructure.Contract.IRepositories;
+using OnlineExam.Model.Models;
 
 namespace OnlineExam.Application.Services
 {
@@ -9,11 +10,13 @@ namespace OnlineExam.Application.Services
     {
         readonly IExamRepository _examRepository;
         readonly IExamMapper _examMapper;
+        readonly ITagService _tagService;
 
-        public ExamService(IExamRepository examRepository, IExamMapper examMapper)
+        public ExamService(IExamRepository examRepository, IExamMapper examMapper, ITagService tagService)
         {
             this._examRepository = examRepository;
             this._examMapper = examMapper;
+            _tagService = tagService;
         }
 
         public bool Add(AddExamDTO dTO)
@@ -21,14 +24,21 @@ namespace OnlineExam.Application.Services
             if (dTO == null)
                 throw new ArgumentNullException();
 
+            var tagIds = _tagService.GetOrAdd(dTO.Tags.ToList()).Select(x => x.Id);
             var newExam = _examMapper.AddDTOToEntity(dTO);
             newExam!.CreatorUserId = "1";
-            return _examRepository.Add(newExam) == 1;
+            var result = _examRepository.Add(newExam) == 1;
+
+            _examMapper.UpdateExamTags(newExam, tagIds);
+
+            result = result & _examRepository.Update(newExam) == tagIds.Count() + 1;
+
+            return result;
         }
 
         public bool Delete(int id)
         {
-            var exam = _examRepository.GetWithSectionsLoaded(id);
+            var exam = _examRepository.GetFullyLoaded(id);
             if(exam == null || exam.Sections.Count != 0)
                 return false;
             return _examRepository.DeleteByEntity(exam) == 1;
@@ -36,7 +46,7 @@ namespace OnlineExam.Application.Services
 
         public ShowExamDTO? GetById(int id)
         {
-            return _examMapper.EntityToShowDTO(_examRepository.GetById(id));
+            return _examMapper.EntityToShowDTO(_examRepository.GetFullyLoaded(id));
         }
 
         public bool Update(UpdateExamDTO dTO)

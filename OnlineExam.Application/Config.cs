@@ -32,6 +32,7 @@ namespace OnlineExam.Application
             //serviceDescriptors.AddScoped<IExamService, ExamService>();
             serviceDescriptors.AddScoped<IExamMapper, ExamMapper>();
             serviceDescriptors.AddScoped<ISectionMapper, SectionMapper>();
+            serviceDescriptors.AddScoped<ITagMapper, TagMapper>();
         }
     }
 }

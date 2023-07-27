@@ -26,9 +26,9 @@ namespace OnlineExam.Application.Services
             try
             {
                 var newSection = _sectionMapper.AddDTOToEntity(dTO);
-                return _sectionRepository.Add(newSection) == 1;
+                return _sectionRepository.Add(newSection!) == 1;
             }
-            catch(Exception ex)
+            catch
             {
                 if(_examRepository.GetById(dTO.ExamId) == null)
                     return false;

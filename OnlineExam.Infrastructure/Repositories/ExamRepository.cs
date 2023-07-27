@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OnlineExam.Infrastructure.Contexts;
+using OnlineExam.Infrastructure.Contract.Abstractions;
 using OnlineExam.Infrastructure.Contract.IRepositories;
 using OnlineExam.Model.Models;
 
@@ -31,9 +32,13 @@ namespace OnlineExam.Infrastructure.Repositories
             return 0;
         }
 
-        public Exam? GetWithSectionsLoaded(int id)
+        public Exam? GetFullyLoaded(int id)
         {
-            return _context.Exam.Include(x => x.Sections).FirstOrDefault(x => x.Id == id);
+            return _context.Exam
+                .Include(x => x.Sections)
+                .Include(x => x.ExamTags)
+                .ThenInclude(x => x.Tag)
+                .FirstOrDefault(x => x.Id == id);
         }
 
         public Exam? GetById(int id)
