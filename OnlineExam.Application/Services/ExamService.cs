@@ -1,4 +1,5 @@
-﻿using OnlineExam.Application.Contract.DTOs.ExamDTOs;
+using OnlineExam.Application.Attributes;
+using OnlineExam.Application.Contract.DTOs.ExamDTOs;
 using OnlineExam.Application.Contract.IServices;
 using OnlineExam.Application.IMappers;
 using OnlineExam.Infrastructure.Contract.IRepositories;
@@ -19,6 +20,7 @@ namespace OnlineExam.Application.Services
             _tagService = tagService;
         }
 
+        [TransactionUnitOfWork]
         public bool Add(AddExamDTO dTO)
         {
             if (dTO == null)
