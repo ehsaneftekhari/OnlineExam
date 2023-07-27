@@ -26,47 +26,37 @@ namespace OnlineExam.Application.Services
             return _tagRepository.Add(newTag!) == 1;
         }
 
-        public IEnumerable<ShowTagDTO> GetOrAdd(IEnumerable<AddTagDTO> dTOs)
+        public IEnumerable<Tag> SyncTagsByNames(IEnumerable<Tag> tags)
         {
-            List<ShowTagDTO> result = new List<ShowTagDTO>();
-            if (dTOs != null)
-                foreach (var tag in dTOs)
-                {
-                    result.Add(GetOrAdd(tag));
-                }
-            return result;
+            if (tags != null)
+                return tags.Select(t => SyncTagByName(t));
+
+            return Array.Empty<Tag>();
         }
 
-        public ShowTagDTO GetOrAdd(AddTagDTO dTO)
+        public Tag SyncTagByName(Tag tag)
         {
-            if (dTO == null)
+            if (tag == null)
                 throw new ArgumentNullException();
 
-            var tag = _tagMapper.AddDTOToEntity(dTO);
-
-            var fromDbTag = _tagRepository.GetIQueryable().FirstOrDefault(x => x.Name == tag!.Name);
+            var fromDbTag = _tagRepository.GetByName(tag!.Name);
 
             if (fromDbTag == null)
                 _tagRepository.Add(tag!);
             else
                 tag = fromDbTag;
 
-            return _tagMapper.EntityToShowDTO(tag)!;
+            return tag;
         }
 
-        public bool Delete(int id)
+        public bool DeleteById(int id)
         {
             return _tagRepository.DeleteById(id) == 1;
         }
 
-        public ShowTagDTO? GetById(int id)
+        public ShowTagDetailsDTO? GetById(int id)
         {
-            return _tagMapper.EntityToShowDTO(_tagRepository.GetById(id));
-        }
-
-        public ShowTagDTO? GetByName(int id)
-        {
-            return _tagMapper.EntityToShowDTO(_tagRepository.GetById(id));
+            return _tagMapper.EntityToShowTagDetailsDTO(_tagRepository.GetById(id));
         }
 
         public bool Update(UpdateTagDTO dTO)

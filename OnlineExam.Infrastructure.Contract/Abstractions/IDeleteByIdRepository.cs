@@ -1,7 +1,7 @@
 ﻿namespace OnlineExam.Infrastructure.Contract.Abstractions
 {
-    public interface IDeleteByIdRepository<TEntity> where TEntity : class
+    public interface IDeleteByIdRepository<TId, TEntity> where TEntity : class
     {
-        int DeleteById(int id);
+        int DeleteById(TId id);
     }
 }

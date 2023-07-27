@@ -36,8 +36,7 @@ namespace OnlineExam.Infrastructure.Repositories
         {
             return _context.Exam
                 .Include(x => x.Sections)
-                .Include(x => x.ExamTags)
-                .ThenInclude(x => x.Tag)
+                .Include(x => x.Tags)
                 .FirstOrDefault(x => x.Id == id);
         }
 

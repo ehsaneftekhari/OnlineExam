@@ -3,8 +3,8 @@ using OnlineExam.Model.Models;
 
 namespace OnlineExam.Infrastructure.Contract.IRepositories
 {
-    public interface ISectionRepository : IAddRepository<Section>, IGetRepository<Section>,
-        IUpdateRepository<Section>, IDeleteByIdRepository<Section>
+    public interface ISectionRepository : IAddRepository<Section>, IGetByIdRepository<int, Section>,
+        IUpdateRepository<Section>, IDeleteByIdRepository<int, Section>
     {
 
     }

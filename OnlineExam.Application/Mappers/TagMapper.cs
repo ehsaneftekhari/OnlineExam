@@ -23,6 +23,20 @@ namespace OnlineExam.Application.Mappers
             {
                 return new()
                 {
+                    Name = entity.Name,
+                    Description = entity.Description
+                };
+            }
+
+            return null;
+        }
+
+        public ShowTagDetailsDTO? EntityToShowTagDetailsDTO(Tag? entity)
+        {
+            if (entity != null)
+            {
+                return new()
+                {
                     Id = entity.Id,
                     Name = entity.Name,
                     Description = entity.Description

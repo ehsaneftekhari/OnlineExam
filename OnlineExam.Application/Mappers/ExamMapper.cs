@@ -6,6 +6,13 @@ namespace OnlineExam.Application.Mappers
 {
     internal class ExamMapper : IExamMapper
     {
+        ITagMapper _tagMapper { get; set; }
+
+        public ExamMapper(ITagMapper tagMapper)
+        {
+            _tagMapper = tagMapper;
+        }
+
         public Exam? AddDTOToEntity(AddExamDTO? addExamDTO)
         {
             if (addExamDTO != null)
@@ -15,7 +22,8 @@ namespace OnlineExam.Application.Mappers
                     Title = addExamDTO.Title,
                     Start = addExamDTO.Start,
                     End = addExamDTO.End,
-                    Published = addExamDTO.Published
+                    Published = addExamDTO.Published,
+                    Tags = addExamDTO.Tags.Select(t => _tagMapper.AddDTOToEntity(t)!).ToList()
                 };
             }
             return null;
@@ -31,7 +39,8 @@ namespace OnlineExam.Application.Mappers
                     Start = entity.Start,
                     End = entity.End,
                     CreatorUserId = entity.CreatorUserId,
-                    Published = entity.Published
+                    Published = entity.Published,
+                    Tags = entity.Tags.Select(t => _tagMapper.EntityToShowDTO(t)!).ToList()
                 };
 
             return null;
@@ -53,12 +62,6 @@ namespace OnlineExam.Application.Mappers
                 if (@new.Published.HasValue)
                     old.Published = @new.Published.Value;
             }
-        }
-
-        public void UpdateExamTags(Exam exam, IEnumerable<int> tagIds)
-        {
-            exam.ExamTags.Clear();
-            tagIds.ToList().ForEach(tagId => exam.ExamTags.Add(new ExamTag() { ExamId = exam.Id, TagId = tagId }));
         }
     }
 }

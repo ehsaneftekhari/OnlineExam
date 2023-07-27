@@ -9,6 +9,6 @@
         public DateTime End { get; set; }
         public bool Published { get; set; }
         public ICollection<Section> Sections { get; set; } = new List<Section>();
-        public ICollection<ExamTag> ExamTags { get; set; } = new HashSet<ExamTag>();
+        public ICollection<Tag> Tags { get; set; } = new HashSet<Tag>();
     }
 }

@@ -24,16 +24,10 @@ namespace OnlineExam.Application.Services
             if (dTO == null)
                 throw new ArgumentNullException();
 
-            var tagIds = _tagService.GetOrAdd(dTO.Tags.ToList()).Select(x => x.Id);
             var newExam = _examMapper.AddDTOToEntity(dTO);
+            newExam!.Tags = _tagService.SyncTagsByNames(newExam!.Tags).ToList();
             newExam!.CreatorUserId = "1";
-            var result = _examRepository.Add(newExam) == 1;
-
-            _examMapper.UpdateExamTags(newExam, tagIds);
-
-            result = result & _examRepository.Update(newExam) == tagIds.Count() + 1;
-
-            return result;
+            return _examRepository.Add(newExam) > 0;
         }
 
         public bool Delete(int id)

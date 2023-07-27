@@ -19,6 +19,11 @@ namespace OnlineExam.Infrastructure.Repositories
             return _context.SaveChanges();
         }
 
+        public Tag? GetByName(string name)
+        {
+            return _context.Tag.FirstOrDefault(x => x.Name == name);
+        }
+
         public Tag? GetById(int id)
         {
             return _context.Tag.FirstOrDefault(x => x.Id == id);

@@ -21,8 +21,7 @@ namespace OnlineExam.Infrastructure.Contexts
             modelBuilder
                 .ApplyConfiguration(new ExamEntityTypeConfiguration())
                 .ApplyConfiguration(new SectionEntityTypeConfiguration())
-                .ApplyConfiguration(new TagEntityTypeConfiguration())
-                .ApplyConfiguration(new ExamTagEntityTypeConfiguration());
+                .ApplyConfiguration(new TagEntityTypeConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }

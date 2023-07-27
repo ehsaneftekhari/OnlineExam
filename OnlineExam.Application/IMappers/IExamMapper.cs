@@ -8,6 +8,5 @@ namespace OnlineExam.Application.IMappers
         Exam? AddDTOToEntity(AddExamDTO? addExamDTO);
         ShowExamDTO? EntityToShowDTO(Exam? entity);
         void UpdateEntityByDTO(Exam old, UpdateExamDTO @new);
-        void UpdateExamTags(Exam exam, IEnumerable<int> tagIds);
     }
 }
