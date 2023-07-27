@@ -1,4 +1,6 @@
-﻿namespace OnlineExam.Application.Contract.DTOs.ExamDTOs
+﻿using OnlineExam.Application.Contract.DTOs.TagDTOs;
+
+namespace OnlineExam.Application.Contract.DTOs.ExamDTOs
 {
     public class ShowExamDTO
     {
@@ -8,5 +10,6 @@
         public DateTime Start { get; set; }
         public DateTime End { get; set; }
         public bool Published { get; set; }
+        public IEnumerable<ShowTagDTO> Tags { get; set; }
     }
 }

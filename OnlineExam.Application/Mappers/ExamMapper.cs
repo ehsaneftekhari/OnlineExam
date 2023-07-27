@@ -6,16 +6,26 @@ namespace OnlineExam.Application.Mappers
 {
     internal class ExamMapper : IExamMapper
     {
+        ITagMapper _tagMapper { get; set; }
+
+        public ExamMapper(ITagMapper tagMapper)
+        {
+            _tagMapper = tagMapper;
+        }
+
         public Exam? AddDTOToEntity(AddExamDTO? addExamDTO)
         {
             if (addExamDTO != null)
+            {
                 return new()
                 {
                     Title = addExamDTO.Title,
                     Start = addExamDTO.Start,
                     End = addExamDTO.End,
-                    Published = addExamDTO.Published
+                    Published = addExamDTO.Published,
+                    Tags = addExamDTO.Tags.Select(t => _tagMapper.AddDTOToEntity(t)!).ToList()
                 };
+            }
             return null;
         }
 
@@ -29,7 +39,8 @@ namespace OnlineExam.Application.Mappers
                     Start = entity.Start,
                     End = entity.End,
                     CreatorUserId = entity.CreatorUserId,
-                    Published = entity.Published
+                    Published = entity.Published,
+                    Tags = entity.Tags.Select(t => _tagMapper.EntityToShowDTO(t)!).ToList()
                 };
 
             return null;

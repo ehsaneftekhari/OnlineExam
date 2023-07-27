@@ -1,8 +1,11 @@
 ﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Autofac.Extras.DynamicProxy;
 using Microsoft.Extensions.DependencyInjection;
+using OnlineExam.Application.AttributeManagers;
 using OnlineExam.Application.Contract.Markers;
 using OnlineExam.Application.IMappers;
+using OnlineExam.Application.Inteceptors;
 using OnlineExam.Application.Mappers;
 
 namespace OnlineExam.Application
@@ -11,20 +14,24 @@ namespace OnlineExam.Application
     {
         public static void RegisterServices(IServiceCollection serviceDescriptors, out AutofacServiceProviderFactory autoFacServiceProviderFactory)
         {
-            var registrationReflectionHelper = new ReflectionHelper();
+            var reflectionHelper = new ReflectionHelper();
+            var transactionUnitOfWorkAttributeManager = new TransactionUnitOfWorkAttributeManager(reflectionHelper);
 
             autoFacServiceProviderFactory = new AutofacServiceProviderFactory(
                     x =>
                     {
-                        x.RegisterInstance(registrationReflectionHelper).SingleInstance();
+                        x.RegisterInstance(reflectionHelper).SingleInstance();
+                        x.RegisterInstance(transactionUnitOfWorkAttributeManager).SingleInstance();
+                        x.RegisterType<TransactionUnitOfWorkInterceptor>().InstancePerLifetimeScope();
 
-                        var implementationsContract = registrationReflectionHelper.GetImplementationContractInterfaces(typeof(IApplicationContractMarker));
+                        var implementationsContract = reflectionHelper.GetImplementationContractInterfaces(typeof(IApplicationContractMarker));
 
-                        foreach ((var impelimention, var ContractInterface) in implementationsContract)
+                        foreach ((var implementation, var ContractInterface) in implementationsContract)
                         {
-                            var registrationBuilder = x.RegisterType(impelimention)
-                                                       .As(ContractInterface)
-                                                       .InstancePerLifetimeScope();
+                            var registrationBuilder = x.RegisterType(implementation).As(ContractInterface).InstancePerLifetimeScope();
+
+                            if (reflectionHelper.ClassHasAttribute(implementation, transactionUnitOfWorkAttributeManager.AttributeType))
+                                registrationBuilder.EnableInterfaceInterceptors().InterceptedBy(typeof(TransactionUnitOfWorkInterceptor));
                         }
                     }
                 );
@@ -32,6 +39,7 @@ namespace OnlineExam.Application
             //serviceDescriptors.AddScoped<IExamService, ExamService>();
             serviceDescriptors.AddScoped<IExamMapper, ExamMapper>();
             serviceDescriptors.AddScoped<ISectionMapper, SectionMapper>();
+            serviceDescriptors.AddScoped<ITagMapper, TagMapper>();
         }
     }
 }

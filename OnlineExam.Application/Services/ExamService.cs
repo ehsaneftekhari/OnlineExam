@@ -1,7 +1,9 @@
-﻿using OnlineExam.Application.Contract.DTOs.ExamDTOs;
+using OnlineExam.Application.Attributes;
+using OnlineExam.Application.Contract.DTOs.ExamDTOs;
 using OnlineExam.Application.Contract.IServices;
 using OnlineExam.Application.IMappers;
 using OnlineExam.Infrastructure.Contract.IRepositories;
+using OnlineExam.Model.Models;
 
 namespace OnlineExam.Application.Services
 {
@@ -9,26 +11,30 @@ namespace OnlineExam.Application.Services
     {
         readonly IExamRepository _examRepository;
         readonly IExamMapper _examMapper;
+        readonly ITagService _tagService;
 
-        public ExamService(IExamRepository examRepository, IExamMapper examMapper)
+        public ExamService(IExamRepository examRepository, IExamMapper examMapper, ITagService tagService)
         {
             this._examRepository = examRepository;
             this._examMapper = examMapper;
+            _tagService = tagService;
         }
 
+        [TransactionUnitOfWork]
         public bool Add(AddExamDTO dTO)
         {
             if (dTO == null)
                 throw new ArgumentNullException();
 
             var newExam = _examMapper.AddDTOToEntity(dTO);
+            newExam!.Tags = _tagService.SyncTagsByNames(newExam!.Tags).ToList();
             newExam!.CreatorUserId = "1";
-            return _examRepository.Add(newExam) == 1;
+            return _examRepository.Add(newExam) > 0;
         }
 
         public bool Delete(int id)
         {
-            var exam = _examRepository.GetWithSectionsLoaded(id);
+            var exam = _examRepository.GetFullyLoaded(id);
             if(exam == null || exam.Sections.Count != 0)
                 return false;
             return _examRepository.DeleteByEntity(exam) == 1;
@@ -36,7 +42,7 @@ namespace OnlineExam.Application.Services
 
         public ShowExamDTO? GetById(int id)
         {
-            return _examMapper.EntityToShowDTO(_examRepository.GetById(id));
+            return _examMapper.EntityToShowDTO(_examRepository.GetFullyLoaded(id));
         }
 
         public bool Update(UpdateExamDTO dTO)
