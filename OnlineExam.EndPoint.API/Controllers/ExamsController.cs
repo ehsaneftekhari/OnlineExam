@@ -1,16 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using OnlineExam.Application.Contract.DTOs;
+using OnlineExam.Application.Contract.DTOs.ExamDTOs;
 using OnlineExam.Application.Contract.IServices;
 
 namespace OnlineExam.EndPoint.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ExamController : ControllerBase
+    public class ExamsController : ControllerBase
     {
         readonly IExamService _examService;
 
-        public ExamController(IExamService examService)
+        public ExamsController(IExamService examService)
         {
             _examService = examService;
         }

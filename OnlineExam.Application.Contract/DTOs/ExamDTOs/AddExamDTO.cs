@@ -1,4 +1,4 @@
-﻿namespace OnlineExam.Application.Contract.DTOs
+﻿namespace OnlineExam.Application.Contract.DTOs.ExamDTOs
 {
     public class AddExamDTO
     {
