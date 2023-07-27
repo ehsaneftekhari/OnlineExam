@@ -12,9 +12,13 @@ namespace OnlineExam.Infrastructure.Contexts
 
         public DbSet<Exam> Exam { get; set; }
 
+        public DbSet<Section> Section { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfiguration(new ExamEntityTypeConfiguration());
+            modelBuilder
+                .ApplyConfiguration(new ExamEntityTypeConfiguration())
+                .ApplyConfiguration(new SectionEntityTypeConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }
