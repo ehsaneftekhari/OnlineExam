@@ -10,6 +10,8 @@ namespace OnlineExam.Application
     {
         public static void RegisterServices(IServiceCollection serviceDescriptors)
         {
+            serviceDescriptors.AddScoped<ISectionMapper, SectionMapper>();
+            serviceDescriptors.AddScoped<ISectionService, SectionService>();
             serviceDescriptors.AddScoped<IExamService, ExamService>();
             serviceDescriptors.AddScoped<IExamMapper, ExamMapper>();
         }
