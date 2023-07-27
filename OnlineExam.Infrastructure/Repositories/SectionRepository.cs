@@ -1,4 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Internal;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using OnlineExam.Infrastructure.Contexts;
 using OnlineExam.Infrastructure.Contract.IRepositories;
 using OnlineExam.Model.Models;
@@ -15,12 +19,12 @@ namespace OnlineExam.Infrastructure.Repositories
         }
 
         public int Add(Section section)
-        {
+        {   
             _context.Add(section);
             return _context.SaveChanges();
         }
 
-        public int Delete(int id)
+        public int DeleteById(int id)
         {
             var exam = _context.Section.FirstOrDefault(x => x.Id == id);
             if (exam != null)

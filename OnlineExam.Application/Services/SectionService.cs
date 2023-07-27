@@ -7,13 +7,15 @@ namespace OnlineExam.Application.Services
 {
     public class SectionService : ISectionService
     {
+        readonly IExamRepository _examRepository;
         readonly ISectionRepository _sectionRepository;
         readonly ISectionMapper _sectionMapper;
 
-        public SectionService(ISectionRepository examRepository, ISectionMapper examMapper)
+        public SectionService(ISectionRepository sectionRepository, ISectionMapper sectionMapper, IExamRepository examRepository)
         {
-            this._sectionRepository = examRepository;
-            this._sectionMapper = examMapper;
+            this._sectionRepository = sectionRepository;
+            this._sectionMapper = sectionMapper;
+            this._examRepository = examRepository;
         }
 
         public bool Add(AddSectionDTO dTO)
@@ -21,13 +23,23 @@ namespace OnlineExam.Application.Services
             if (dTO == null)
                 throw new ArgumentNullException();
 
-            var newSection = _sectionMapper.AddDTOToEntity(dTO);
-            return _sectionRepository.Add(newSection) == 1;
+            try
+            {
+                var newSection = _sectionMapper.AddDTOToEntity(dTO);
+                return _sectionRepository.Add(newSection) == 1;
+            }
+            catch(Exception ex)
+            {
+                if(_examRepository.GetById(dTO.ExamId) == null)
+                    return false;
+
+                throw;
+            }
         }
 
         public bool Delete(int id)
         {
-            return _sectionRepository.Delete(id) == 1;
+            return _sectionRepository.DeleteById(id) == 1;
         }
 
         public ShowSectionDTO? GetById(int id)
