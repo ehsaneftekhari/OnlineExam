@@ -29,6 +29,8 @@ namespace OnlineExam.Application.Inteceptors
                 {
                     //todo:log
                     transactionUnitOfWork.Rollback();
+
+                    throw;
                 }
             }
             else
