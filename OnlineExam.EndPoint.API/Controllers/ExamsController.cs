@@ -25,6 +25,16 @@ namespace OnlineExam.EndPoint.API.Controllers
             return Ok(dto);
         }
 
+        [HttpPost("GetByFilter")]
+        public IActionResult GetByFilter(ExamFilterDTO dto)
+        {
+            //if (dto < 0)
+            //    return BadRequest("id can not be less than zero");
+
+            var pagingModel = _examService.GetByFilter(dto);
+            return Ok(pagingModel);
+        }
+
         [HttpPost("Create")]
         public IActionResult Create(AddExamDTO exam)
         {
