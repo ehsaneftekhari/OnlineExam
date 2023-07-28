@@ -67,7 +67,32 @@ namespace OnlineExam.Application.Services
 
         public PagingModel<List<ShowExamDTO>> GetByFilter(ExamFilterDTO dTO)
         {
-            return Test4GetByFilter(dTO);
+
+        private PagingModel<List<ShowExamDTO>> Test4GetByFilter(ExamFilterDTO dTO)
+        {
+            //throws exception
+            //var quarry = _examRepository.GetIQueryable()
+            //    .SelectMany(exam => exam.Tags, (exam, tag) => new { exam, tag })
+            //    .GroupBy(obj => obj.exam);
+                //.Select(gr => gr.Key)
+                //.Where(exam => dTO.Title == default || exam.Title.Contains(dTO.Title))
+                //.Where(exam => !dTO.StartFrom.HasValue || dTO.StartFrom.Value <= exam.Start)
+                //.Where(exam => !dTO.StartTo.HasValue || dTO.StartTo.Value >= exam.Start)
+                //.Where(exam => !dTO.EndFrom.HasValue || dTO.EndFrom.Value <= exam.End)
+                //.Where(exam => !dTO.EndTo.HasValue || dTO.EndTo.Value >= exam.End)
+                //.Where(exam => !dTO.Published.HasValue || dTO.Published.Value == exam.Published);
+
+            //var t = quarry.ToList();
+
+            //var exams = quarry
+            //    .Skip(dTO.Skip)
+            //    .Take(dTO.Take)
+            //    .ToList()
+            //    .Select(exam => _examMapper.EntityToShowDTO(exam))
+            //    .ToList();
+
+            //return new(exams, quarry.Count());
+            return new(null, 0);
         }
 
         private PagingModel<List<ShowExamDTO>> Test3GetByFilter(ExamFilterDTO dTO)
