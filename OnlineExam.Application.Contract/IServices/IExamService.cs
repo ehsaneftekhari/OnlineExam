@@ -12,5 +12,7 @@ namespace OnlineExam.Application.Contract.IServices
         bool Update(UpdateExamDTO dTO);
 
         bool Delete(int id);
+
+        PagingModel<List<ShowExamDTO>> GetByFilter(ExamFilterDTO dTO);
     }
 }
