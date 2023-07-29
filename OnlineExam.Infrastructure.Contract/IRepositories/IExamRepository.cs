@@ -7,5 +7,6 @@ namespace OnlineExam.Infrastructure.Contract.IRepositories
         IUpdateRepository<Exam>, IDeleteByEntityRepository<Exam>, IGetQueryableRepository<Exam>
     {
         Exam? GetFullyLoaded(int id);
+        IQueryable<ExamTag> GetIExamTagQueryable();
     }
 }

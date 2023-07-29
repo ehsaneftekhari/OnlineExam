@@ -3,6 +3,7 @@ using OnlineExam.Application.Attributes;
 using OnlineExam.Application.Contract.DTOs.ExamDTOs;
 using OnlineExam.Application.Contract.IServices;
 using OnlineExam.Application.IMappers;
+using OnlineExam.Infrastructure.Contexts;
 using OnlineExam.Infrastructure.Contract.IRepositories;
 using OnlineExam.Model.Models;
 using System.Linq;
@@ -11,15 +12,19 @@ namespace OnlineExam.Application.Services
 {
     public class ExamService : IExamService
     {
+        readonly OnlineExamContext _context;
         readonly IExamRepository _examRepository;
+        readonly ITagRepository _tagRepository;
         readonly IExamMapper _examMapper;
         readonly ITagService _tagService;
 
-        public ExamService(IExamRepository examRepository, IExamMapper examMapper, ITagService tagService)
+        public ExamService(IExamRepository examRepository, IExamMapper examMapper, ITagService tagService, ITagRepository tagRepository, OnlineExamContext context)
         {
             this._examRepository = examRepository;
             this._examMapper = examMapper;
             _tagService = tagService;
+            _tagRepository = tagRepository;
+            _context = context;
         }
 
         [TransactionUnitOfWork]
@@ -67,6 +72,42 @@ namespace OnlineExam.Application.Services
 
         public PagingModel<List<ShowExamDTO>> GetByFilter(ExamFilterDTO dTO)
         {
+            return Test5GetByFilter(dTO);
+        }
+
+        private PagingModel<List<ShowExamDTO>> Test5GetByFilter(ExamFilterDTO dTO)
+        {
+            var quarry = _examRepository.GetIQueryable()
+            .Join(_context.Set<ExamTag>(nameof(ExamTag))
+                , exam => exam.Id
+                , examTag => examTag.ExamId
+                , (exam, tagTag) => new { exam, tagTag.TagId }
+            )
+            .Join(_context.Set<Tag>()
+                , obj => obj.TagId
+                , tag => tag.Id
+                , (obj, tag) => new { obj.exam, tag }
+            ).ToList();
+            //.Include(exam => exam.Tags)
+            //.Where(exam => dTO.Tags == default || dTO.Tags.Count == 0 || exam.Tags.Any(t => dTO.Tags.Contains(t.Name)))
+            //.Where(exam => dTO.Title == default || exam.Title.Contains(dTO.Title))
+            //.Where(exam => !dTO.StartFrom.HasValue || dTO.StartFrom.Value <= exam.Start)
+            //.Where(exam => !dTO.StartTo.HasValue || dTO.StartTo.Value >= exam.Start)
+            //.Where(exam => !dTO.EndFrom.HasValue || dTO.EndFrom.Value <= exam.End)
+            //.Where(exam => !dTO.EndTo.HasValue || dTO.EndTo.Value >= exam.End)
+            //.Where(exam => !dTO.Published.HasValue || dTO.Published.Value == exam.Published);
+
+
+            //var exams = quarry
+            //    .Skip(dTO.Skip)
+            //    .Take(dTO.Take)
+            //    .ToList()
+            //    .Select(exam => _examMapper.EntityToShowDTO(exam))
+            //    .ToList();
+
+            //return new(exams, quarry.Count());
+            return new(null, 0);
+        }
 
         private PagingModel<List<ShowExamDTO>> Test4GetByFilter(ExamFilterDTO dTO)
         {
@@ -169,10 +210,8 @@ namespace OnlineExam.Application.Services
             var quarry7 = quarry6.Where(exam => !dTO.Published.HasValue || dTO.Published.Value == exam.Published);
             var t7 = quarry7.ToList();
 
-            var quarry8 = quarry7.Where(exam => dTO.Tags == default || dTO.Tags.Count == 0 || exam.Tags.Any(t => dTO.Tags.Contains(t.Name)));
+            var quarry8 = quarry7.Where(exam => dTO.Tags == default || dTO.Tags.Count == 0 || exam.Tags.All(t => dTO.Tags.Contains(t.Name)));
             var t8 = quarry8.ToList();
-
-
 
 
             var exams = quarry8

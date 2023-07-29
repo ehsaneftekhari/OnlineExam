@@ -29,17 +29,33 @@ namespace OnlineExam.Infrastructure.Mappings
                .HasColumnType<bool>(nameof(SqlDbType.Bit));
 
             builder.HasMany(e => e.Tags)
-                .WithMany(e => e.Exams)
-                .UsingEntity("ExamTag",
-                    l => l.HasOne(typeof(Tag)).WithMany().OnDelete(DeleteBehavior.Cascade).HasForeignKey("TagId").HasPrincipalKey(nameof(Tag.Id)),
-                    r => r.HasOne(typeof(Exam)).WithMany().OnDelete(DeleteBehavior.Cascade).HasForeignKey("ExamId").HasPrincipalKey(nameof(Exam.Id)),
-                    etb =>
+                .WithMany(t => t.Exams)
+                .UsingEntity<ExamTag>(nameof(ExamTag),
+                    l => l.HasOne(et => et.Tag).WithMany(t => t.ExamTags).OnDelete(DeleteBehavior.Cascade).HasForeignKey(et => et.TagId).HasPrincipalKey(t => t.Id),
+                    r => r.HasOne(et => et.Exam).WithMany(e => e.ExamTags).OnDelete(DeleteBehavior.Cascade).HasForeignKey(et => et.ExamId).HasPrincipalKey(e => e.Id),
+                    builder =>
                     {
-                        etb.Property("TagId").IsRequired().HasColumnType(nameof(SqlDbType.Int));
-                        etb.Property("ExamId").IsRequired().HasColumnType(nameof(SqlDbType.Int));
-                        etb.HasKey("TagId", "ExamId");
+                        builder.HasKey(nameof(ExamTag.ExamId), nameof(ExamTag.TagId));
+                        builder.Property(e => e.TagId).IsRequired().HasColumnType(nameof(SqlDbType.Int));
+                        builder.Property(e => e.ExamId).IsRequired().HasColumnType(nameof(SqlDbType.Int));
                     }
                  );
         }
     }
+    
+    //public class ExamTagEntityTypeConfiguration : IEntityTypeConfiguration<ExamTag>
+    //{
+    //    public void Configure(EntityTypeBuilder<ExamTag> builder)
+    //    {
+    //        builder.HasKey("ExamId", "TagId");
+
+    //        builder.Property(e => e.TagId)
+    //            .IsRequired()
+    //            .HasColumnType(nameof(SqlDbType.Int));
+
+    //        builder.Property(e => e.ExamId)
+    //            .IsRequired()
+    //            .HasColumnType(nameof(SqlDbType.Int));
+    //    }
+    //}
 }

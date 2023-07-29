@@ -56,5 +56,10 @@ namespace OnlineExam.Infrastructure.Repositories
         {
             return _context.Exam;
         }
+
+        public IQueryable<ExamTag> GetIExamTagQueryable()
+        {
+            return _context.ExamTag;
+        }
     }
 }

@@ -16,12 +16,15 @@ namespace OnlineExam.Infrastructure.Contexts
 
         public DbSet<Tag> Tag { get; set; }
 
+        public DbSet<ExamTag> ExamTag { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .ApplyConfiguration(new ExamEntityTypeConfiguration())
                 .ApplyConfiguration(new SectionEntityTypeConfiguration())
                 .ApplyConfiguration(new TagEntityTypeConfiguration());
+                //.ApplyConfiguration(new ExamTagEntityTypeConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }
