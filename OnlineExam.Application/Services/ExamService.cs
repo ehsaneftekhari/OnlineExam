@@ -6,6 +6,7 @@ using OnlineExam.Application.IMappers;
 using OnlineExam.Infrastructure.Contexts;
 using OnlineExam.Infrastructure.Contract.IRepositories;
 using OnlineExam.Model.Models;
+using System;
 using System.Linq;
 
 namespace OnlineExam.Application.Services
@@ -72,11 +73,114 @@ namespace OnlineExam.Application.Services
 
         public PagingModel<List<ShowExamDTO>> GetByFilter(ExamFilterDTO dTO)
         {
-            return Test5GetByFilter(dTO);
+            //Test2GetByFilter(dTO);
+            //Test3GetByFilter(dTO);
+            //Test4GetByFilter(dTO);
+            //Test5GetByFilter(dTO);
+            //Test6GetByFilter(dTO);
+            //Test7GetByFilter(dTO);
+            //return Test2GetByFilter(dTO);
+            return Test7GetByFilter(dTO);
+        }
+
+        private PagingModel<List<ShowExamDTO>> Test7GetByFilter(ExamFilterDTO dTO)
+        {
+            //throws exception
+            var quarry = _context.Tag 
+                .Where(tag => dTO.Tags == default || dTO.Tags.Count == 0 || dTO.Tags.Contains(tag.Name))
+                .Join(_context.Set<ExamTag>(nameof(ExamTag))
+                    , tag => tag.Id
+                    , examTag => examTag.TagId
+                    , (tag, examTag) => examTag.ExamId
+                )
+                .GroupJoin(_context.Exam
+                    , examId => examId
+                    , exam => exam.Id
+                    , (examId, exam) => exam
+                )
+                .SelectMany(exams => exams)
+                .Where(exam => dTO.Title == default || exam.Title.Contains(dTO.Title))
+                .Where(exam => !dTO.StartFrom.HasValue || dTO.StartFrom.Value <= exam.Start)
+                .Where(exam => !dTO.StartTo.HasValue || dTO.StartTo.Value >= exam.Start)
+                .Where(exam => !dTO.EndFrom.HasValue || dTO.EndFrom.Value <= exam.End)
+                .Where(exam => !dTO.EndTo.HasValue || dTO.EndTo.Value >= exam.End)
+                .Where(exam => !dTO.Published.HasValue || dTO.Published.Value == exam.Published);
+
+            var t = quarry.ToList();
+
+            var exams = quarry
+                .Skip(dTO.Skip)
+                .Take(dTO.Take)
+                .ToList()
+                .Select(exam => _examMapper.EntityToShowDTO(exam))
+                .ToList();
+
+            return new(exams, quarry.Count());
+        }
+
+        private PagingModel<List<ShowExamDTO>> Test6GetByFilter(ExamFilterDTO dTO)
+        {
+            //throws exception
+            var quarry = _examRepository.GetIQueryable()
+                .Join(_context.Set<ExamTag>(nameof(ExamTag))
+                    , exam => exam.Id
+                    , examTag => examTag.ExamId
+                    , (exam, tagTag) => new { exam, tagTag.TagId }
+                )
+                .Join(_context.Set<Tag>()
+                    , obj => obj.TagId
+                    , tag => tag.Id
+                    , (obj, tag) => new { obj.exam, tag }
+                )
+                .Where(join => dTO.Tags == default || dTO.Tags.Count == 0 || dTO.Tags.Contains(join.tag.Name))
+                .Select(join => join.exam)
+                .Where(exam => dTO.Title == default || exam.Title.Contains(dTO.Title))
+                .Where(exam => !dTO.StartFrom.HasValue || dTO.StartFrom.Value <= exam.Start)
+                .Where(exam => !dTO.StartTo.HasValue || dTO.StartTo.Value >= exam.Start)
+                .Where(exam => !dTO.EndFrom.HasValue || dTO.EndFrom.Value <= exam.End)
+                .Where(exam => !dTO.EndTo.HasValue || dTO.EndTo.Value >= exam.End)
+                .Where(exam => !dTO.Published.HasValue || dTO.Published.Value == exam.Published)
+                .ToList()
+                .GroupBy(exam => exam)
+                .Select(gr => gr.Key)
+                .ToList();
+
+            var exams = quarry
+                .Skip(dTO.Skip)
+                .Take(dTO.Take)
+                .ToList()
+                .Select(exam => _examMapper.EntityToShowDTO(exam))
+                .ToList();
+
+            return new(exams, quarry.Count());
+        }
+
+        public class ExamTagResult : IEquatable<ExamTagResult>
+        {
+            public ExamTagResult(Exam exam, Tag tag)
+            {
+                Exam = exam;
+                Tag = tag;
+            }
+
+            public Exam Exam { get; set; }
+            public Tag Tag { get; set; }
+
+            public bool Equals(ExamTagResult other)
+            {
+                if (other == null) return false;
+                return Exam.Id == other.Exam.Id && Tag.Id == other.Tag.Id;
+            }
+
+            public override int GetHashCode()
+            {
+                return Exam.Id.GetHashCode() ^ Tag.Id.GetHashCode();
+            }
         }
 
         private PagingModel<List<ShowExamDTO>> Test5GetByFilter(ExamFilterDTO dTO)
         {
+            //throws exception
             var quarry = _examRepository.GetIQueryable()
             .Join(_context.Set<ExamTag>(nameof(ExamTag))
                 , exam => exam.Id
@@ -86,9 +190,12 @@ namespace OnlineExam.Application.Services
             .Join(_context.Set<Tag>()
                 , obj => obj.TagId
                 , tag => tag.Id
-                , (obj, tag) => new { obj.exam, tag }
-            ).ToList();
-            //.Include(exam => exam.Tags)
+                , (obj, tag) => new ExamTagResult(obj.exam, tag )
+            )
+            .GroupBy(join => join.Exam)
+            .ToList();
+            //.Select(gr => gr.Key)
+
             //.Where(exam => dTO.Tags == default || dTO.Tags.Count == 0 || exam.Tags.Any(t => dTO.Tags.Contains(t.Name)))
             //.Where(exam => dTO.Title == default || exam.Title.Contains(dTO.Title))
             //.Where(exam => !dTO.StartFrom.HasValue || dTO.StartFrom.Value <= exam.Start)
@@ -112,16 +219,16 @@ namespace OnlineExam.Application.Services
         private PagingModel<List<ShowExamDTO>> Test4GetByFilter(ExamFilterDTO dTO)
         {
             //throws exception
-            //var quarry = _examRepository.GetIQueryable()
-            //    .SelectMany(exam => exam.Tags, (exam, tag) => new { exam, tag })
-            //    .GroupBy(obj => obj.exam);
-                //.Select(gr => gr.Key)
-                //.Where(exam => dTO.Title == default || exam.Title.Contains(dTO.Title))
-                //.Where(exam => !dTO.StartFrom.HasValue || dTO.StartFrom.Value <= exam.Start)
-                //.Where(exam => !dTO.StartTo.HasValue || dTO.StartTo.Value >= exam.Start)
-                //.Where(exam => !dTO.EndFrom.HasValue || dTO.EndFrom.Value <= exam.End)
-                //.Where(exam => !dTO.EndTo.HasValue || dTO.EndTo.Value >= exam.End)
-                //.Where(exam => !dTO.Published.HasValue || dTO.Published.Value == exam.Published);
+            var quarry = _examRepository.GetIQueryable()
+                .SelectMany(exam => exam.Tags, (exam, tag) => new { exam, tag })
+                .GroupBy(obj => obj.exam)
+                .Select(gr => gr.Key);
+            //.Where(exam => dTO.Title == default || exam.Title.Contains(dTO.Title))
+            //.Where(exam => !dTO.StartFrom.HasValue || dTO.StartFrom.Value <= exam.Start)
+            //.Where(exam => !dTO.StartTo.HasValue || dTO.StartTo.Value >= exam.Start)
+            //.Where(exam => !dTO.EndFrom.HasValue || dTO.EndFrom.Value <= exam.End)
+            //.Where(exam => !dTO.EndTo.HasValue || dTO.EndTo.Value >= exam.End)
+            //.Where(exam => !dTO.Published.HasValue || dTO.Published.Value == exam.Published);
 
             //var t = quarry.ToList();
 
@@ -138,27 +245,31 @@ namespace OnlineExam.Application.Services
 
         private PagingModel<List<ShowExamDTO>> Test3GetByFilter(ExamFilterDTO dTO)
         {
-            var quarry = _examRepository.GetIQueryable()
+            var quarry = _context.Exam
                 .SelectMany(
                     exam => exam.Tags
                         .Where(tag => dTO.Tags == default || dTO.Tags.Count == 0 || dTO.Tags.Contains(tag.Name))
-                    ,(exam, tag) => exam
+                    , (exam, tag) => new { exam, tag }
                 )
-                .Where(exam => dTO.Title == default || exam.Title.Contains(dTO.Title))
-                .Where(exam => !dTO.StartFrom.HasValue || dTO.StartFrom.Value <= exam.Start)
-                .Where(exam => !dTO.StartTo.HasValue || dTO.StartTo.Value >= exam.Start)
-                .Where(exam => !dTO.EndFrom.HasValue || dTO.EndFrom.Value <= exam.End)
-                .Where(exam => !dTO.EndTo.HasValue || dTO.EndTo.Value >= exam.End)
-                .Where(exam => !dTO.Published.HasValue || dTO.Published.Value == exam.Published);
-
-            var exams = quarry
-                .Skip(dTO.Skip)
-                .Take(dTO.Take)
+                .Where(obj => dTO.Title == default || obj.exam.Title.Contains(dTO.Title))
+                .Where(obj => !dTO.StartFrom.HasValue || dTO.StartFrom.Value <= obj.exam.Start)
+                .Where(obj => !dTO.StartTo.HasValue || dTO.StartTo.Value >= obj.exam.Start)
+                .Where(obj => !dTO.EndFrom.HasValue || dTO.EndFrom.Value <= obj.exam.End)
+                .Where(obj => !dTO.EndTo.HasValue || dTO.EndTo.Value >= obj.exam.End)
+                .Where(obj => !dTO.Published.HasValue || dTO.Published.Value == obj.exam.Published)
+                .Select(obj => obj.exam)
                 .ToList()
-                .Select(exam => _examMapper.EntityToShowDTO(exam))
-                .ToList();
+                .GroupBy(exam => exam);
 
-            return new(exams, quarry.Count());
+            //var exams = quarry
+            //    .Skip(dTO.Skip)
+            //    .Take(dTO.Take)
+            //    .ToList()
+            //    .Select(exam => _examMapper.EntityToShowDTO(exam))
+            //    .ToList();
+
+            //return new(exams, quarry.Count());
+            return new(null, 0);
         }
 
         private PagingModel<List<ShowExamDTO>> Test2GetByFilter(ExamFilterDTO dTO)
@@ -173,6 +284,7 @@ namespace OnlineExam.Application.Services
             .Where(exam => !dTO.EndTo.HasValue || dTO.EndTo.Value >= exam.End)
             .Where(exam => !dTO.Published.HasValue || dTO.Published.Value == exam.Published);
 
+            var t = quarry.ToList();
 
             var exams = quarry
                 .Skip(dTO.Skip)
