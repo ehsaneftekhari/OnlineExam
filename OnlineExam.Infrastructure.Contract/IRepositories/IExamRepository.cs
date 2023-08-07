@@ -4,7 +4,7 @@ using OnlineExam.Model.Models;
 namespace OnlineExam.Infrastructure.Contract.IRepositories
 {
     public interface IExamRepository : IAddRepository<Exam>, IGetRepository<Exam>, 
-        IUpdateRepository<Exam>, IDeleteByEntityRepository<Exam>
+        IUpdateRepository<Exam>, IDeleteRepository<Exam>
     {
         Exam? GetWithSectionsLoaded(int id);
     }

@@ -30,16 +30,13 @@ namespace OnlineExam.Application.Mappers
         {
             if (entity != null)
             {
-                if (entity.Exam == null)
-                    throw new NullReferenceException($"in {nameof(entity)}, the {nameof(entity.Exam)} can not be null");
-
                 return new()
                 {
                     Id = entity.Id,
                     Title = entity.Title,
                     Order = entity.Order,
                     RandomizeQuestions = entity.RandomizeQuestions,
-                    Exam = _examMapper.EntityToShowDTO(entity.Exam)!,
+                    Exam = entity.Exam != null ? _examMapper.EntityToShowDTO(entity.Exam)! : null,
                 };
             }
 

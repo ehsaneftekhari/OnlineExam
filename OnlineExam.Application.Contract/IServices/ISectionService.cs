@@ -4,12 +4,12 @@ namespace OnlineExam.Application.Contract.IServices
 {
     public interface ISectionService
     {
-        bool Add(AddSectionDTO dTO);
+        ShowSectionDTO Add(AddSectionDTO dTO);
 
         ShowSectionDTO? GetById(int id);
 
-        bool Update(UpdateSectionDTO dTO);
+        void Update(UpdateSectionDTO dTO);
 
-        bool Delete(int id);
+        void Delete(int id);
     }
 }

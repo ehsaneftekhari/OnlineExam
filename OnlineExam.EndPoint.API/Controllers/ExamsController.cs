@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OnlineExam.Application.Contract.DTOs.ExamDTOs;
+using OnlineExam.Application.Contract.Exceptions;
 using OnlineExam.Application.Contract.IServices;
+using OnlineExam.EndPoint.API.Exceptions;
 
 namespace OnlineExam.EndPoint.API.Controllers
 {
@@ -18,9 +20,6 @@ namespace OnlineExam.EndPoint.API.Controllers
         [HttpGet("GetById/{id}")]
         public IActionResult GetById(int id)
         {
-            if(id < 0)
-                return BadRequest("id can not be less than zero");
-
             var dto = _examService.GetById(id);
             return Ok(dto);
         }
@@ -29,39 +28,26 @@ namespace OnlineExam.EndPoint.API.Controllers
         public IActionResult Create(AddExamDTO exam)
         {
             if (exam == null)
-                return BadRequest();
+                throw new APIValidationException("exam can not be null");
 
-            if (_examService.Add(exam))
-                return Ok("Created");
-
-            return BadRequest();
+            return Ok(_examService.Add(exam));
         }
 
         [HttpPost("Update")]
         public IActionResult Update(UpdateExamDTO exam)
         {
-            if(exam == null)
-                return BadRequest();
+            if (exam == null)
+                throw new APIValidationException("exam can not be null");
 
-            if (_examService.Update(exam))
-                return Ok("Updated");
-            
-            if(_examService.GetById(exam.Id) == null)
-                return BadRequest($"did not updated");
-
-            throw new Exception();
+            _examService.Update(exam);
+            return Ok();
         }
 
         [HttpDelete("Delete")]
         public IActionResult Delete(int id)
         {
-            if (id < 0)
-                return BadRequest("id can not be less than zero");
-
-            if(_examService.Delete(id))
-                return Ok("Deleted");
-
-            return BadRequest($"did not deleted");
+            _examService.Delete(id);
+            return Ok();
         }
     }
 }

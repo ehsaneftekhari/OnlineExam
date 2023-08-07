@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OnlineExam.Application.Contract.DTOs.SectionDTOs;
+using OnlineExam.Application.Contract.Exceptions;
 using OnlineExam.Application.Contract.IServices;
+using OnlineExam.EndPoint.API.Exceptions;
+using OnlineExam.Model.Models;
 
 namespace OnlineExam.EndPoint.API.Controllers
 {
@@ -18,9 +21,6 @@ namespace OnlineExam.EndPoint.API.Controllers
         [HttpGet("GetById/{id}")]
         public IActionResult GetById(int id)
         {
-            if (id < 0)
-                return BadRequest("id can not be less than zero");
-
             var dto = _sectionService.GetById(id);
             return Ok(dto);
         }
@@ -29,39 +29,26 @@ namespace OnlineExam.EndPoint.API.Controllers
         public IActionResult Create(AddSectionDTO section)
         {
             if (section == null)
-                return BadRequest();
+                throw new APIValidationException("section can not be null");
 
-            if (_sectionService.Add(section))
-                return Ok("Created");
-
-            return BadRequest();
+            return Ok(_sectionService.Add(section));
         }
 
         [HttpPost("Update")]
         public IActionResult Update(UpdateSectionDTO section)
         {
             if (section == null)
-                return BadRequest();
+                throw new APIValidationException("section can not be null");
 
-            if (_sectionService.Update(section))
-                return Ok("Updated");
-
-            if (_sectionService.GetById(section.Id) == null)
-                return BadRequest($"there is no section by id {section.Id}");
-
-            throw new Exception();
+            _sectionService.Update(section);
+            return Ok();
         }
 
         [HttpDelete("Delete")]
         public IActionResult Delete(int id)
         {
-            if (id < 0)
-                return BadRequest("id can not be less than zero");
-
-            if (_sectionService.Delete(id))
-                return Ok("Deleted");
-
-            return BadRequest($"there is no section by id {id} to deleted");
+            _sectionService.Delete(id);
+                return Ok();
         }
     }
 }
