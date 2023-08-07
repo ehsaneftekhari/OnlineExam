@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
+using OnlineExam.EndPoint.API.Exceptions;
 using System.Net;
 using System.Net.Mime;
 
@@ -19,6 +20,12 @@ namespace OnlineExam.EndPoint.API.Middlewares
             {
                 await _next.Invoke(context);
             }
+            catch(APIException ex)
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                context.Response.ContentType = "application/json";
+                await context.Response.WriteAsync(JsonConvert.SerializeObject(new APIExceptionHttpMessageBody(ex.Message)));
+            }
             catch
             {
                 throw;
@@ -26,4 +33,5 @@ namespace OnlineExam.EndPoint.API.Middlewares
         }
     }
 
+    record APIExceptionHttpMessageBody(string message);
 }
