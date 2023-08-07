@@ -8,6 +8,6 @@ namespace OnlineExam.Application.Contract.DTOs.SectionDTOs
         public string Title { get; set; } = null!;
         public int Order { get; set; }
         public bool RandomizeQuestions { get; set; }
-        public ShowExamDTO Exam { get; set; } = null!;
+        public ShowExamDTO? Exam { get; set; } = null!;
     }
 }

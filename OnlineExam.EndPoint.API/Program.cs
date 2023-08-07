@@ -1,3 +1,5 @@
+using OnlineExam.EndPoint.API.Middlewares;
+
 namespace OnlineExam.EndPoint.API
 {
     public class Program
@@ -28,6 +30,7 @@ namespace OnlineExam.EndPoint.API
             //app.UseAuthorization();
 
             app.MapControllers();
+            app.UseMiddleware<CustomExceptionHandlerMiddleware>();
 
             app.Run();
         }
