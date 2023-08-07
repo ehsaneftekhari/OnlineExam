@@ -14,6 +14,7 @@
 		<ProjectReference Include="..\OnlineExam.Application.Contract\OnlineExam.Application.Contract.csproj" />
 		<ProjectReference Include="..\OnlineExam.Application\OnlineExam.Application.csproj" />
 		<ProjectReference Include="..\OnlineExam.Infrastructure\OnlineExam.Infrastructure.csproj" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 	</ItemGroup>
 
 	<ItemGroup>

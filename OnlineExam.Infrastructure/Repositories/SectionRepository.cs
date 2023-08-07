@@ -24,15 +24,10 @@ namespace OnlineExam.Infrastructure.Repositories
             return _context.SaveChanges();
         }
 
-        public int DeleteById(int id)
+        public int Delete(Section entity)
         {
-            var exam = _context.Section.FirstOrDefault(x => x.Id == id);
-            if (exam != null)
-            {
-                _context.Remove(exam);
-                return _context.SaveChanges();
-            }
-            return 0;
+            _context.Remove(entity);
+            return _context.SaveChanges();
         }
 
         public Section? GetById(int id)

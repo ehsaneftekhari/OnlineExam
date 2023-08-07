@@ -21,14 +21,10 @@ namespace OnlineExam.Infrastructure.Repositories
             return _context.SaveChanges();
         }
 
-        public int DeleteByEntity(Exam exam)
+        public int Delete(Exam exam)
         {
-            if (exam != null)
-            {
-                _context.Remove(exam);
-                return _context.SaveChanges();
-            }
-            return 0;
+            _context.Remove(exam);
+            return _context.SaveChanges();
         }
 
         public Exam? GetWithSectionsLoaded(int id)

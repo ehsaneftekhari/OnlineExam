@@ -1,7 +1,9 @@
 ﻿using OnlineExam.Application.Contract.DTOs.ExamDTOs;
+using OnlineExam.Application.Contract.Exceptions;
 using OnlineExam.Application.Contract.IServices;
 using OnlineExam.Application.IMappers;
 using OnlineExam.Infrastructure.Contract.IRepositories;
+using OnlineExam.Model.Models;
 
 namespace OnlineExam.Application.Services
 {
@@ -16,45 +18,71 @@ namespace OnlineExam.Application.Services
             this._examMapper = examMapper;
         }
 
-        public bool Add(AddExamDTO dTO)
+        public ShowExamDTO Add(AddExamDTO dTO)
         {
             if (dTO == null)
                 throw new ArgumentNullException();
 
             var newExam = _examMapper.AddDTOToEntity(dTO);
             newExam!.CreatorUserId = "1";
-            return _examRepository.Add(newExam) == 1;
+
+            if (_examRepository.Add(newExam) > 0 && newExam.Id > 0)
+                return _examMapper.EntityToShowDTO(newExam)!;
+
+            throw new Exception();
         }
 
-        public bool Delete(int id)
+        public void Delete(int id)
         {
+            if (id < 1)
+                throw new ApplicationValidationException("id can not be less than 1");
+
             var exam = _examRepository.GetWithSectionsLoaded(id);
-            if(exam == null || exam.Sections.Count != 0)
-                return false;
-            return _examRepository.DeleteByEntity(exam) == 1;
+
+            if (exam == null)
+                throw new OEApplicationException($"Exam with id:{id} is not exists");
+
+            try
+            {
+                if (_examRepository.Delete(exam) < 0)
+                    throw new Exception();
+            }
+            catch
+            {
+                if (_examRepository.GetWithSectionsLoaded(id).Sections.Any())
+                    throw new OEApplicationException($"the exam has sections and can not be deleted");
+
+                throw;
+            }
         }
 
         public ShowExamDTO? GetById(int id)
         {
-            return _examMapper.EntityToShowDTO(_examRepository.GetById(id));
+            if (id < 1)
+                throw new ApplicationValidationException("id can not be less than 1");
+
+            var exam = _examRepository.GetById(id);
+
+            if (exam == null)
+                throw new OEApplicationException($"Exam with id:{id} is not exists");
+
+            return _examMapper.EntityToShowDTO(exam);
         }
 
-        public bool Update(UpdateExamDTO dTO)
+        public void Update(UpdateExamDTO dTO)
         {
             if (dTO == null)
                 throw new ArgumentNullException();
 
             var exam = _examRepository.GetById(dTO.Id);
 
-            var result = false;
+            if (exam == null)
+                throw new OEApplicationException($"Exam with id:{dTO.Id} is not exists");
 
-            if(exam != null)
-            {
-                _examMapper.UpdateEntityByDTO(exam, dTO);
-                result = _examRepository.Update(exam) == 1;
-            }
+            _examMapper.UpdateEntityByDTO(exam, dTO);
 
-            return result;
+            if (_examRepository.Update(exam) <= 0)
+                throw new Exception();
         }
     }
 }
