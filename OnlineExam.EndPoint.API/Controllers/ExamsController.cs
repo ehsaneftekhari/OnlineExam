@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OnlineExam.Application.Contract.DTOs.ExamDTOs;
-using OnlineExam.Application.Contract.Exceptions;
 using OnlineExam.Application.Contract.IServices;
 using OnlineExam.EndPoint.API.Exceptions;
 

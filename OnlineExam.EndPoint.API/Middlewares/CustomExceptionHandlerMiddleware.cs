@@ -1,9 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using OnlineExam.Application.Contract.Exceptions;
 using OnlineExam.EndPoint.API.Exceptions;
 using System.Net;
-using System.Net.Mime;
 
 namespace OnlineExam.EndPoint.API.Middlewares
 {

@@ -1,6 +1,4 @@
-﻿using System.Collections;
-
-namespace OnlineExam.Application.Contract.Exceptions
+﻿namespace OnlineExam.Application.Contract.Exceptions
 {
     public class OEApplicationException : Exception
     {

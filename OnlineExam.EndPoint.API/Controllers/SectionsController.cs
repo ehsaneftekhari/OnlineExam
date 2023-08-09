@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OnlineExam.Application.Contract.DTOs.SectionDTOs;
-using OnlineExam.Application.Contract.Exceptions;
 using OnlineExam.Application.Contract.IServices;
 using OnlineExam.EndPoint.API.Exceptions;
-using OnlineExam.Model.Models;
 
 namespace OnlineExam.EndPoint.API.Controllers
 {
