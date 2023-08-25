@@ -1,4 +1,6 @@
+using Microsoft.Extensions.Configuration;
 using OnlineExam.EndPoint.API.Middlewares;
+using OnlineExam.Model.ConfigProviders;
 
 namespace OnlineExam.EndPoint.API
 {
@@ -12,6 +14,19 @@ namespace OnlineExam.EndPoint.API
             builder.Services.AddSwaggerGen();
 
             // Add services to the container.
+            builder.Services.AddSingleton(sp =>
+            {
+                var configuration = sp.GetRequiredService<IConfiguration>();
+                return new IdentityConfiguration()
+                {
+                    Key = configuration
+                        .GetSection("MyIdentityConfiguration")
+                        .GetChildren()
+                        .First(x => x.Key == "TokenKey").Value
+                        
+                };
+            });
+
             Application.Config.RegisterServices(builder.Services);
             Infrastructure.Config.RegisterServices(builder.Services, builder.Configuration.GetConnectionString("OnlineExamConnectionStrings"));
             //builder.Services.AddAuthorization();
