@@ -16,14 +16,14 @@ namespace OnlineExam.EndPoint.API.Controllers
             _examService = examService;
         }
 
-        [HttpGet("GetById/{id}")]
+        [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
             var dto = _examService.GetById(id);
             return Ok(dto);
         }
 
-        [HttpPost("Create")]
+        [HttpPost]
         public IActionResult Create(AddExamDTO exam)
         {
             if (exam == null)
@@ -32,7 +32,7 @@ namespace OnlineExam.EndPoint.API.Controllers
             return Ok(_examService.Add(exam));
         }
 
-        [HttpPost("Update")]
+        [HttpPatch]
         public IActionResult Update(UpdateExamDTO exam)
         {
             if (exam == null)
@@ -42,7 +42,7 @@ namespace OnlineExam.EndPoint.API.Controllers
             return Ok();
         }
 
-        [HttpDelete("Delete")]
+        [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
             _examService.Delete(id);
