@@ -12,6 +12,8 @@ namespace OnlineExam.Infrastructure
         {
             serviceDescriptors.AddScoped<IExamRepository, ExamRepository>();
             serviceDescriptors.AddScoped<ISectionRepository, SectionRepository>();
+            serviceDescriptors.AddScoped<IQuestionRepository, QuestionRepository>();
+            
             serviceDescriptors.AddDbContext<OnlineExamContext>(option => option.UseSqlServer(ConnectionString));
         }
     }
