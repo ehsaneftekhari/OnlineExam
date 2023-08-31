@@ -39,7 +39,7 @@ namespace OnlineExam.Application.Services
             var exam = _examRepository.GetWithSectionsLoaded(id);
 
             if (exam == null)
-                throw new OEApplicationException($"Exam with id:{id} is not exists");
+                throw new ApplicationSourceNotFoundException($"Exam with id:{id} is not exists");
 
             try
             {
@@ -63,7 +63,7 @@ namespace OnlineExam.Application.Services
             var exam = _examRepository.GetById(id);
 
             if (exam == null)
-                throw new OEApplicationException($"Exam with id:{id} is not exists");
+                throw new ApplicationSourceNotFoundException($"Exam with id:{id} is not exists");
 
             return _examMapper.EntityToShowDTO(exam);
         }
@@ -76,7 +76,7 @@ namespace OnlineExam.Application.Services
             var exam = _examRepository.GetById(dTO.Id);
 
             if (exam == null)
-                throw new OEApplicationException($"Exam with id:{dTO.Id} is not exists");
+                throw new ApplicationSourceNotFoundException($"Exam with id:{dTO.Id} is not exists");
 
             _examMapper.UpdateEntityByDTO(exam, dTO);
 
