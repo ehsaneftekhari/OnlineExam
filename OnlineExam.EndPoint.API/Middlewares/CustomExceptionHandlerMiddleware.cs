@@ -19,13 +19,31 @@ namespace OnlineExam.EndPoint.API.Middlewares
             {
                 await _next.Invoke(context);
             }
+            catch (ApplicationValidationException ex)
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                context.Response.ContentType = "application/json";
+                await context.Response.WriteAsync(JsonConvert.SerializeObject(new ApplicationExceptionHttpMessageBody(ex.Message)));
+            }
+            catch (ApplicationSourceNotFoundException ex)
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.NotFound;
+                context.Response.ContentType = "application/json";
+                await context.Response.WriteAsync(JsonConvert.SerializeObject(new ApplicationExceptionHttpMessageBody(ex.Message)));
+            }
             catch (OEApplicationException ex)
             {
                 context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                 context.Response.ContentType = "application/json";
                 await context.Response.WriteAsync(JsonConvert.SerializeObject(new ApplicationExceptionHttpMessageBody(ex.Message)));
             }
-            catch(APIException ex)
+            catch (APIValidationException ex)
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                context.Response.ContentType = "application/json";
+                await context.Response.WriteAsync(JsonConvert.SerializeObject(new APIExceptionHttpMessageBody(ex.Message)));
+            }
+            catch (APIException ex)
             {
                 context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                 context.Response.ContentType = "application/json";
