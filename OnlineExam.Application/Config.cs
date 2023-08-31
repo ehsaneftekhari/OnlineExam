@@ -1,4 +1,4 @@
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using OnlineExam.Application.Contract.IServices;
 using OnlineExam.Application.IMappers;
 using OnlineExam.Application.Mappers;
@@ -14,6 +14,7 @@ namespace OnlineExam.Application
             serviceDescriptors.AddScoped<ISectionService, SectionService>();
             serviceDescriptors.AddScoped<IExamService, ExamService>();
             serviceDescriptors.AddScoped<IExamMapper, ExamMapper>();
+            serviceDescriptors.AddScoped<IQuestionService, QuestionService>();
             serviceDescriptors.AddScoped<IQuestionMapper, QuestionMapper>();
         }
     }
