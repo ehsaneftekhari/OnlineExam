@@ -14,6 +14,8 @@ namespace OnlineExam.Application
             serviceDescriptors.AddScoped<ISectionService, SectionService>();
             serviceDescriptors.AddScoped<IExamService, ExamService>();
             serviceDescriptors.AddScoped<IExamMapper, ExamMapper>();
+            serviceDescriptors.AddScoped<IQuestionService, QuestionService>();
+            serviceDescriptors.AddScoped<IQuestionMapper, QuestionMapper>();
         }
     }
 }

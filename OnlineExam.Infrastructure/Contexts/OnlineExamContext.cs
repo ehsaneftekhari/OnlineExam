@@ -14,11 +14,14 @@ namespace OnlineExam.Infrastructure.Contexts
 
         public DbSet<Section> Section { get; set; }
 
+        public DbSet<Question> Question { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .ApplyConfiguration(new ExamEntityTypeConfiguration())
-                .ApplyConfiguration(new SectionEntityTypeConfiguration());
+                .ApplyConfiguration(new SectionEntityTypeConfiguration())
+                .ApplyConfiguration(new QuestionEntityTypeConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }

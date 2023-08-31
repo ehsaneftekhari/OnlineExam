@@ -49,7 +49,7 @@ namespace OnlineExam.Application.Services
             var section = _sectionRepository.GetById(id);
 
             if (section == null)
-                throw new OEApplicationException($"Section with id:{id} is not exists");
+                throw new ApplicationSourceNotFoundException($"Section with id:{id} is not exists");
 
             if (_sectionRepository.Delete(section) < 0)
                 throw new Exception();
@@ -63,7 +63,7 @@ namespace OnlineExam.Application.Services
             var section = _sectionRepository.GetById(id);
 
             if (section == null)
-                throw new OEApplicationException($"Section with id:{id} is not exists");
+                throw new ApplicationSourceNotFoundException($"Section with id:{id} is not exists");
 
             return _sectionMapper.EntityToShowDTO(section);
         }
@@ -76,7 +76,7 @@ namespace OnlineExam.Application.Services
             var section = _sectionRepository.GetById(dTO.Id);
 
             if (section == null)
-                throw new OEApplicationException($"Section with id:{dTO.Id} is not exists");
+                throw new ApplicationSourceNotFoundException($"Section with id:{dTO.Id} is not exists");
 
             _sectionMapper.UpdateEntityByDTO(section, dTO);
 
