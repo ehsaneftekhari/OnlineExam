@@ -2,6 +2,7 @@
 using OnlineExam.Application.Contract.Exceptions;
 using OnlineExam.Application.Contract.IServices;
 using OnlineExam.Application.IMappers;
+using OnlineExam.Application.Mappers;
 using OnlineExam.Infrastructure.Contract.IRepositories;
 
 namespace OnlineExam.Application.Services
@@ -66,6 +67,24 @@ namespace OnlineExam.Application.Services
                 throw new ApplicationSourceNotFoundException($"Exam with id:{id} is not exists");
 
             return _examMapper.EntityToShowDTO(exam);
+        }
+
+        public IEnumerable<ShowExamDTO> GetAll(int skip, int take)
+        {
+            if (skip < 0 || take < 1)
+                throw new OEApplicationException();
+
+            var exams =
+                _examRepository.GetIQueryable()
+                .Skip(skip)
+                .Take(take)
+                .ToList()
+                .Select(_examMapper.EntityToShowDTO);
+
+            if (!exams.Any())
+                throw new ApplicationSourceNotFoundException($"there is no Exam");
+
+            return exams!;
         }
 
         public void Update(int id, UpdateExamDTO dTO)

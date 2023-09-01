@@ -43,5 +43,10 @@ namespace OnlineExam.Infrastructure.Repositories
             var tState = _context.Entry<Exam>(exam).State;
             return _context.SaveChanges();
         }
+
+        public IQueryable<Exam> GetIQueryable()
+        {
+            return _context.Exam;
+        }
     }
 }

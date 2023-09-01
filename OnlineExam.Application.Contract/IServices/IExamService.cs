@@ -8,6 +8,8 @@ namespace OnlineExam.Application.Contract.IServices
 
         ShowExamDTO? GetById(int id);
 
+        IEnumerable<ShowExamDTO> GetAll(int skip, int take);
+
         void Update(int id, UpdateExamDTO dTO);
 
         void Delete(int id);
