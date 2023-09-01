@@ -68,15 +68,15 @@ namespace OnlineExam.Application.Services
             return _examMapper.EntityToShowDTO(exam);
         }
 
-        public void Update(UpdateExamDTO dTO)
+        public void Update(int id, UpdateExamDTO dTO)
         {
             if (dTO == null)
                 throw new ArgumentNullException();
 
-            var exam = _examRepository.GetById(dTO.Id);
+            var exam = _examRepository.GetById(id);
 
             if (exam == null)
-                throw new ApplicationSourceNotFoundException($"Exam with id:{dTO.Id} is not exists");
+                throw new ApplicationSourceNotFoundException($"Exam with id:{id} is not exists");
 
             _examMapper.UpdateEntityByDTO(exam, dTO);
 

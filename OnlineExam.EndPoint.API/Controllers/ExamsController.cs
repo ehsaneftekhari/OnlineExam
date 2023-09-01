@@ -32,13 +32,13 @@ namespace OnlineExam.EndPoint.API.Controllers
             return Ok(_examService.Add(exam));
         }
 
-        [HttpPatch]
-        public IActionResult Update(UpdateExamDTO exam)
+        [HttpPatch("{id}")]
+        public IActionResult Update(int id, UpdateExamDTO exam)
         {
             if (exam == null)
                 throw new APIValidationException("exam can not be null");
 
-            _examService.Update(exam);
+            _examService.Update(id, exam);
             return Ok();
         }
 

@@ -8,7 +8,7 @@ namespace OnlineExam.Application.Contract.IServices
 
         ShowExamDTO? GetById(int id);
 
-        void Update(UpdateExamDTO dTO);
+        void Update(int id, UpdateExamDTO dTO);
 
         void Delete(int id);
     }
