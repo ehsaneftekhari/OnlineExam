@@ -6,13 +6,6 @@ namespace OnlineExam.Application.Mappers
 {
     internal class SectionMapper : ISectionMapper
     {
-        private readonly IExamMapper _examMapper;
-
-        public SectionMapper(IExamMapper examMapper)
-        {
-            _examMapper = examMapper;
-        }
-
         public Section? AddDTOToEntity(AddSectionDTO? addSectionDTO)
         {
             if (addSectionDTO != null)
@@ -35,8 +28,7 @@ namespace OnlineExam.Application.Mappers
                     Id = entity.Id,
                     Title = entity.Title,
                     Order = entity.Order,
-                    RandomizeQuestions = entity.RandomizeQuestions,
-                    Exam = entity.Exam != null ? _examMapper.EntityToShowDTO(entity.Exam)! : null,
+                    RandomizeQuestions = entity.RandomizeQuestions
                 };
             }
 

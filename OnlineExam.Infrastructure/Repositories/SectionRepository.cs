@@ -31,6 +31,11 @@ namespace OnlineExam.Infrastructure.Repositories
             return _context.Section.Include(x => x.Exam).FirstOrDefault(x => x.Id == id);
         }
 
+        public IQueryable<Section> GetIQueryable()
+        {
+            return _context.Section;
+        }
+
         public int Update(Section section)
         {
             _context.Section.Update(section);
