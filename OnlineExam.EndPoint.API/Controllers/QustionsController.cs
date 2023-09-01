@@ -7,7 +7,7 @@ using OnlineExam.EndPoint.API.Exceptions;
 
 namespace OnlineExam.EndPoint.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api")]
     [ApiController]
     public class QuestionsController : ControllerBase
     {
@@ -18,14 +18,14 @@ namespace OnlineExam.EndPoint.API.Controllers
             _questionService = questionService;
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("[controller]/{id}")]
         public IActionResult GetById(int id)
         {
             var dto = _questionService.GetById(id);
             return Ok(dto);
         }
 
-        [HttpGet("GetAll/{sectionId}")]
+        [HttpGet("Sections/{sectionId}/[controller]")]
         public IActionResult GetAllBySectionId(int sectionId, int pageNumber, int pageSize)
         {
             if (pageNumber < 1)
@@ -38,7 +38,7 @@ namespace OnlineExam.EndPoint.API.Controllers
             return Ok(dto);
         }
 
-        [HttpPost]
+        [HttpPost("[controller]")]
         public IActionResult Create(AddQuestionDTO question)
         {
             if (question == null)
@@ -47,7 +47,7 @@ namespace OnlineExam.EndPoint.API.Controllers
             return Ok(_questionService.Add(question));
         }
 
-        [HttpPatch]
+        [HttpPatch("[controller]")]
         public IActionResult Update(UpdateQuestionDTO question)
         {
             if (question == null)
@@ -57,7 +57,7 @@ namespace OnlineExam.EndPoint.API.Controllers
             return Ok();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("[controller]/{id}")]
         public IActionResult Delete(int id)
         {
             _questionService.Delete(id);
