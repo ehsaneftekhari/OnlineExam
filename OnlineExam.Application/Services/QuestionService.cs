@@ -89,15 +89,15 @@ namespace OnlineExam.Application.Services
             return _questionMapper.EntityToShowDTO(question);
         }
 
-        public void Update(UpdateQuestionDTO dTO)
+        public void Update(int id, UpdateQuestionDTO dTO)
         {
             if (dTO == null)
                 throw new ArgumentNullException();
 
-            var question = _questionRepository.GetById(dTO.Id);
+            var question = _questionRepository.GetById(id);
 
             if (question == null)
-                throw new ApplicationSourceNotFoundException($"Question with id:{dTO.Id} is not exists");
+                throw new ApplicationSourceNotFoundException($"Question with id:{id} is not exists");
 
             _questionMapper.UpdateEntityByDTO(question, dTO);
 

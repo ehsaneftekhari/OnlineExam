@@ -39,7 +39,6 @@ namespace OnlineExam.Application.Mappers
                 {
                     Id = entity.Id,
                     SectionId = entity.SectionId,
-                    Section = entity.Section,
                     Text = entity.Text,
                     ImageAddress = entity.ImageAddress,
                     Score = entity.Score,
@@ -58,9 +57,6 @@ namespace OnlineExam.Application.Mappers
                 foreach(var property in typeof(UpdateQuestionDTO).GetProperties())
                 {
                     var pName = property.Name;
-
-                    if (pName == nameof(@new.Id))
-                        continue;
 
                     var value = property.GetValue(@new);
 
