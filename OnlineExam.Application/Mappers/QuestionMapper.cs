@@ -13,12 +13,12 @@ namespace OnlineExam.Application.Mappers
             _sectionMapper = sectionMapper;
         }
 
-        public Question? AddDTOToEntity(AddQuestionDTO? addQuestionDTO)
+        public Question? AddDTOToEntity(int sectionId, AddQuestionDTO? addQuestionDTO)
         {
             if (addQuestionDTO != null)
                 return new()
                 {
-                    SectionId = addQuestionDTO.SectionId,
+                    SectionId = sectionId,
                     Text = addQuestionDTO.Text,
                     Score = addQuestionDTO.Score,
                     Duration = new TimeSpan(

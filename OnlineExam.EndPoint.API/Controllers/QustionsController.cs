@@ -38,13 +38,13 @@ namespace OnlineExam.EndPoint.API.Controllers
             return Ok(dto);
         }
 
-        [HttpPost("[controller]")]
-        public IActionResult Create(AddQuestionDTO question)
+        [HttpPost("Sections/{id}/[controller]")]
+        public IActionResult Create(int id, AddQuestionDTO question)
         {
             if (question == null)
                 throw new APIValidationException("question can not be null");
 
-            return Ok(_questionService.Add(question));
+            return Ok(_questionService.Add(id, question));
         }
 
         [HttpPatch("[controller]/{id}")]
