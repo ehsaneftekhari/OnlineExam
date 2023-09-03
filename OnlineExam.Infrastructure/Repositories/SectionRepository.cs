@@ -28,7 +28,7 @@ namespace OnlineExam.Infrastructure.Repositories
 
         public Section? GetById(int id)
         {
-            return _context.Section.Include(x => x.Exam).FirstOrDefault(x => x.Id == id);
+            return _context.Section.FirstOrDefault(x => x.Id == id);
         }
 
         public IQueryable<Section> GetIQueryable()
