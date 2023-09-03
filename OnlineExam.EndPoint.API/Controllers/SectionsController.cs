@@ -16,8 +16,8 @@ namespace OnlineExam.EndPoint.API.Controllers
             _sectionService = sectionService;
         }
 
-        [HttpGet("Exams/{examId}/[controller]")]
-        public IActionResult GetAllByExamId(int examId, int pageNumber, int pageSize)
+        [HttpGet("Exams/{id}/[controller]")]
+        public IActionResult GetAllByExamId(int id, int pageNumber, int pageSize)
         {
             if (pageNumber < 1)
                 throw new APIValidationException("pageNumber can not be less than 1");
@@ -25,7 +25,7 @@ namespace OnlineExam.EndPoint.API.Controllers
             if (pageSize < 1)
                 throw new APIValidationException("pageSize can not be less than 1");
 
-            var dto = _sectionService.GetAllByExamId(examId, (pageNumber - 1) * pageSize, pageSize);
+            var dto = _sectionService.GetAllByExamId(id, (pageNumber - 1) * pageSize, pageSize);
             return Ok(dto);
         }
 
@@ -36,13 +36,13 @@ namespace OnlineExam.EndPoint.API.Controllers
             return Ok(dto);
         }
 
-        [HttpPost("[controller]")]
-        public IActionResult Create(AddSectionDTO section)
+        [HttpPost("Exams/{id}/[controller]")]
+        public IActionResult Create(int id, AddSectionDTO section)
         {
             if (section == null)
                 throw new APIValidationException("section can not be null");
 
-            return Ok(_sectionService.Add(section));
+            return Ok(_sectionService.Add(id, section));
         }
 
         [HttpPatch("[controller]/{id}")]

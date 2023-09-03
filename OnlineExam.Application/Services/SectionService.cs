@@ -21,14 +21,14 @@ namespace OnlineExam.Application.Services
             this._examRepository = examRepository;
         }
 
-        public ShowSectionDTO Add(AddSectionDTO dTO)
+        public ShowSectionDTO Add(int examId, AddSectionDTO dTO)
         {
             if (dTO == null)
                 throw new ArgumentNullException();
 
             try
             {
-                var newSection = _sectionMapper.AddDTOToEntity(dTO);
+                var newSection = _sectionMapper.AddDTOToEntity(examId, dTO)!;
                 if (_sectionRepository.Add(newSection) > 0 && newSection.Id > 0)
                     return _sectionMapper.EntityToShowDTO(newSection)!;
 
@@ -36,8 +36,8 @@ namespace OnlineExam.Application.Services
             }
             catch
             {
-                if (_examRepository.GetById(dTO.ExamId) == null)
-                    throw new OEApplicationException($"Exam with id:{dTO.ExamId} is not exists");
+                if (_examRepository.GetById(examId) == null)
+                    throw new OEApplicationException($"Exam with id:{examId} is not exists");
 
                 throw;
             }

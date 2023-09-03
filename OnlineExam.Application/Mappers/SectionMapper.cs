@@ -6,7 +6,7 @@ namespace OnlineExam.Application.Mappers
 {
     internal class SectionMapper : ISectionMapper
     {
-        public Section? AddDTOToEntity(AddSectionDTO? addSectionDTO)
+        public Section? AddDTOToEntity(int examId, AddSectionDTO? addSectionDTO)
         {
             if (addSectionDTO != null)
                 return new()
@@ -14,7 +14,7 @@ namespace OnlineExam.Application.Mappers
                     Title = addSectionDTO.Title,
                     Order = addSectionDTO.Order,
                     RandomizeQuestions = addSectionDTO.RandomizeQuestions,
-                    ExamId = addSectionDTO.ExamId
+                    ExamId = examId
                 };
             return null;
         }
