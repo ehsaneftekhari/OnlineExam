@@ -3,7 +3,6 @@
     public class TextField
     {
         public int Id { get; set; }
-        public int TextFieldUITypeId { get; set; }
         public TextFieldUIType TextFieldUIType { get; set; }
         public int QuestionId { get; set; }
         public Question Question { get; set; }
