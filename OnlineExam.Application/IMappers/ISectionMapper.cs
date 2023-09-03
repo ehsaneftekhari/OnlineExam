@@ -5,7 +5,7 @@ namespace OnlineExam.Application.IMappers
 {
     public interface ISectionMapper
     {
-        Section? AddDTOToEntity(AddSectionDTO? addSectionDTO);
+        Section? AddDTOToEntity(int examId, AddSectionDTO? addSectionDTO);
         ShowSectionDTO? EntityToShowDTO(Section? entity);
         void UpdateEntityByDTO(Section old, UpdateSectionDTO @new);
     }
