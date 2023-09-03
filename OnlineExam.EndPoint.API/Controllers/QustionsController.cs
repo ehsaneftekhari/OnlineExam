@@ -25,8 +25,8 @@ namespace OnlineExam.EndPoint.API.Controllers
             return Ok(dto);
         }
 
-        [HttpGet("Sections/{sectionId}/[controller]")]
-        public IActionResult GetAllBySectionId(int sectionId, int pageNumber, int pageSize)
+        [HttpGet("Sections/{id}/[controller]")]
+        public IActionResult GetAllBySectionId(int id, int pageNumber, int pageSize)
         {
             if (pageNumber < 1)
                 throw new APIValidationException("pageNumber can not be less than 1");
@@ -34,7 +34,7 @@ namespace OnlineExam.EndPoint.API.Controllers
             if (pageSize < 1)
                 throw new APIValidationException("pageSize can not be less than 1");
 
-            var dto = _questionService.GetAllBySectionId(sectionId, (pageNumber - 1) * pageSize, pageSize);
+            var dto = _questionService.GetAllBySectionId(id, (pageNumber - 1) * pageSize, pageSize);
             return Ok(dto);
         }
 
