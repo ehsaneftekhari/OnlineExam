@@ -21,12 +21,12 @@ namespace OnlineExam.Application.Services
             _sectionRepository = sectionRepository;
         }
 
-        public ShowQuestionDTO Add(AddQuestionDTO dTO)
+        public ShowQuestionDTO Add(int sectionId, AddQuestionDTO dTO)
         {
             if (dTO == null)
                 throw new ArgumentNullException();
 
-            if (dTO.SectionId < 1)
+            if (sectionId < 1)
                 throw new ApplicationValidationException("SectionId can not be less than 1");
 
             if (string.IsNullOrEmpty(dTO.Text))
@@ -34,7 +34,7 @@ namespace OnlineExam.Application.Services
 
             try
             {
-                var newQuestion = _questionMapper.AddDTOToEntity(dTO);
+                var newQuestion = _questionMapper.AddDTOToEntity(sectionId, dTO);
                 if (_questionRepository.Add(newQuestion) > 0 && newQuestion.Id > 0)
                     return _questionMapper.EntityToShowDTO(newQuestion)!;
 
@@ -42,8 +42,8 @@ namespace OnlineExam.Application.Services
             }
             catch
             {
-                if (_sectionRepository.GetById(dTO.SectionId) == null)
-                    throw new OEApplicationException($"SectionId with id:{dTO.SectionId} is not exists");
+                if (_sectionRepository.GetById(sectionId) == null)
+                    throw new OEApplicationException($"SectionId with id:{sectionId} is not exists");
 
                 throw;
             }

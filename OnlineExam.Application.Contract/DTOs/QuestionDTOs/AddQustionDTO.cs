@@ -2,7 +2,6 @@
 {
     public class AddQuestionDTO
     {
-        public int SectionId { get; set; }
         public string Text { get; set; }
         public string? ImageAddress { get; set; }
         public int Score { get; set; }
