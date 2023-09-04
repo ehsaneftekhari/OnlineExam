@@ -41,7 +41,7 @@ namespace OnlineExam.Application.Services
             catch
             {
                 if (_questionRepository.GetById(questionId) == null)
-                    throw new OEApplicationException($"QuestionId with id:{questionId} is not exists");
+                    throw new OEApplicationException($"Question with id:{questionId} is not exists");
 
                 throw;
             }
@@ -79,9 +79,9 @@ namespace OnlineExam.Application.Services
             if (!sections.Any())
             {
                 if (_questionRepository.GetById(questionId) == null)
-                    throw new ApplicationSourceNotFoundException($"QuestionId with id:{questionId} is not exists");
+                    throw new ApplicationSourceNotFoundException($"Question with id:{questionId} is not exists");
 
-                throw new ApplicationSourceNotFoundException($"there is no TextField within QuestionId (questionId:{questionId})");
+                throw new ApplicationSourceNotFoundException($"there is no TextField within Question (questionId:{questionId})");
             }
 
             return sections!;
@@ -127,10 +127,10 @@ namespace OnlineExam.Application.Services
         
         private void ValidateDTO(int? answerLength, int? textFieldUIType)
         {
-            if (answerLength.HasValue && answerLength >= 1 && answerLength < 8000)
+            if (answerLength.HasValue && (answerLength < 1 || answerLength > 8000))
                 throw new ApplicationValidationException("valid AnswerLength is from 1 to 8000");
 
-            if (textFieldUIType.HasValue && Enum.IsDefined(typeof(TextFieldUIType), textFieldUIType))
+            if (textFieldUIType.HasValue && !Enum.IsDefined(typeof(TextFieldUIType), textFieldUIType))
                 throw new ApplicationValidationException("TextFieldUIType is not valid");
         }
     }
