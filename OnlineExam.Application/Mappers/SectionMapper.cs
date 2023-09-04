@@ -1,5 +1,5 @@
-﻿using OnlineExam.Application.Contract.DTOs.SectionDTOs;
-using OnlineExam.Application.IMappers;
+﻿using OnlineExam.Application.Abstractions.IMappers;
+using OnlineExam.Application.Contract.DTOs.SectionDTOs;
 using OnlineExam.Model.Models;
 
 namespace OnlineExam.Application.Mappers

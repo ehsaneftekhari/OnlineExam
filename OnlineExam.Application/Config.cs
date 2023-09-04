@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using OnlineExam.Application.Abstractions.IMappers;
 using OnlineExam.Application.Contract.IServices;
-using OnlineExam.Application.IMappers;
 using OnlineExam.Application.Mappers;
 using OnlineExam.Application.Services;
 

@@ -1,7 +1,7 @@
 ﻿using OnlineExam.Application.Contract.DTOs.SectionDTOs;
 using OnlineExam.Model.Models;
 
-namespace OnlineExam.Application.IMappers
+namespace OnlineExam.Application.Abstractions.IMappers
 {
     public interface ISectionMapper
     {
