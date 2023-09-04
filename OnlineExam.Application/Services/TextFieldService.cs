@@ -47,6 +47,19 @@ namespace OnlineExam.Application.Services
                 throw;
             }
         }
+
+        public ShowTextFieldDTO? GetById(int id)
+        {
+            if (id < 1)
+                throw new ApplicationValidationException("id can not be less than 1");
+
+            var textField = _textFieldRepository.GetById(id);
+
+            if (textField == null)
+                throw new ApplicationSourceNotFoundException($"TextField with id:{id} is not exists");
+
+            return _textFieldMapper.EntityToShowDTO(textField);
+        }
         private void ValidateAddDTO(AddTextFieldDTO dTO)
             => ValidateDTO(dTO.AnswerLength, dTO.TextFieldUIType);
         private void ValidateDTO(int? answerLength, int? textFieldUIType)
