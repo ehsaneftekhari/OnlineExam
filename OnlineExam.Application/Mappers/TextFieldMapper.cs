@@ -1,4 +1,4 @@
-﻿using OnlineExam.Application.Contract.DTOs.TextFieldDTOs;
+using OnlineExam.Application.Contract.DTOs.TextFieldDTOs;
 using OnlineExam.Application.IMappers;
 using OnlineExam.Model.Models;
 
@@ -9,14 +9,15 @@ namespace OnlineExam.Application.Mappers
         public TextField? AddDTOToEntity(int questionId, AddTextFieldDTO? addTextFieldDTO)
         {
             if (addTextFieldDTO != null)
+            {
                 return new()
                 {
                     QuestionId = questionId,
-                    TextFieldUIType = addTextFieldDTO!.TextFieldUIType,
+                    TextFieldUIType = (TextFieldUIType)addTextFieldDTO.TextFieldUIType,
                     AnswerLength = addTextFieldDTO.AnswerLength,
                     RegEx = addTextFieldDTO.RegEx
                 };
-
+            }
             return null;
         }
 
