@@ -16,12 +16,16 @@ namespace OnlineExam.Infrastructure.Contexts
 
         public DbSet<Question> Question { get; set; }
 
+        public DbSet<TextField> TextField { get; set; }
+
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .ApplyConfiguration(new ExamEntityTypeConfiguration())
                 .ApplyConfiguration(new SectionEntityTypeConfiguration())
-                .ApplyConfiguration(new QuestionEntityTypeConfiguration());
+                .ApplyConfiguration(new QuestionEntityTypeConfiguration())
+                .ApplyConfiguration(new TextFieldEntityTypeConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }
