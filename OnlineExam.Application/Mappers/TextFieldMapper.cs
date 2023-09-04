@@ -1,4 +1,4 @@
-using OnlineExam.Application.Contract.DTOs.TextFieldDTOs;
+﻿using OnlineExam.Application.Contract.DTOs.TextFieldDTOs;
 using OnlineExam.Application.IMappers;
 using OnlineExam.Model.Models;
 
@@ -37,6 +37,21 @@ namespace OnlineExam.Application.Mappers
             }
 
             return null;
+        }
+
+        public void UpdateEntityByDTO(TextField old, UpdateTextFieldDTO @new)
+        {
+            if (@new != null || old != null)
+            {
+                if (@new!.RegEx != null)
+                    old.RegEx = @new.RegEx;
+
+                if (@new!.AnswerLength != null)
+                    old.AnswerLength = @new.AnswerLength;
+
+                if (@new!.TextFieldUIType != null)
+                    old.TextFieldUIType = (TextFieldUIType)@new.TextFieldUIType;
+            }
         }
     }
 }

@@ -7,5 +7,6 @@ namespace OnlineExam.Application.IMappers
     {
         TextField? AddDTOToEntity(int questionId, AddTextFieldDTO? addTextFieldDTO);
         ShowTextFieldDTO EntityToShowDTO(TextField addTextFieldDTO);
+        void UpdateEntityByDTO(TextField old, UpdateTextFieldDTO @new);
     }
 }
