@@ -43,5 +43,15 @@ namespace OnlineExam.EndPoint.API.Controllers
 
             return Ok(_textFieldService.Add(id, textField));
         }
+
+        [HttpPatch("[controller]/{id}")]
+        public IActionResult Update(int id, UpdateTextFieldDTO textField)
+        {
+            if (textField == null)
+                throw new APIValidationException("textField can not be null");
+
+            _textFieldService.Update(id, textField);
+            return Ok();
+        }
     }
 }
