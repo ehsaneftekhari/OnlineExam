@@ -1,4 +1,4 @@
-using OnlineExam.Application.Contract.DTOs.TextFieldDTOs;
+﻿using OnlineExam.Application.Contract.DTOs.TextFieldDTOs;
 using OnlineExam.Application.Contract.Exceptions;
 using OnlineExam.Application.Contract.IServices;
 using OnlineExam.Application.IMappers;
@@ -102,6 +102,20 @@ namespace OnlineExam.Application.Services
             _textFieldMapper.UpdateEntityByDTO(textField, dTO);
 
             if (_textFieldRepository.Update(textField) <= 0)
+                throw new Exception();
+        }
+
+        public void Delete(int id)
+        {
+            if (id < 1)
+                throw new ApplicationValidationException("id can not be less than 1");
+
+            var textField = _textFieldRepository.GetById(id);
+
+            if (textField == null)
+                throw new ApplicationSourceNotFoundException($"TextField with id:{id} is not exists");
+
+            if (_textFieldRepository.Delete(textField) < 0)
                 throw new Exception();
         }
 
