@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using OnlineExam.Application.Contract.DTOs.TextFieldDTOs;
 using OnlineExam.Application.Contract.IServices;
 using OnlineExam.EndPoint.API.Exceptions;
@@ -39,7 +39,7 @@ namespace OnlineExam.EndPoint.API.Controllers
         public IActionResult Create(int id, AddTextFieldDTO textField)
         {
             if (textField == null)
-                throw new APIValidationException("Questions can not be null");
+                throw new APIValidationException("TextField can not be null");
 
             return Ok(_textFieldService.Add(id, textField));
         }
