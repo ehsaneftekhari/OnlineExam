@@ -6,5 +6,6 @@ namespace OnlineExam.Application.Contract.IServices
     {
         ShowTextFieldDTO Add(int questionId, AddTextFieldDTO dTO);
         ShowTextFieldDTO? GetById(int id);
+        IEnumerable<ShowTextFieldDTO> GetAllByExamId(int questionId, int skip = 0, int take = 20);
     }
 }

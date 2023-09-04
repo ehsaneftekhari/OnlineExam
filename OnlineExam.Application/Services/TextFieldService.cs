@@ -9,7 +9,6 @@ namespace OnlineExam.Application.Services
 {
     public class TextFieldService : ITextFieldService
     {
-        readonly ITextFieldMapper _textFieldMapper;
         readonly ITextFieldRepository _textFieldRepository;
         readonly ITextFieldMapper _textFieldMapper;
         readonly IQuestionRepository _questionRepository;
@@ -59,6 +58,33 @@ namespace OnlineExam.Application.Services
                 throw new ApplicationSourceNotFoundException($"TextField with id:{id} is not exists");
 
             return _textFieldMapper.EntityToShowDTO(textField);
+        }
+
+        public IEnumerable<ShowTextFieldDTO> GetAllByExamId(int questionId, int skip = 0, int take = 20)
+        {
+            if (questionId < 1)
+                throw new ApplicationValidationException("examId can not be less than 1");
+
+            if (skip < 0 || take < 1)
+                throw new OEApplicationException();
+
+            var sections =
+                _textFieldRepository.GetIQueryable()
+                .Where(q => q.QuestionId == questionId)
+                .Skip(skip)
+                .Take(take)
+                .ToList()
+                .Select(_textFieldMapper.EntityToShowDTO);
+
+            if (!sections.Any())
+            {
+                if (_questionRepository.GetById(questionId) == null)
+                    throw new ApplicationSourceNotFoundException($"QuestionId with id:{questionId} is not exists");
+
+                throw new ApplicationSourceNotFoundException($"there is no TextField within QuestionId (questionId:{questionId})");
+            }
+
+            return sections!;
         }
         private void ValidateAddDTO(AddTextFieldDTO dTO)
             => ValidateDTO(dTO.AnswerLength, dTO.TextFieldUIType);
