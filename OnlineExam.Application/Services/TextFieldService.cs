@@ -86,8 +86,31 @@ namespace OnlineExam.Application.Services
 
             return sections!;
         }
+
+        public void Update(int id, UpdateTextFieldDTO dTO)
+        {
+            if (dTO == null)
+                throw new ArgumentNullException();
+
+            ValidateAddDTO(dTO);
+
+            var textField = _textFieldRepository.GetById(id);
+
+            if (textField == null)
+                throw new ApplicationSourceNotFoundException($"TextField with id:{id} is not exists");
+
+            _textFieldMapper.UpdateEntityByDTO(textField, dTO);
+
+            if (_textFieldRepository.Update(textField) <= 0)
+                throw new Exception();
+        }
+
         private void ValidateAddDTO(AddTextFieldDTO dTO)
             => ValidateDTO(dTO.AnswerLength, dTO.TextFieldUIType);
+
+        private void ValidateAddDTO(UpdateTextFieldDTO dTO)
+            => ValidateDTO(dTO.AnswerLength, dTO.TextFieldUIType);
+        
         private void ValidateDTO(int? answerLength, int? textFieldUIType)
         {
             if (answerLength.HasValue && answerLength >= 1 && answerLength < 8000)
