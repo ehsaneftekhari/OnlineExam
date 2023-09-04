@@ -22,6 +22,19 @@ namespace OnlineExam.EndPoint.API.Controllers
             return Ok(dto);
         }
 
+        [HttpGet("Questions/{id}/[controller]")]
+        public IActionResult GetAllByQuestionId(int id, int pageNumber = 1, int pageSize = 20)
+        {
+            if (pageNumber < 1)
+                throw new APIValidationException("pageNumber can not be less than 1");
+
+            if (pageSize < 1)
+                throw new APIValidationException("pageSize can not be less than 1");
+
+            var dto = _textFieldService.GetAllByExamId(id, (pageNumber - 1) * pageSize, pageSize);
+            return Ok(dto);
+        }
+
         [HttpPost("Questions/{id}/[controller]")]
         public IActionResult Create(int id, AddTextFieldDTO textField)
         {
