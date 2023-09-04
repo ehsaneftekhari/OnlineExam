@@ -53,5 +53,12 @@ namespace OnlineExam.EndPoint.API.Controllers
             _textFieldService.Update(id, textField);
             return Ok();
         }
+
+        [HttpDelete("[controller]/{id}")]
+        public IActionResult Delete(int id)
+        {
+            _textFieldService.Delete(id);
+            return Ok();
+        }
     }
 }
