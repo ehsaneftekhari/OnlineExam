@@ -2,7 +2,6 @@
 using OnlineExam.Infrastructure.Contexts;
 using OnlineExam.Infrastructure.Contract.IRepositories;
 using OnlineExam.Model.Models;
-using static System.Collections.Specialized.BitVector32;
 
 namespace OnlineExam.Infrastructure.Repositories
 {
