@@ -21,17 +21,18 @@ namespace OnlineExam.Application.Mappers
             return null;
         }
 
-        public ShowTextFieldDTO EntityToShowDTO(TextField addTextFieldDTO)
+        public ShowTextFieldDTO EntityToShowDTO(TextField entity)
         {
-            if (addTextFieldDTO != null)
+            if (entity != null)
             {
                 return new()
                 {
-                    Id = addTextFieldDTO.Id,
-                    TextFieldUIType = addTextFieldDTO.TextFieldUIType,
-                    QuestionId = addTextFieldDTO.QuestionId,
-                    AnswerLength = addTextFieldDTO.AnswerLength,
-                    RegEx = addTextFieldDTO.RegEx
+                    Id = entity.Id,
+                    TextFieldUIType = (int)entity.TextFieldUIType,
+                    TextFieldUITypeName = Enum.GetName(typeof(TextFieldUIType), entity.TextFieldUIType)!,
+                    QuestionId = entity.QuestionId,
+                    AnswerLength = entity.AnswerLength,
+                    RegEx = entity.RegEx
                 };
             }
 
