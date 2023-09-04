@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using OnlineExam.Application.Contract.DTOs.TextFieldDTOs;
 using OnlineExam.Application.Contract.IServices;
 using OnlineExam.EndPoint.API.Exceptions;
@@ -13,6 +13,13 @@ namespace OnlineExam.EndPoint.API.Controllers
         public TextFieldsController(ITextFieldService textFieldService)
         {
             _textFieldService = textFieldService;
+        }
+
+        [HttpGet("[controller]/{id}")]
+        public IActionResult GetById(int id)
+        {
+            var dto = _textFieldService.GetById(id);
+            return Ok(dto);
         }
 
         [HttpPost("Questions/{id}/[controller]")]
