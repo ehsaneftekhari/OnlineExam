@@ -62,7 +62,7 @@ namespace OnlineExam.Application.Services
                 throw new Exception();
         }
 
-        public IEnumerable<ShowCheckFieldDTO> GetAllByExamId(int questionId, int skip = 0, int take = 20)
+        public IEnumerable<ShowCheckFieldDTO> GetAllByQuestionId(int questionId, int skip = 0, int take = 20)
         {
             if (questionId < 1)
                 throw new ApplicationValidationException("examId can not be less than 1");

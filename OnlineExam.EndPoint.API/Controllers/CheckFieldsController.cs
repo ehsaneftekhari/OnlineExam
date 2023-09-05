@@ -34,7 +34,7 @@ namespace OnlineExam.EndPoint.API.Controllers
             if (pageSize < 1)
                 throw new APIValidationException("pageSize can not be less than 1");
 
-            var dto = _checkFieldService.GetAllByExamId(id, (pageNumber - 1) * pageSize, pageSize);
+            var dto = _checkFieldService.GetAllByQuestionId(id, (pageNumber - 1) * pageSize, pageSize);
             return Ok(dto);
         }
 
