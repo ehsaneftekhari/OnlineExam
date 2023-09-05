@@ -17,9 +17,4 @@
 		<ProjectReference Include="..\OnlineExam.Infrastructure.Contract\OnlineExam.Infrastructure.Contract.csproj" />
 	</ItemGroup>
 
-
-	<ItemGroup>
-	  <Folder Include="Abstractions\" />
-	</ItemGroup>
-
 </Project>

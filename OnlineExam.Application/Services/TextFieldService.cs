@@ -68,7 +68,7 @@ namespace OnlineExam.Application.Services
             if (skip < 0 || take < 1)
                 throw new OEApplicationException();
 
-            var sections =
+            var textFields =
                 _textFieldRepository.GetIQueryable()
                 .Where(q => q.QuestionId == questionId)
                 .Skip(skip)
@@ -76,7 +76,7 @@ namespace OnlineExam.Application.Services
                 .ToList()
                 .Select(_textFieldMapper.EntityToShowDTO);
 
-            if (!sections.Any())
+            if (!textFields.Any())
             {
                 if (_questionRepository.GetById(questionId) == null)
                     throw new ApplicationSourceNotFoundException($"Question with id:{questionId} is not exists");
@@ -84,7 +84,7 @@ namespace OnlineExam.Application.Services
                 throw new ApplicationSourceNotFoundException($"there is no TextField within Question (questionId:{questionId})");
             }
 
-            return sections!;
+            return textFields!;
         }
 
         public void Update(int id, UpdateTextFieldDTO dTO)
