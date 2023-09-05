@@ -60,7 +60,7 @@ namespace OnlineExam.Application.Services
             return _textFieldMapper.EntityToShowDTO(textField);
         }
 
-        public IEnumerable<ShowTextFieldDTO> GetAllByExamId(int questionId, int skip = 0, int take = 20)
+        public IEnumerable<ShowTextFieldDTO> GetAllByQuestionId(int questionId, int skip = 0, int take = 20)
         {
             if (questionId < 1)
                 throw new ApplicationValidationException("examId can not be less than 1");
