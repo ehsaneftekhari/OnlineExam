@@ -107,6 +107,8 @@ namespace OnlineExam.Application.Services
             if (dTO == null)
                 throw new ArgumentNullException();
 
+            ValidateAddDTO(dTO);
+
             var textField = _checkFieldRepository.GetById(id);
 
             if (textField == null)
