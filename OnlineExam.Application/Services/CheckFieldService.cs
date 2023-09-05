@@ -50,12 +50,43 @@ namespace OnlineExam.Application.Services
 
         public void Delete(int id)
         {
-            throw new NotImplementedException();
+            if (id < 1)
+                throw new ApplicationValidationException("id can not be less than 1");
+
+            var textField = _checkFieldRepository.GetById(id);
+
+            if (textField == null)
+                throw new ApplicationSourceNotFoundException($"CheckField with id:{id} is not exists");
+
+            if (_checkFieldRepository.Delete(textField) < 0)
+                throw new Exception();
         }
 
         public IEnumerable<ShowCheckFieldDTO> GetAllByExamId(int questionId, int skip = 0, int take = 20)
         {
-            throw new NotImplementedException();
+            if (questionId < 1)
+                throw new ApplicationValidationException("examId can not be less than 1");
+
+            if (skip < 0 || take < 1)
+                throw new OEApplicationException();
+
+            var checkFields =
+                _checkFieldRepository.GetIQueryable()
+                .Where(q => q.QuestionId == questionId)
+                .Skip(skip)
+                .Take(take)
+                .ToList()
+                .Select(_checkFieldMapper.EntityToShowDTO);
+
+            if (!checkFields.Any())
+            {
+                if (_questionRepository.GetById(questionId) == null)
+                    throw new ApplicationSourceNotFoundException($"Question with id:{questionId} is not exists");
+
+                throw new ApplicationSourceNotFoundException($"there is no CheckField within Question (questionId:{questionId})");
+            }
+
+            return checkFields!;
         }
 
         public ShowCheckFieldDTO? GetById(int id)
@@ -73,7 +104,18 @@ namespace OnlineExam.Application.Services
 
         public void Update(int id, UpdateCheckFieldDTO dTO)
         {
-            throw new NotImplementedException();
+            if (dTO == null)
+                throw new ArgumentNullException();
+
+            var textField = _checkFieldRepository.GetById(id);
+
+            if (textField == null)
+                throw new ApplicationSourceNotFoundException($"TextField with id:{id} is not exists");
+
+            _checkFieldMapper.UpdateEntityByDTO(textField, dTO);
+
+            if (_checkFieldRepository.Update(textField) <= 0)
+                throw new Exception();
         }
 
         private void ValidateAddDTO(AddCheckFieldDTO dTO)
