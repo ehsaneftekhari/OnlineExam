@@ -2,6 +2,7 @@
 using OnlineExam.Application.Contract.DTOs.CheckFieldDTOs;
 using OnlineExam.Application.Contract.Exceptions;
 using OnlineExam.Application.Contract.IServices;
+using OnlineExam.Application.Mappers;
 using OnlineExam.Infrastructure.Contract.IRepositories;
 using OnlineExam.Model.Models;
 
@@ -59,7 +60,15 @@ namespace OnlineExam.Application.Services
 
         public ShowCheckFieldDTO? GetById(int id)
         {
-            throw new NotImplementedException();
+            if (id < 1)
+                throw new ApplicationValidationException("id can not be less than 1");
+
+            var textField = _checkFieldRepository.GetById(id);
+
+            if (textField == null)
+                throw new ApplicationSourceNotFoundException($"CheckField with id:{id} is not exists");
+
+            return _checkFieldMapper.EntityToShowDTO(textField);
         }
 
         public void Update(int id, UpdateCheckFieldDTO dTO)
