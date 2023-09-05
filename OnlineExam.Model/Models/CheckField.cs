@@ -12,7 +12,7 @@
 
     public enum CheckFieldUIType
     {
-        TextField = 1,
-        TextArea = 2
+        CheckBox = 1,
+        RadioButton = 2
     }
 }
