@@ -18,6 +18,8 @@ namespace OnlineExam.Infrastructure.Contexts
 
         public DbSet<TextField> TextField { get; set; }
 
+        public DbSet<CheckField> CheckField { get; set; }
+
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -25,7 +27,8 @@ namespace OnlineExam.Infrastructure.Contexts
                 .ApplyConfiguration(new ExamEntityTypeConfiguration())
                 .ApplyConfiguration(new SectionEntityTypeConfiguration())
                 .ApplyConfiguration(new QuestionEntityTypeConfiguration())
-                .ApplyConfiguration(new TextFieldEntityTypeConfiguration());
+                .ApplyConfiguration(new TextFieldEntityTypeConfiguration())
+                .ApplyConfiguration(new CheckFieldEntityTypeConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }
