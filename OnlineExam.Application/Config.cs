@@ -21,6 +21,7 @@ namespace OnlineExam.Application
             serviceDescriptors.AddScoped<ICheckFieldMapper, CheckFieldMapper>();
             serviceDescriptors.AddScoped<ICheckFieldService, CheckFieldService>();
             serviceDescriptors.AddScoped<ICheckFieldOptionService, CheckFieldOptionService>();
+            serviceDescriptors.AddScoped<ICheckFieldOptionMapper, CheckFieldOptionMapper>();
         }
     }
 }
