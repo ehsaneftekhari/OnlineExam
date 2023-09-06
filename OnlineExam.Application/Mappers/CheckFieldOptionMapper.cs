@@ -6,12 +6,13 @@ namespace OnlineExam.Application.Mappers
 {
     internal class CheckFieldOptionMapper : ICheckFieldOptionMapper
     {
-        public CheckFieldOption? AddDTOToEntity(int questionId, AddCheckFieldOptionDTO? addCheckFieldOptionDTO)
+        public CheckFieldOption? AddDTOToEntity(int checkFieldId, AddCheckFieldOptionDTO? addCheckFieldOptionDTO)
         {
             if (addCheckFieldOptionDTO != null)
             {
                 return new()
                 {
+                    CheckFieldId = checkFieldId,
                     Order = addCheckFieldOptionDTO.Order,
                     Score = addCheckFieldOptionDTO.Score,
                     Text = addCheckFieldOptionDTO.Text
