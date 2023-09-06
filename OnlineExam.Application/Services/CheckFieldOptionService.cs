@@ -1,4 +1,4 @@
-﻿using OnlineExam.Application.Contract.DTOs.CheckFieldDTOs;
+using OnlineExam.Application.Contract.DTOs.CheckFieldDTOs;
 using OnlineExam.Application.Contract.IServices;
 
 namespace OnlineExam.Application.Services
@@ -28,6 +28,21 @@ namespace OnlineExam.Application.Services
         public void Update(int id, UpdateCheckFieldOptionDTO dTO)
         {
             throw new NotImplementedException();
+        }
+
+        private void ValidateAddDTO(AddCheckFieldOptionDTO dTO)
+            => ValidateDTO(dTO.Order, dTO.Text);
+
+        private void ValidateUpdateDTO(UpdateCheckFieldOptionDTO dTO)
+            => ValidateDTO(dTO.Order, dTO.Text);
+        
+        private void ValidateDTO(int? Order, string? Text)
+        {
+            if (Order.HasValue && (Order < 1))
+                throw new ApplicationValidationException("Order can not be less then 1");
+
+            if (string.IsNullOrEmpty(Text) && (Text!.Length > 4000))
+                throw new ApplicationValidationException("Text length can not be more than 4000 characters");
         }
     }
 }
