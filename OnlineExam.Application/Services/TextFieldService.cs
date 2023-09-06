@@ -1,4 +1,5 @@
 ﻿using OnlineExam.Application.Abstractions.IMappers;
+using OnlineExam.Application.Abstractions.IValidators;
 using OnlineExam.Application.Contract.DTOs.TextFieldDTOs;
 using OnlineExam.Application.Contract.Exceptions;
 using OnlineExam.Application.Contract.IServices;
@@ -12,12 +13,14 @@ namespace OnlineExam.Application.Services
         readonly ITextFieldRepository _textFieldRepository;
         readonly ITextFieldMapper _textFieldMapper;
         readonly IQuestionRepository _questionRepository;
+        readonly ITextFieldValidator _textFieldValidator;
 
-        public TextFieldService(ITextFieldRepository textFieldRepository, ITextFieldMapper textFieldMapper, IQuestionRepository questionRepository)
+        public TextFieldService(ITextFieldRepository textFieldRepository, ITextFieldMapper textFieldMapper, IQuestionRepository questionRepository, ITextFieldValidator textFieldValidator)
         {
             _textFieldRepository = textFieldRepository;
             _textFieldMapper = textFieldMapper;
             _questionRepository = questionRepository;
+            _textFieldValidator = textFieldValidator;
         }
 
         public ShowTextFieldDTO Add(int questionId, AddTextFieldDTO dTO)
@@ -28,7 +31,7 @@ namespace OnlineExam.Application.Services
             if (questionId < 1)
                 throw new ApplicationValidationException("QuestionId can not be less than 1");
 
-            ValidateDTO(dTO);
+            _textFieldValidator.ValidateDTO(dTO);
 
             try
             {
@@ -92,7 +95,7 @@ namespace OnlineExam.Application.Services
             if (dTO == null)
                 throw new ArgumentNullException();
 
-            ValidateDTO(dTO);
+            _textFieldValidator.ValidateDTO(dTO);
 
             var textField = _textFieldRepository.GetById(id);
 
@@ -117,21 +120,6 @@ namespace OnlineExam.Application.Services
 
             if (_textFieldRepository.Delete(textField) < 0)
                 throw new Exception();
-        }
-
-        private void ValidateDTO(AddTextFieldDTO dTO)
-            => ValidateValues(dTO.AnswerLength, dTO.TextFieldUIType);
-
-        private void ValidateDTO(UpdateTextFieldDTO dTO)
-            => ValidateValues(dTO.AnswerLength, dTO.TextFieldUIType);
-        
-        private void ValidateValues(int? answerLength, int? textFieldUIType)
-        {
-            if (answerLength.HasValue && (answerLength < 1 || answerLength > 8000))
-                throw new ApplicationValidationException("valid AnswerLength is from 1 to 8000");
-
-            if (textFieldUIType.HasValue && !Enum.IsDefined(typeof(TextFieldUIType), textFieldUIType))
-                throw new ApplicationValidationException("TextFieldUIType is not valid");
         }
     }
 }
