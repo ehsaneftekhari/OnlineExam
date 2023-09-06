@@ -15,13 +15,15 @@ namespace OnlineExam.Application.Services
         readonly ICheckFieldRepository _checkFieldRepository;
         readonly ICheckFieldOptionMapper _checkFieldOptionMapper;
         readonly ICheckFieldOptionValidator _checkFieldOptionValidator;
+        readonly IDatabaseBasedCheckFieldOptionValidator _databaseBasedCheckFieldOptionValidator;
 
-        public CheckFieldOptionService(ICheckFieldOptionRepository checkFieldOptionRepository, ICheckFieldRepository checkFieldRepository, ICheckFieldOptionMapper checkFieldOptionMapper, ICheckFieldOptionValidator checkFieldOptionValidator)
+        public CheckFieldOptionService(ICheckFieldOptionRepository checkFieldOptionRepository, ICheckFieldRepository checkFieldRepository, ICheckFieldOptionMapper checkFieldOptionMapper, ICheckFieldOptionValidator checkFieldOptionValidator, IDatabaseBasedCheckFieldOptionValidator databaseBasedCheckFieldOptionValidator)
         {
             _checkFieldOptionRepository = checkFieldOptionRepository;
             _checkFieldRepository = checkFieldRepository;
             _checkFieldOptionMapper = checkFieldOptionMapper;
             _checkFieldOptionValidator = checkFieldOptionValidator;
+            _databaseBasedCheckFieldOptionValidator = databaseBasedCheckFieldOptionValidator;
         }
 
         public ShowCheckFieldOptionDTO Add(int checkFieldId, AddCheckFieldOptionDTO dTO)
@@ -34,7 +36,7 @@ namespace OnlineExam.Application.Services
 
             _checkFieldOptionValidator.ValidateDTO(dTO);
 
-            DatabaseBasedValidate(checkFieldId, dTO);
+            _databaseBasedCheckFieldOptionValidator.DatabaseBasedValidate(checkFieldId, dTO);
 
             try
             {
@@ -120,34 +122,12 @@ namespace OnlineExam.Application.Services
             if (checkFieldOption == null)
                 throw new ApplicationSourceNotFoundException($"CheckFieldOption with id:{id} is not exists");
 
-            DatabaseBasedValidate(checkFieldOption.CheckFieldId, id, dTO);
+            _databaseBasedCheckFieldOptionValidator.DatabaseBasedValidate(checkFieldOption.CheckFieldId, id, dTO);
 
             _checkFieldOptionMapper.UpdateEntityByDTO(checkFieldOption, dTO);
 
             if (_checkFieldOptionRepository.Update(checkFieldOption) <= 0)
                 throw new Exception();
-        }
-
-
-
-        private void DatabaseBasedValidate(int checkFieldId, AddCheckFieldOptionDTO dTO)
-            => DatabaseBasedValidateValues(checkFieldId, dTO.Order);
-
-
-        private void DatabaseBasedValidate(int checkFieldId, int checkFieldOptionId, UpdateCheckFieldOptionDTO dTO)
-            => DatabaseBasedValidateValues(checkFieldId, dTO.Order, checkFieldOptionId);
-
-        private void DatabaseBasedValidateValues(int checkFieldId, int? order, int? checkFieldOptionId = null)
-        {
-            if (!order.HasValue)
-                return;
-
-            if (_checkFieldOptionRepository.GetIQueryable()
-                .Where(cfo => cfo.CheckFieldId == checkFieldId)
-                .Where(cfo => !checkFieldOptionId.HasValue 
-                    || cfo.Id != checkFieldOptionId.Value)
-                .Any(cfo => cfo.Order == order))
-                throw new ApplicationValidationException($"duplicate order: an other checkFieldOption in checkField (checkFieldId: {checkFieldId}) has {order} order");
         }
     }
 }
