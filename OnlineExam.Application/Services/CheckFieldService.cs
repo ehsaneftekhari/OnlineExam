@@ -1,10 +1,10 @@
 ﻿using OnlineExam.Application.Abstractions.IMappers;
+using OnlineExam.Application.Abstractions.IValidators;
 using OnlineExam.Application.Contract.DTOs.CheckFieldDTOs;
 using OnlineExam.Application.Contract.Exceptions;
 using OnlineExam.Application.Contract.IServices;
 using OnlineExam.Application.Mappers;
 using OnlineExam.Infrastructure.Contract.IRepositories;
-using OnlineExam.Model.Models;
 
 namespace OnlineExam.Application.Services
 {
@@ -13,12 +13,14 @@ namespace OnlineExam.Application.Services
         readonly ICheckFieldRepository _checkFieldRepository;
         readonly IQuestionRepository _questionRepository;
         readonly ICheckFieldMapper _checkFieldMapper;
+        readonly ICheckFieldValidator _checkFieldValidator;
 
-        public CheckFieldService(ICheckFieldRepository checkFieldRepository, IQuestionRepository questionRepository, ICheckFieldMapper checkFieldMapper)
+        public CheckFieldService(ICheckFieldRepository checkFieldRepository, IQuestionRepository questionRepository, ICheckFieldMapper checkFieldMapper, ICheckFieldValidator checkFieldValidator)
         {
             _checkFieldRepository = checkFieldRepository;
             _questionRepository = questionRepository;
             _checkFieldMapper = checkFieldMapper;
+            _checkFieldValidator = checkFieldValidator;
         }
 
         public ShowCheckFieldDTO Add(int questionId, AddCheckFieldDTO dTO)
@@ -29,7 +31,7 @@ namespace OnlineExam.Application.Services
             if (questionId < 1)
                 throw new ApplicationValidationException("QuestionId can not be less than 1");
 
-            ValidateDTO(dTO);
+            _checkFieldValidator.ValidateDTO(dTO);
 
             try
             {
@@ -107,7 +109,7 @@ namespace OnlineExam.Application.Services
             if (dTO == null)
                 throw new ArgumentNullException();
 
-            ValidateDTO(dTO);
+            _checkFieldValidator.ValidateDTO(dTO);
 
             var textField = _checkFieldRepository.GetById(id);
 
@@ -118,21 +120,6 @@ namespace OnlineExam.Application.Services
 
             if (_checkFieldRepository.Update(textField) <= 0)
                 throw new Exception();
-        }
-
-        private void ValidateDTO(AddCheckFieldDTO dTO)
-            => ValidateValues(dTO.MaximumSelection, dTO.CheckFieldUIType);
-
-        private void ValidateDTO(UpdateCheckFieldDTO dTO)
-            => ValidateValues(dTO.MaximumSelection, dTO.CheckFieldUIType);
-
-        private void ValidateValues(int? maximumSelection, int? checkFieldUIType)
-        {
-            if (maximumSelection.HasValue && (maximumSelection < 1))
-                throw new ApplicationValidationException("maximumSelection can not be less then 1");
-
-            if (checkFieldUIType.HasValue && !Enum.IsDefined(typeof(CheckFieldUIType), checkFieldUIType))
-                throw new ApplicationValidationException("checkFieldUIType is not valid");
         }
     }
 }
