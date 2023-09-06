@@ -1,6 +1,6 @@
 ﻿namespace OnlineExam.Model.Models
 {
-    public class TextField
+    public class TextField : BaseModel
     {
         public int Id { get; set; }
         public TextFieldUIType TextFieldUIType { get; set; }

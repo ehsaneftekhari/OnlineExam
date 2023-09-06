@@ -1,6 +1,6 @@
 ﻿namespace OnlineExam.Model.Models
 {
-    public class CheckField
+    public class CheckField : BaseModel
     {
         public int Id { get; set; }
         public CheckFieldUIType CheckFieldUIType { get; set; }

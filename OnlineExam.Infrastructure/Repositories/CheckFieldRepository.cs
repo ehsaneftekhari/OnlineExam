@@ -12,6 +12,7 @@ namespace OnlineExam.Infrastructure.Repositories
         {
             _context = context;
         }
+
         public int Add(CheckField checkField)
         {
             _context.CheckField.Add(checkField);
