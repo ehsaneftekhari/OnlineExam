@@ -106,6 +106,9 @@ namespace OnlineExam.Application.Services
 
         public void Update(int id, UpdateCheckFieldDTO dTO)
         {
+            if (id < 1)
+                throw new ApplicationValidationException("id can not be less than 1");
+
             if (dTO == null)
                 throw new ArgumentNullException();
 

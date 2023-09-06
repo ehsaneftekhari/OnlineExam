@@ -16,9 +16,9 @@ namespace OnlineExam.Application.Services
 
         public SectionService(ISectionRepository sectionRepository, ISectionMapper sectionMapper, IExamRepository examRepository)
         {
-            this._sectionRepository = sectionRepository;
-            this._sectionMapper = sectionMapper;
-            this._examRepository = examRepository;
+            _sectionRepository = sectionRepository;
+            _sectionMapper = sectionMapper;
+            _examRepository = examRepository;
         }
 
         public ShowSectionDTO Add(int examId, AddSectionDTO dTO)
@@ -99,6 +99,9 @@ namespace OnlineExam.Application.Services
 
         public void Update(int id, UpdateSectionDTO dTO)
         {
+            if (id < 1)
+                throw new ApplicationValidationException("id can not be less than 1");
+
             if (dTO == null)
                 throw new ArgumentNullException();
 
