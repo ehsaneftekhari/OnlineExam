@@ -28,7 +28,7 @@ namespace OnlineExam.Application.Services
             if (questionId < 1)
                 throw new ApplicationValidationException("QuestionId can not be less than 1");
 
-            ValidateAddDTO(dTO);
+            ValidateDTO(dTO);
 
             try
             {
@@ -60,7 +60,7 @@ namespace OnlineExam.Application.Services
             return _textFieldMapper.EntityToShowDTO(textField);
         }
 
-        public IEnumerable<ShowTextFieldDTO> GetAllByExamId(int questionId, int skip = 0, int take = 20)
+        public IEnumerable<ShowTextFieldDTO> GetAllByQuestionId(int questionId, int skip = 0, int take = 20)
         {
             if (questionId < 1)
                 throw new ApplicationValidationException("examId can not be less than 1");
@@ -92,7 +92,7 @@ namespace OnlineExam.Application.Services
             if (dTO == null)
                 throw new ArgumentNullException();
 
-            ValidateAddDTO(dTO);
+            ValidateDTO(dTO);
 
             var textField = _textFieldRepository.GetById(id);
 
@@ -119,13 +119,13 @@ namespace OnlineExam.Application.Services
                 throw new Exception();
         }
 
-        private void ValidateAddDTO(AddTextFieldDTO dTO)
-            => ValidateDTO(dTO.AnswerLength, dTO.TextFieldUIType);
+        private void ValidateDTO(AddTextFieldDTO dTO)
+            => ValidateValues(dTO.AnswerLength, dTO.TextFieldUIType);
 
-        private void ValidateAddDTO(UpdateTextFieldDTO dTO)
-            => ValidateDTO(dTO.AnswerLength, dTO.TextFieldUIType);
+        private void ValidateDTO(UpdateTextFieldDTO dTO)
+            => ValidateValues(dTO.AnswerLength, dTO.TextFieldUIType);
         
-        private void ValidateDTO(int? answerLength, int? textFieldUIType)
+        private void ValidateValues(int? answerLength, int? textFieldUIType)
         {
             if (answerLength.HasValue && (answerLength < 1 || answerLength > 8000))
                 throw new ApplicationValidationException("valid AnswerLength is from 1 to 8000");
