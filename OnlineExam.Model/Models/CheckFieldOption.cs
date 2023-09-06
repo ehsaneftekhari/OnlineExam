@@ -1,8 +1,7 @@
 ﻿namespace OnlineExam.Model.Models
 {
-    public class CheckFieldOption
+    public class CheckFieldOption : BaseModel
     {
-        public int Id { get; set; }
         public int Order { get; set; }
         public int CheckFieldId { get; set; }
         public CheckField CheckField { get; set; } = null!;
