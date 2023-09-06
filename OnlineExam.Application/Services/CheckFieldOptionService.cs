@@ -1,4 +1,5 @@
 ﻿using OnlineExam.Application.Abstractions.IMappers;
+using OnlineExam.Application.Abstractions.IValidators;
 using OnlineExam.Application.Contract.DTOs.CheckFieldDTOs;
 using OnlineExam.Application.Contract.Exceptions;
 using OnlineExam.Application.Contract.IServices;
@@ -13,12 +14,14 @@ namespace OnlineExam.Application.Services
         readonly ICheckFieldOptionRepository _checkFieldOptionRepository;
         readonly ICheckFieldRepository _checkFieldRepository;
         readonly ICheckFieldOptionMapper _checkFieldOptionMapper;
+        readonly ICheckFieldOptionValidator _checkFieldOptionValidator;
 
-        public CheckFieldOptionService(ICheckFieldOptionRepository checkFieldOptionRepository, ICheckFieldRepository checkFieldRepository, ICheckFieldOptionMapper checkFieldOptionMapper)
+        public CheckFieldOptionService(ICheckFieldOptionRepository checkFieldOptionRepository, ICheckFieldRepository checkFieldRepository, ICheckFieldOptionMapper checkFieldOptionMapper, ICheckFieldOptionValidator checkFieldOptionValidator)
         {
             _checkFieldOptionRepository = checkFieldOptionRepository;
             _checkFieldRepository = checkFieldRepository;
             _checkFieldOptionMapper = checkFieldOptionMapper;
+            _checkFieldOptionValidator = checkFieldOptionValidator;
         }
 
         public ShowCheckFieldOptionDTO Add(int checkFieldId, AddCheckFieldOptionDTO dTO)
@@ -29,7 +32,7 @@ namespace OnlineExam.Application.Services
             if (checkFieldId < 1)
                 throw new ApplicationValidationException("QuestionId can not be less than 1");
 
-            ValidateDTO(dTO);
+            _checkFieldOptionValidator.ValidateDTO(dTO);
 
             DatabaseBasedValidate(checkFieldId, dTO);
 
@@ -110,7 +113,7 @@ namespace OnlineExam.Application.Services
             if (dTO == null)
                 throw new ArgumentNullException();
 
-            ValidateDTO(dTO);
+            _checkFieldOptionValidator.ValidateDTO(dTO);
 
             var checkFieldOption = _checkFieldOptionRepository.GetById(id);
 
@@ -125,20 +128,7 @@ namespace OnlineExam.Application.Services
                 throw new Exception();
         }
 
-        private void ValidateDTO(AddCheckFieldOptionDTO dTO)
-            => ValidateValues(dTO.Order, dTO.Text);
 
-        private void ValidateDTO(UpdateCheckFieldOptionDTO dTO)
-            => ValidateValues(dTO.Order, dTO.Text);
-
-        private void ValidateValues(int? Order, string? Text)
-        {
-            if (Order.HasValue && (Order < 1))
-                throw new ApplicationValidationException("Order can not be less then 1");
-
-            if (Text != null && (Text!.Length > 4000))
-                throw new ApplicationValidationException("Text length can not be more than 4000 characters");
-        }
 
         private void DatabaseBasedValidate(int checkFieldId, AddCheckFieldOptionDTO dTO)
             => DatabaseBasedValidateValues(checkFieldId, dTO.Order);
