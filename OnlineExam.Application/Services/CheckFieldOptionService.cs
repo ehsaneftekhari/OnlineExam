@@ -31,6 +31,8 @@ namespace OnlineExam.Application.Services
 
             ValidateDTO(dTO);
 
+            DatabaseBasedValidate(checkFieldId, dTO);
+
             try
             {
                 var newTextField = _checkFieldOptionMapper.AddDTOToEntity(checkFieldId, dTO)!;
@@ -75,6 +77,7 @@ namespace OnlineExam.Application.Services
                 .Where(q => q.CheckFieldId == checkFieldId)
                 .Skip(skip)
                 .Take(take)
+                .OrderBy(q => q.Order)
                 .ToList()
                 .Select(_checkFieldOptionMapper.EntityToShowDTO);
 
@@ -114,6 +117,8 @@ namespace OnlineExam.Application.Services
             if (checkFieldOption == null)
                 throw new ApplicationSourceNotFoundException($"CheckFieldOption with id:{id} is not exists");
 
+            DatabaseBasedValidate(checkFieldOption.CheckFieldId, id, dTO);
+
             _checkFieldOptionMapper.UpdateEntityByDTO(checkFieldOption, dTO);
 
             if (_checkFieldOptionRepository.Update(checkFieldOption) <= 0)
@@ -125,14 +130,34 @@ namespace OnlineExam.Application.Services
 
         private void ValidateDTO(UpdateCheckFieldOptionDTO dTO)
             => ValidateValues(dTO.Order, dTO.Text);
-        
+
         private void ValidateValues(int? Order, string? Text)
         {
             if (Order.HasValue && (Order < 1))
                 throw new ApplicationValidationException("Order can not be less then 1");
 
-            if (string.IsNullOrEmpty(Text) && (Text!.Length > 4000))
+            if (Text != null && (Text!.Length > 4000))
                 throw new ApplicationValidationException("Text length can not be more than 4000 characters");
+        }
+
+        private void DatabaseBasedValidate(int checkFieldId, AddCheckFieldOptionDTO dTO)
+            => DatabaseBasedValidateValues(checkFieldId, dTO.Order);
+
+
+        private void DatabaseBasedValidate(int checkFieldId, int checkFieldOptionId, UpdateCheckFieldOptionDTO dTO)
+            => DatabaseBasedValidateValues(checkFieldId, dTO.Order, checkFieldOptionId);
+
+        private void DatabaseBasedValidateValues(int checkFieldId, int? order, int? checkFieldOptionId = null)
+        {
+            if (!order.HasValue)
+                return;
+
+            if (_checkFieldOptionRepository.GetIQueryable()
+                .Where(cfo => cfo.CheckFieldId == checkFieldId)
+                .Where(cfo => !checkFieldOptionId.HasValue 
+                    || cfo.Id != checkFieldOptionId.Value)
+                .Any(cfo => cfo.Order == order))
+                throw new ApplicationValidationException($"duplicate order: an other checkFieldOption in checkField (checkFieldId: {checkFieldId}) has {order} order");
         }
     }
 }
