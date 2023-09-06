@@ -1,8 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using OnlineExam.Application.Abstractions.IMappers;
+using OnlineExam.Application.Abstractions.IValidators;
 using OnlineExam.Application.Contract.IServices;
 using OnlineExam.Application.Mappers;
 using OnlineExam.Application.Services;
+using OnlineExam.Application.Validators;
 
 namespace OnlineExam.Application
 {
@@ -22,6 +24,7 @@ namespace OnlineExam.Application
             serviceDescriptors.AddScoped<ICheckFieldService, CheckFieldService>();
             serviceDescriptors.AddScoped<ICheckFieldOptionService, CheckFieldOptionService>();
             serviceDescriptors.AddScoped<ICheckFieldOptionMapper, CheckFieldOptionMapper>();
+            serviceDescriptors.AddScoped<ICheckFieldOptionValidator, CheckFieldOptionValidator>();
         }
     }
 }
