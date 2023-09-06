@@ -29,7 +29,7 @@ namespace OnlineExam.Application.Services
             if (checkFieldId < 1)
                 throw new ApplicationValidationException("QuestionId can not be less than 1");
 
-            ValidateAddDTO(dTO);
+            ValidateDTO(dTO);
 
             try
             {
@@ -107,7 +107,7 @@ namespace OnlineExam.Application.Services
             if (dTO == null)
                 throw new ArgumentNullException();
 
-            ValidateUpdateDTO(dTO);
+            ValidateDTO(dTO);
 
             var checkFieldOption = _checkFieldOptionRepository.GetById(id);
 
@@ -120,13 +120,13 @@ namespace OnlineExam.Application.Services
                 throw new Exception();
         }
 
-        private void ValidateAddDTO(AddCheckFieldOptionDTO dTO)
-            => ValidateDTO(dTO.Order, dTO.Text);
+        private void ValidateDTO(AddCheckFieldOptionDTO dTO)
+            => ValidateValues(dTO.Order, dTO.Text);
 
-        private void ValidateUpdateDTO(UpdateCheckFieldOptionDTO dTO)
-            => ValidateDTO(dTO.Order, dTO.Text);
+        private void ValidateDTO(UpdateCheckFieldOptionDTO dTO)
+            => ValidateValues(dTO.Order, dTO.Text);
         
-        private void ValidateDTO(int? Order, string? Text)
+        private void ValidateValues(int? Order, string? Text)
         {
             if (Order.HasValue && (Order < 1))
                 throw new ApplicationValidationException("Order can not be less then 1");
