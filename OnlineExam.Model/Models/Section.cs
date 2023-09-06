@@ -2,7 +2,6 @@
 {
     public class Section : BaseModel
     {
-        public int Id { get; set; }
         public string Title { get; set; }
         public int Order { get; set; }
         public bool RandomizeQuestions { get; set; }

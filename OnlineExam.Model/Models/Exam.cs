@@ -2,7 +2,6 @@
 {
     public class Exam : BaseModel
     {
-        public int Id { get; set; }
         public string CreatorUserId { get; set; }
         public string Title { get; set; }
         public DateTime Start { get; set; }

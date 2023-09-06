@@ -2,7 +2,6 @@
 {
     public class TextField : BaseModel
     {
-        public int Id { get; set; }
         public TextFieldUIType TextFieldUIType { get; set; }
         public int QuestionId { get; set; }
         public Question Question { get; set; }

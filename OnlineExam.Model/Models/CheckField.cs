@@ -2,7 +2,6 @@
 {
     public class CheckField : BaseModel
     {
-        public int Id { get; set; }
         public CheckFieldUIType CheckFieldUIType { get; set; }
         public int QuestionId { get; set; }
         public Question Question { get; set; }
