@@ -1,15 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using OnlineExam.Infrastructure.Abstraction;
 using OnlineExam.Model.Models;
 
 namespace OnlineExam.Infrastructure.Mappings
 {
-    internal class TextFieldEntityTypeConfiguration : IEntityTypeConfiguration<TextField>
+    internal class TextFieldEntityTypeConfiguration : BaseModelEntityTypeConfiguration<TextField>
     {
-        public void Configure(EntityTypeBuilder<TextField> builder)
+        public override void ConcreteConfigure(EntityTypeBuilder<TextField> builder)
         {
-            builder.HasKey(x => x.Id);
-
             builder.HasOne(x => x.Question)
                 .WithMany()
                 .HasForeignKey(x => x.QuestionId)
