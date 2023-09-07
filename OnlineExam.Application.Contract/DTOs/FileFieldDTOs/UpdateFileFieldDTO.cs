@@ -2,7 +2,7 @@
 {
     public class UpdateFileFieldDTO
     {
-        public int KiloByteMaximumSize { get; set; }
-        public ICollection<int> AllowedFileTypesIds { get; set; } = new List<int>();
+        public int? KiloByteMaximumSize { get; set; }
+        public ICollection<int>? AllowedFileTypesIds { get; set; } = new List<int>();
     }
 }
