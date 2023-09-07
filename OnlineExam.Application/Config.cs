@@ -5,6 +5,7 @@ using OnlineExam.Application.Contract.IServices;
 using OnlineExam.Application.Mappers;
 using OnlineExam.Application.Services;
 using OnlineExam.Application.Validators;
+using OnlineExam.Infrastructure.Contract.IRepositories;
 
 namespace OnlineExam.Application
 {
@@ -28,6 +29,7 @@ namespace OnlineExam.Application
             serviceDescriptors.AddScoped<ICheckFieldOptionMapper, CheckFieldOptionMapper>();
             serviceDescriptors.AddScoped<ICheckFieldOptionValidator, CheckFieldOptionValidator>();
             serviceDescriptors.AddScoped<IDatabaseBasedCheckFieldOptionValidator, DatabaseBasedCheckFieldOptionValidator>();
+            serviceDescriptors.AddScoped<IAllowedFileTypesFieldService, AllowedFileTypesFieldService>();
             serviceDescriptors.AddScoped<IFileFieldMapper, FileFieldMapper>();
             serviceDescriptors.AddScoped<IAllowedFileTypesFieldMapper, AllowedFileTypesFieldMapper>();
             serviceDescriptors.AddScoped<IDatabaseBasedAllowedFileTypesFieldValidator, DatabaseBasedAllowedFileTypesFieldValidator>();
