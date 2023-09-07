@@ -5,6 +5,7 @@ using OnlineExam.EndPoint.API.Exceptions;
 
 namespace OnlineExam.EndPoint.API.Controllers
 {
+    [Route("api")]
     [ApiController]
     public class TextFieldsController : ControllerBase
     {
