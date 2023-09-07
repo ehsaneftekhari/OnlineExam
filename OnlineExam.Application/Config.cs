@@ -30,6 +30,9 @@ namespace OnlineExam.Application
             serviceDescriptors.AddScoped<IDatabaseBasedCheckFieldOptionValidator, DatabaseBasedCheckFieldOptionValidator>();
             serviceDescriptors.AddScoped<IFileFieldMapper, FileFieldMapper>();
             serviceDescriptors.AddScoped<IAllowedFileTypesFieldMapper, AllowedFileTypesFieldMapper>();
+            serviceDescriptors.AddScoped<IDatabaseBasedAllowedFileTypesFieldValidator, DatabaseBasedAllowedFileTypesFieldValidator>();
+            serviceDescriptors.AddScoped<IAllowedFileTypesFieldValidator, AllowedFileTypesFieldValidator>();
+            serviceDescriptors.AddScoped<IFileFieldValidator, FileFieldValidator>();
         }
     }
 }

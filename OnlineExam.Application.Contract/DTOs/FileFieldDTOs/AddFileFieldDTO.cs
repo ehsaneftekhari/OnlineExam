@@ -1,7 +1,4 @@
-﻿using OnlineExam.Model.Models;
-using OnlineExam.Model;
-
-namespace OnlineExam.Application.Contract.DTOs.FileFieldDTOs
+﻿namespace OnlineExam.Application.Contract.DTOs.FileFieldDTOs
 {
     public class AddFileFieldDTO
     {
