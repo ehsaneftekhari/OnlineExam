@@ -9,7 +9,7 @@ namespace OnlineExam.Application.Mappers
         public FileField? AddDTOToEntity(
             int questionId
             , AddFileFieldDTO? addFileFieldDTO
-            , Func<ICollection<int>, ICollection<AllowedFileTypesField>> allowedFileTypesFieldExtractor)
+            , Func<IEnumerable<int>, IEnumerable<AllowedFileTypesField>> allowedFileTypesFieldExtractor)
         {
             if (addFileFieldDTO != null)
             {
@@ -17,7 +17,7 @@ namespace OnlineExam.Application.Mappers
                 {
                     QuestionId = questionId,
                     KiloByteMaximumSize = addFileFieldDTO.KiloByteMaximumSize,
-                    AllowedFileTypes = allowedFileTypesFieldExtractor.Invoke(addFileFieldDTO.AllowedFileTypesIds)
+                    AllowedFileTypes = allowedFileTypesFieldExtractor.Invoke(addFileFieldDTO.AllowedFileTypesIds).ToList()
                 };
             }
             return null;
@@ -49,7 +49,7 @@ namespace OnlineExam.Application.Mappers
         public void UpdateEntityByDTO(
             FileField old
             , UpdateFileFieldDTO @new
-            , Func<ICollection<int>, ICollection<AllowedFileTypesField>> allowedFileTypesFieldExtractor)
+            , Func<IEnumerable<int>, IEnumerable<AllowedFileTypesField>> allowedFileTypesFieldExtractor)
         {
             if (@new != null || old != null)
             {
@@ -57,7 +57,7 @@ namespace OnlineExam.Application.Mappers
                     old.KiloByteMaximumSize = (int)@new.KiloByteMaximumSize;
 
                 if (@new.AllowedFileTypesIds != null && @new.AllowedFileTypesIds.Any())
-                    old.AllowedFileTypes = allowedFileTypesFieldExtractor.Invoke(@new.AllowedFileTypesIds);
+                    old.AllowedFileTypes = allowedFileTypesFieldExtractor.Invoke(@new.AllowedFileTypesIds).ToList();
             }
         }
     }
