@@ -4,6 +4,7 @@ using OnlineExam.Application.Contract.DTOs.AllowedFileTypesFieldDTOs;
 using OnlineExam.Application.Contract.Exceptions;
 using OnlineExam.Application.Contract.IServices;
 using OnlineExam.Infrastructure.Contract.IRepositories;
+using OnlineExam.Model.Models;
 
 namespace OnlineExam.Application.Services
 {
@@ -90,6 +91,42 @@ namespace OnlineExam.Application.Services
                 throw new ApplicationSourceNotFoundException($"AllowedFileTypesField with id:{id} is not exists");
 
             return _mapper.EntityToShowDTO(allowedFileTypesField);
+        }
+
+        internal IEnumerable<AllowedFileTypesField> GetByIds(IEnumerable<int> allowedFileTypesFieldIds)
+        {
+            if (allowedFileTypesFieldIds == null)
+                throw new ApplicationValidationException("allowedFileTypesFieldIds can not be null");
+
+            var fetched =
+                allowedFileTypesFieldIds.Any() ?
+                _repository.GetIQueryable()
+                .Where(x => allowedFileTypesFieldIds.Contains(x.Id))
+                .ToList()
+                : new List<AllowedFileTypesField>();
+
+            if(allowedFileTypesFieldIds.Count() != fetched.Count())
+            {
+                var message = "AllowedFileTypesField with ids:";
+
+                var notFoundedIds = allowedFileTypesFieldIds
+                    .Where(id => fetched.Any(t => t.Id == id))
+                    .ToList();
+
+                if(notFoundedIds.Count() > 1)
+                {
+                    notFoundedIds.ForEach(id => message += $"{id}, ");
+                    message += " are not exists";
+                }
+                else
+                {
+                    message += $"{notFoundedIds.First()} is not exists";
+                }
+
+                throw new ApplicationValidationException(message);
+            }
+
+            return fetched;
         }
 
         public void Update(int id, UpdateAllowedFileTypesFieldDTO dTO)
