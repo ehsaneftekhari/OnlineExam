@@ -1,4 +1,4 @@
-﻿using OnlineExam.Application.Abstractions.IMappers;
+using OnlineExam.Application.Abstractions.IMappers;
 using OnlineExam.Application.Contract.DTOs.FileFieldDTOs;
 using OnlineExam.Application.Contract.IServices;
 using OnlineExam.Infrastructure.Contract.IRepositories;
@@ -7,13 +7,13 @@ namespace OnlineExam.Application.Services
 {
     public class FileFieldService : IFileFieldService
     {
-        readonly IFileFieldOptionRepository _optionRepository;
+        readonly IFileFieldRepository _fileFieldRepository;
         readonly IQuestionRepository _questionRepository;
         readonly IFileFieldMapper _fileFieldMapper;
 
-        public FileFieldService(IFileFieldOptionRepository optionRepository, IQuestionRepository questionRepository, IFileFieldMapper fileFieldMapper)
+        public FileFieldService(IFileFieldRepository optionRepository,
         {
-            _optionRepository = optionRepository;
+            _fileFieldRepository = optionRepository;
             _questionRepository = questionRepository;
             _fileFieldMapper = fileFieldMapper;
         }
