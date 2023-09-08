@@ -21,6 +21,10 @@ namespace OnlineExam.Infrastructure.Contexts
         public DbSet<CheckField> CheckField { get; set; }
 
         public DbSet<CheckFieldOption> CheckFieldOption { get; set; }
+
+        public DbSet<FileField> FileField { get; set; }
+
+        public DbSet<AllowedFileTypesField> AllowedFileTypes { get; set; }
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -30,7 +34,9 @@ namespace OnlineExam.Infrastructure.Contexts
                 .ApplyConfiguration(new QuestionEntityTypeConfiguration())
                 .ApplyConfiguration(new TextFieldEntityTypeConfiguration())
                 .ApplyConfiguration(new CheckFieldEntityTypeConfiguration())
-                .ApplyConfiguration(new CheckFieldOptionEntityTypeConfiguration());
+                .ApplyConfiguration(new CheckFieldOptionEntityTypeConfiguration())
+                .ApplyConfiguration(new FileFieldEntityTypeConfiguration())
+                .ApplyConfiguration(new AllowedFileTypesEntityTypeConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }

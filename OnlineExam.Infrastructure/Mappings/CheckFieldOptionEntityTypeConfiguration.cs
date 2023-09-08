@@ -1,16 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using OnlineExam.Infrastructure.Abstraction;
 using OnlineExam.Model.Models;
 using System.Data;
 
 namespace OnlineExam.Infrastructure.Mappings
 {
-    internal class CheckFieldOptionEntityTypeConfiguration : IEntityTypeConfiguration<CheckFieldOption>
+    internal class CheckFieldOptionEntityTypeConfiguration : BaseModelEntityTypeConfiguration<CheckFieldOption>
     {
-        public void Configure(EntityTypeBuilder<CheckFieldOption> builder)
+        public override void ConcreteConfigure(EntityTypeBuilder<CheckFieldOption> builder)
         {
-            builder.HasKey(x => x.Id);
-
             builder.HasOne(x => x.CheckField)
                 .WithMany()
                 .HasForeignKey(x => x.CheckFieldId)

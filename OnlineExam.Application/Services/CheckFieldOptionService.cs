@@ -32,7 +32,7 @@ namespace OnlineExam.Application.Services
                 throw new ArgumentNullException();
 
             if (checkFieldId < 1)
-                throw new ApplicationValidationException("QuestionId can not be less than 1");
+                throw new ApplicationValidationException("checkFieldId can not be less than 1");
 
             _checkFieldOptionValidator.ValidateDTO(dTO);
 

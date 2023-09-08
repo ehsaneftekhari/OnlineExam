@@ -1,16 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using OnlineExam.Infrastructure.Abstraction;
 using OnlineExam.Model.Models;
 using System.Data;
 
 namespace OnlineExam.Infrastructure.Mappings
 {
-    public class SectionEntityTypeConfiguration : IEntityTypeConfiguration<Section>
+    public class SectionEntityTypeConfiguration : BaseModelEntityTypeConfiguration<Section>
     {
-        public void Configure(EntityTypeBuilder<Section> builder)
+        public override void ConcreteConfigure(EntityTypeBuilder<Section> builder)
         {
-            builder.HasKey(x => x.Id);
-
             builder.Property(x => x.Title)
                 .IsRequired()
                 .HasMaxLength(256)
