@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using OnlineExam.Application.Abstractions.IMappers;
 using OnlineExam.Application.Abstractions.IValidators;
 using OnlineExam.Application.Contract.IServices;
@@ -37,6 +37,7 @@ namespace OnlineExam.Application
             serviceDescriptors.AddScoped<IAllowedFileTypesFieldValidator, AllowedFileTypesFieldValidator>();
             serviceDescriptors.AddScoped<IFileFieldValidator, FileFieldValidator>();
             serviceDescriptors.AddScoped<IFileFieldService, FileFieldService>();
+            serviceDescriptors.AddScoped<IExamUserMapper, ExamUserMapper>();
         }
     }
 }
