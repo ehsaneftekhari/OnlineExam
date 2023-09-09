@@ -23,9 +23,9 @@ namespace OnlineExam.Application.Mappers
                     Score = addQuestionDTO.Score,
                     Duration = new TimeSpan(
                         addQuestionDTO.DurationDays
-                        ,addQuestionDTO.DurationHours
-                        ,addQuestionDTO.DurationMinutes
-                        ,addQuestionDTO.DurationSeconds),
+                        , addQuestionDTO.DurationHours
+                        , addQuestionDTO.DurationMinutes
+                        , addQuestionDTO.DurationSeconds),
                     Order = addQuestionDTO.Order
                 };
             return null;
@@ -54,19 +54,24 @@ namespace OnlineExam.Application.Mappers
         {
             if (@new != null || old != null)
             {
-                foreach(var property in typeof(UpdateQuestionDTO).GetProperties())
-                {
-                    var pName = property.Name;
+                if (@new!.Text != null)
+                    old.Text = @new.Text;
 
-                    var value = property.GetValue(@new);
+                if (@new.ImageAddress != null)
+                    old.ImageAddress = @new.ImageAddress;
 
-                    if (value != null)
-                    {
-                        var entityProperty = typeof(Question)!.GetProperty(pName);
-                        entityProperty.SetValue(old, value);
-                    }
-                    
-                }
+                if (@new.Score.HasValue)
+                    old.Score = @new.Score.Value;
+
+                if (@new.DurationDays.HasValue
+                    || @new.DurationHours.HasValue
+                    || @new.DurationMinutes.HasValue
+                    || @new.DurationSeconds.HasValue)
+                    old.Duration = new TimeSpan(@new.DurationDays ?? 0, @new.DurationHours ?? 0
+                        , @new.DurationMinutes ?? 0, @new.DurationSeconds ?? 0);
+
+                if (@new.Order.HasValue)
+                    old.Order = @new.Order.Value;
             }
         }
     }
