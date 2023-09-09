@@ -25,6 +25,8 @@ namespace OnlineExam.Infrastructure.Contexts
         public DbSet<FileField> FileField { get; set; }
 
         public DbSet<AllowedFileTypesField> AllowedFileTypes { get; set; }
+
+        public DbSet<ExamUser> ExamUser { get; set; }
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -36,7 +38,8 @@ namespace OnlineExam.Infrastructure.Contexts
                 .ApplyConfiguration(new CheckFieldEntityTypeConfiguration())
                 .ApplyConfiguration(new CheckFieldOptionEntityTypeConfiguration())
                 .ApplyConfiguration(new FileFieldEntityTypeConfiguration())
-                .ApplyConfiguration(new AllowedFileTypesEntityTypeConfiguration());
+                .ApplyConfiguration(new AllowedFileTypesEntityTypeConfiguration())
+                .ApplyConfiguration(new ExamUserConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }
