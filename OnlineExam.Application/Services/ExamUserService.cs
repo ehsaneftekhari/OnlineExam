@@ -33,7 +33,7 @@ namespace OnlineExam.Application.Services
 
             _validator.DatabaseBasedValidate(dTO);
 
-            var newExamUser = _mapper.AddDTOToEntity(dTO)!;
+            var newExamUser = _mapper.AddDTOToEntity(dTO, DateTime.Now)!;
             if (_repository.Add(newExamUser) > 0 && newExamUser.Id > 0)
                 return _mapper.EntityToShowDTO(newExamUser)!;
 
@@ -54,7 +54,7 @@ namespace OnlineExam.Application.Services
                 throw new Exception();
         }
 
-        public IEnumerable<ShowExamUserDTO> GetAll(int examId, int skip = 0, int take = 20)
+        public IEnumerable<ShowExamUserDTO> GetAllByExamId(int examId, int skip = 0, int take = 20)
         {
             if (examId < 1)
                 throw new ApplicationValidationException("examId can not be less than 1");

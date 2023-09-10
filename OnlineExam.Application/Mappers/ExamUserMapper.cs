@@ -6,13 +6,14 @@ namespace OnlineExam.Application.Mappers
 {
     internal class ExamUserMapper : IExamUserMapper
     {
-        public ExamUser? AddDTOToEntity(AddExamUserDTO? dTO)
+        public ExamUser? AddDTOToEntity(AddExamUserDTO? dTO, DateTime Start)
         {
             if (dTO != null)
                 return new()
                 {
                     UserId = dTO.UserId,
-                    ExamId = dTO.ExamId
+                    ExamId = dTO.ExamId,
+                    Start = Start
                 };
             return null;
         }
