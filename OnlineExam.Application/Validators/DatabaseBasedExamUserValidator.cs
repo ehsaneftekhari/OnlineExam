@@ -28,7 +28,7 @@ namespace OnlineExam.Application.Validators
                 throw new ApplicationValidationException($"Exam (id: {examId}) is not published");
 
             if (exam.End < DateTime.Now)
-                throw new ApplicationValidationException($"the Exam (id: {examId}) is finished");
+                throw new ApplicationValidationException($"the Exam (id: {examId}) is finished at {exam.End}");
         }
     }
 }
