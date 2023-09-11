@@ -1,15 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using OnlineExam.Infrastructure.Abstraction;
 using OnlineExam.Model.Models;
 
 namespace OnlineExam.Infrastructure.Mappings
 {
-    internal class AnswerEntityTypeConfiguration : IEntityTypeConfiguration<Answer>
+    internal class AnswerEntityTypeConfiguration : BaseModelEntityTypeConfiguration<Answer>
     {
-        public void Configure(EntityTypeBuilder<Answer> builder)
+        public override void ConcreteConfigure(EntityTypeBuilder<Answer> builder)
         {
-            builder.HasKey(x => new { x.ExamUserId, x.QuestionId });
-
             builder.HasOne(x => x.ExamUser)
                 .WithMany()
                 .HasForeignKey(x => x.ExamUserId)

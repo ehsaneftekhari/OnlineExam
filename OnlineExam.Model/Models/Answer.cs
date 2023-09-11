@@ -1,6 +1,6 @@
 ﻿namespace OnlineExam.Model.Models
 {
-    public class Answer
+    public class Answer : BaseModel
     {
         public int ExamUserId { get; set; }
         public ExamUser ExamUser { get; set; } = null!;
