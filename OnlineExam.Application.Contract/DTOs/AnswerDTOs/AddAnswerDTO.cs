@@ -1,6 +1,4 @@
-﻿using OnlineExam.Model.Models;
-
-namespace OnlineExam.Application.Contract.DTOs.AnswerDTOs
+﻿namespace OnlineExam.Application.Contract.DTOs.AnswerDTOs
 {
     public class AddAnswerDTO
     {

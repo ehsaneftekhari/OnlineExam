@@ -2,6 +2,7 @@
 {
     public class ShowAnswerDTO
     {
+        public int Id { get; set; }
         public int ExamUserId { get; set; }
         public int QuestionId { get; set; }
         public string Content { get; set; } = null!;

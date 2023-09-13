@@ -2,8 +2,7 @@
 {
     public class UpdateAnswerDTO
     {
-        public int ExamUserId { get; set; }
-        public int QuestionId { get; set; }
-        public string Content { get; set; } = null!;
+        public int Id { get; set; }
+        public int EarnedScore { get; set; }
     }
 }
