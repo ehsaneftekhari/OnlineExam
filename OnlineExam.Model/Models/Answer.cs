@@ -8,6 +8,6 @@
         public Question Question { get; set; } = null!;
         public string Content { get; set; } = null!;
         public DateTime DateTime { get; set; }
-        public int EarnedScore { get; set; }
+        public int? EarnedScore { get; set; }
     }
 }
