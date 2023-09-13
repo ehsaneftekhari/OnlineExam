@@ -49,5 +49,14 @@ namespace OnlineExam.Application.Validators
             if (exam.End < DateTime.Now)
                 throw new ApplicationValidationException($"Exam by id: {exam.Id} has ended");
         }
+
+        public void ValidateBeforeUpdate(UpdateAnswerDTO dTO)
+        {
+            var answer = _answerRepository.GetById(dTO.Id);
+            var question = _questionService.GetById(answer.QuestionId);
+
+            if (question.Score < dTO.EarnedScore)
+                throw new ApplicationValidationException($"EarnedScore for question (questionId: {question}) can not be more than {question.Score}");
+        }
     }
 }

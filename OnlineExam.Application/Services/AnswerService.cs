@@ -92,6 +92,7 @@ namespace OnlineExam.Application.Services
         public void UpdateEarnedScore(UpdateAnswerDTO dTO)
         {
             _answerValidator.ValidateDTO(dTO);
+            _databaseBasedAnswerValidator.ValidateBeforeUpdate(dTO);
 
             var answer = _answerRepository.GetById(dTO.Id);
 
