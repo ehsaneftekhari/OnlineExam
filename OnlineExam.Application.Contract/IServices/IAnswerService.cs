@@ -6,6 +6,7 @@ namespace OnlineExam.Application.Contract.IServices
     {
         ShowAnswerDTO Add(AddAnswerDTO dTO);
         ShowAnswerDTO? GetById(int answerId);
+        IEnumerable<ShowAnswerDTO> GetAll(int examUserId, int questionId, int skip, int take);
         void UpdateEarnedScore(UpdateAnswerDTO dTO);
     }
 }
