@@ -73,6 +73,8 @@ namespace OnlineExam.Application.Services
             return section;
         }
 
+        internal void ThrowExceptionIfSectionIsNotExists(int sectionId) => GetById(sectionId);
+
         internal void Delete(int sectionId)
         {
             var section = GetById(sectionId);
@@ -81,13 +83,12 @@ namespace OnlineExam.Application.Services
                 throw new OEApplicationException("Section did not deleted");
         }
 
-
         internal void Update(Section section)
         {
             ThrowIfSectionIsNotValid(section);
 
             if (_sectionRepository.Update(section) <= 0)
-                throw new Exception();
+                throw new OEApplicationException("Section did not updated");
         }
 
         internal void ThrowIfSectionIdIsNotValid(int sectionId)

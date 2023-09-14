@@ -7,15 +7,12 @@ namespace OnlineExam.Application.Services
 {
     public class SectionService : ISectionService
     {
-        readonly ExamInternalService _examInternalService;
         readonly SectionInternalService _sectionInternalService;
         readonly ISectionMapper _sectionMapper;
 
-        public SectionService(ExamInternalService examInternalService,
-                              SectionInternalService sectionInternalService,
+        public SectionService(SectionInternalService sectionInternalService,
                               ISectionMapper sectionMapper)
         {
-            _examInternalService = examInternalService;
             _sectionInternalService = sectionInternalService;
             _sectionMapper = sectionMapper;
         }
