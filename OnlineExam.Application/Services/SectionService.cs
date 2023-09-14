@@ -2,116 +2,46 @@
 using OnlineExam.Application.Contract.DTOs.SectionDTOs;
 using OnlineExam.Application.Contract.Exceptions;
 using OnlineExam.Application.Contract.IServices;
-using OnlineExam.Infrastructure.Contract.IRepositories;
 
 namespace OnlineExam.Application.Services
 {
     public class SectionService : ISectionService
     {
-        readonly IExamRepository _examRepository;
-        readonly ISectionRepository _sectionRepository;
+        readonly ExamInternalService _examInternalService;
+        readonly SectionInternalService _sectionInternalService;
         readonly ISectionMapper _sectionMapper;
 
-        public SectionService(ISectionRepository sectionRepository, ISectionMapper sectionMapper, IExamRepository examRepository)
+        public SectionService(ExamInternalService examInternalService,
+                              SectionInternalService sectionInternalService,
+                              ISectionMapper sectionMapper)
         {
-            _sectionRepository = sectionRepository;
+            _examInternalService = examInternalService;
+            _sectionInternalService = sectionInternalService;
             _sectionMapper = sectionMapper;
-            _examRepository = examRepository;
         }
 
-        public ShowSectionDTO Add(int examId, AddSectionDTO dTO)
+        public ShowSectionDTO Add(int examId, AddSectionDTO Section)
         {
-            if (dTO == null)
-                throw new ArgumentNullException();
-
-            try
-            {
-                var newSection = _sectionMapper.AddDTOToEntity(examId, dTO)!;
-                if (_sectionRepository.Add(newSection) > 0 && newSection.Id > 0)
-                    return _sectionMapper.EntityToShowDTO(newSection)!;
-
-                throw new Exception();
-            }
-            catch
-            {
-                if (_examRepository.GetById(examId) == null)
-                    throw new OEApplicationException($"Exam with id:{examId} is not exists");
-
-                throw;
-            }
+            var newSection = _sectionMapper.AddDTOToEntity(examId, Section)!;
+            _sectionInternalService.Add(examId, newSection);
+            return _sectionMapper.EntityToShowDTO(newSection)!;
         }
 
         public IEnumerable<ShowSectionDTO> GetAllByExamId(int examId, int skip, int take)
+         => _sectionInternalService.GetAllByExamId(examId, skip, take).Select(_sectionMapper.EntityToShowDTO)!;
+
+        public void Delete(int sectionId) => _sectionInternalService.Delete(sectionId);
+
+        public ShowSectionDTO? GetById(int sectionId)
+            => _sectionMapper.EntityToShowDTO(_sectionInternalService.GetById(sectionId));
+
+        public void Update(int sectionId, UpdateSectionDTO dTO)
         {
-            if (examId < 1)
-                throw new ApplicationValidationException("examId can not be less than 1");
-
-            if (skip < 0 || take < 1)
-                throw new OEApplicationException();
-
-            var sections =
-                _sectionRepository.GetIQueryable()
-                .Where(q => q.ExamId == examId)
-                .Skip(skip)
-                .Take(take)
-                .ToList()
-                .Select(_sectionMapper.EntityToShowDTO);
-
-            if (!sections.Any())
-            {
-                if (_examRepository.GetById(examId) == null)
-                    throw new ApplicationSourceNotFoundException($"Exam with id:{examId} is not exists");
-
-                throw new ApplicationSourceNotFoundException($"there is no Section within Exam (examId:{examId})");
-            }
-
-            return sections!;
-        }
-
-        public void Delete(int id)
-        {
-            if (id < 1)
-                throw new ApplicationValidationException("id can not be less than 1");
-
-            var section = _sectionRepository.GetById(id);
-
-            if (section == null)
-                throw new ApplicationSourceNotFoundException($"Section with id:{id} is not exists");
-
-            if (_sectionRepository.Delete(section) < 0)
-                throw new Exception();
-        }
-
-        public ShowSectionDTO? GetById(int id)
-        {
-            if (id < 1)
-                throw new ApplicationValidationException("id can not be less than 1");
-
-            var section = _sectionRepository.GetById(id);
-
-            if (section == null)
-                throw new ApplicationSourceNotFoundException($"Section with id:{id} is not exists");
-
-            return _sectionMapper.EntityToShowDTO(section);
-        }
-
-        public void Update(int id, UpdateSectionDTO dTO)
-        {
-            if (id < 1)
-                throw new ApplicationValidationException("id can not be less than 1");
-
-            if (dTO == null)
-                throw new ArgumentNullException();
-
-            var section = _sectionRepository.GetById(id);
-
-            if (section == null)
-                throw new ApplicationSourceNotFoundException($"Section with id:{id} is not exists");
+            var section = _sectionInternalService.GetById(sectionId);
 
             _sectionMapper.UpdateEntityByDTO(section, dTO);
 
-            if(_sectionRepository.Update(section) <= 0)
-                throw new Exception();
+            _sectionInternalService.Update(section);
         }
     }
 }
