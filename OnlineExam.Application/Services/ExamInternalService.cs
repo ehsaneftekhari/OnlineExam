@@ -14,10 +14,9 @@ namespace OnlineExam.Application.Services
             _examRepository = examRepository;
         }
 
-        public Exam Add(Exam newExam)
+        internal Exam Add(Exam newExam)
         {
-            if (newExam == null)
-                throw new ArgumentNullException();
+            ThrowIfExamIsNotValid(newExam);
 
             newExam!.CreatorUserId = "1";
 
@@ -27,15 +26,9 @@ namespace OnlineExam.Application.Services
             throw new OEApplicationException();
         }
 
-        public void Delete(int id)
+        internal void Delete(int examId)
         {
-            if (id < 1)
-                throw new ApplicationValidationException("id can not be less than 1");
-
-            var exam = _examRepository.GetById(id);
-
-            if (exam == null)
-                throw new ApplicationSourceNotFoundException($"Exam with id:{id} is not exists");
+            var exam = GetById(examId);
 
             try
             {
@@ -44,27 +37,28 @@ namespace OnlineExam.Application.Services
             }
             catch
             {
-                if (_examRepository.GetWithSectionsLoaded(id).Sections.Any())
+                if (_examRepository.GetWithSectionsLoaded(examId).Sections.Any())
                     throw new OEApplicationException($"the exam has sections and can not be deleted");
 
                 throw;
             }
         }
 
-        public Exam GetById(int id)
+        internal Exam GetById(int examId)
         {
-            if (id < 1)
-                throw new ApplicationValidationException("id can not be less than 1");
+            ThrowIfExamIdIsNotValid(examId);
 
-            var exam = _examRepository.GetById(id);
+            var exam = _examRepository.GetById(examId);
 
             if (exam == null)
-                throw new ApplicationSourceNotFoundException($"Exam with id:{id} is not exists");
+                throw new ApplicationSourceNotFoundException($"Exam with id:{examId} is not exists");
 
             return exam;
         }
 
-        public IEnumerable<Exam> GetAll(int skip, int take)
+        internal void ThrowExceptionIfExamIsNotExists(int examId) => GetById(examId);
+
+        internal IEnumerable<Exam> GetAll(int skip, int take)
         {
             if (skip < 0 || take < 1)
                 throw new OEApplicationException();
@@ -81,16 +75,24 @@ namespace OnlineExam.Application.Services
             return exams!;
         }
 
-        public void Update(int id, Exam exam)
+        internal void Update(Exam exam)
         {
-            if (id < 1)
-                throw new ApplicationValidationException("id can not be less than 1");
-
-            if (exam == null)
-                throw new ArgumentNullException();
+            ThrowIfExamIsNotValid(exam);
 
             if (_examRepository.Update(exam) <= 0)
-                throw new Exception();
+                throw new OEApplicationException("Exam did not updated");
+        }
+
+        internal void ThrowIfExamIdIsNotValid(int examId)
+        {
+            if (examId < 1)
+                throw new ApplicationValidationException($"{nameof(examId)} can not be less than 1");
+        }
+
+        internal void ThrowIfExamIsNotValid(Exam exam)
+        {
+            if (exam == null)
+                throw new ArgumentNullException();
         }
     }
 }

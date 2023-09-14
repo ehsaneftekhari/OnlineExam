@@ -34,7 +34,7 @@ namespace OnlineExam.Application.Services
 
             _examMapper.UpdateEntityByDTO(exam, dTO);
 
-            _internalService.Update(id, exam);
+            _internalService.Update(exam);
         }
     }
 }
