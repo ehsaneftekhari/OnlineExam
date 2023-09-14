@@ -5,7 +5,7 @@ using OnlineExam.Model.Models;
 
 namespace OnlineExam.Infrastructure.Mappings
 {
-    internal class ExamUserConfiguration : BaseModelEntityTypeConfiguration<ExamUser>
+    internal class ExamUserEntityTypeConfiguration : BaseModelEntityTypeConfiguration<ExamUser>
     {
         public override void ConcreteConfigure(EntityTypeBuilder<ExamUser> builder)
         {
