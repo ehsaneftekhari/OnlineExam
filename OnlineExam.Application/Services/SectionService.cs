@@ -1,9 +1,7 @@
 ﻿using OnlineExam.Application.Abstractions.IMappers;
-using OnlineExam.Application.Contract.DTOs.QuestionDTOs;
 using OnlineExam.Application.Contract.DTOs.SectionDTOs;
 using OnlineExam.Application.Contract.Exceptions;
 using OnlineExam.Application.Contract.IServices;
-using OnlineExam.Application.Mappers;
 using OnlineExam.Infrastructure.Contract.IRepositories;
 
 namespace OnlineExam.Application.Services

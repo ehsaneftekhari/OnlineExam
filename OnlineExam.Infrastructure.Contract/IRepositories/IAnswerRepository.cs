@@ -1,6 +1,5 @@
 ﻿using OnlineExam.Infrastructure.Contract.Abstractions;
 using OnlineExam.Model.Models;
-using System.Security.Cryptography;
 
 namespace OnlineExam.Infrastructure.Contract.IRepositories
 {

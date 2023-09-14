@@ -3,7 +3,6 @@ using OnlineExam.Application.Contract.DTOs.AnswerDTOs;
 using OnlineExam.Application.Contract.Exceptions;
 using OnlineExam.Application.Contract.IServices;
 using OnlineExam.Infrastructure.Contract.IRepositories;
-using OnlineExam.Model.Models;
 
 namespace OnlineExam.Application.Validators
 {

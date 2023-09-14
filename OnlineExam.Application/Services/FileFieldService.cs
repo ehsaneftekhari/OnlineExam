@@ -3,8 +3,6 @@ using OnlineExam.Application.Abstractions.IValidators;
 using OnlineExam.Application.Contract.DTOs.FileFieldDTOs;
 using OnlineExam.Application.Contract.Exceptions;
 using OnlineExam.Application.Contract.IServices;
-using OnlineExam.Application.Mappers;
-using OnlineExam.Application.Validators;
 using OnlineExam.Infrastructure.Contract.IRepositories;
 
 namespace OnlineExam.Application.Services

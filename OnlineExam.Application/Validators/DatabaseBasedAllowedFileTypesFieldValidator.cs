@@ -1,9 +1,7 @@
 ﻿using OnlineExam.Application.Abstractions.IValidators;
 using OnlineExam.Application.Contract.DTOs.AllowedFileTypesFieldDTOs;
-using OnlineExam.Application.Contract.DTOs.CheckFieldDTOs;
 using OnlineExam.Application.Contract.Exceptions;
 using OnlineExam.Infrastructure.Contract.IRepositories;
-using OnlineExam.Model.Models;
 
 namespace OnlineExam.Application.Validators
 {

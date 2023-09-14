@@ -5,7 +5,6 @@ using OnlineExam.Application.Contract.IServices;
 using OnlineExam.Application.Mappers;
 using OnlineExam.Application.Services;
 using OnlineExam.Application.Validators;
-using OnlineExam.Infrastructure.Contract.IRepositories;
 
 namespace OnlineExam.Application
 {

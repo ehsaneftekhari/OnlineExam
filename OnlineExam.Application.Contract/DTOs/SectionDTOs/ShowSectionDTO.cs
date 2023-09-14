@@ -1,6 +1,4 @@
-﻿using OnlineExam.Application.Contract.DTOs.ExamDTOs;
-
-namespace OnlineExam.Application.Contract.DTOs.SectionDTOs
+﻿namespace OnlineExam.Application.Contract.DTOs.SectionDTOs
 {
     public class ShowSectionDTO
     {

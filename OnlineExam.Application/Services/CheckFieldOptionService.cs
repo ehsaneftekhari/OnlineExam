@@ -3,9 +3,7 @@ using OnlineExam.Application.Abstractions.IValidators;
 using OnlineExam.Application.Contract.DTOs.CheckFieldDTOs;
 using OnlineExam.Application.Contract.Exceptions;
 using OnlineExam.Application.Contract.IServices;
-using OnlineExam.Application.Mappers;
 using OnlineExam.Infrastructure.Contract.IRepositories;
-using OnlineExam.Model.Models;
 
 namespace OnlineExam.Application.Services
 {

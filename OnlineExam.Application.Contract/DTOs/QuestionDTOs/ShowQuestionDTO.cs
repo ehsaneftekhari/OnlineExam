@@ -1,7 +1,4 @@
-﻿
-using OnlineExam.Model.Models;
-
-namespace OnlineExam.Application.Contract.DTOs.QuestionDTOs
+﻿namespace OnlineExam.Application.Contract.DTOs.QuestionDTOs
 {
     public class ShowQuestionDTO 
     {

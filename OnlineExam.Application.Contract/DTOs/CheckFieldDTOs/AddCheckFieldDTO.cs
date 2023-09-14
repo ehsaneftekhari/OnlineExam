@@ -1,6 +1,4 @@
-﻿using OnlineExam.Model.Models;
-
-namespace OnlineExam.Application.Contract.DTOs.CheckFieldDTOs
+﻿namespace OnlineExam.Application.Contract.DTOs.CheckFieldDTOs
 {
     public class AddCheckFieldDTO
     {

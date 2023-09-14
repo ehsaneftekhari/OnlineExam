@@ -1,6 +1,4 @@
-﻿using OnlineExam.Model.Models;
-
-namespace OnlineExam.Application.Contract.DTOs.TextFieldDTOs
+﻿namespace OnlineExam.Application.Contract.DTOs.TextFieldDTOs
 {
     public class UpdateTextFieldDTO
     {

@@ -1,7 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using OnlineExam.Application.Contract.DTOs.AnswerDTOs;
-using OnlineExam.Application.Contract.DTOs.QuestionDTOs;
 using OnlineExam.Application.Contract.IServices;
 using OnlineExam.EndPoint.API.DTOs.AnswerDTOs;
 using OnlineExam.EndPoint.API.Exceptions;
