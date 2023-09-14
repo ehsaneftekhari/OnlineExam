@@ -40,10 +40,6 @@ namespace OnlineExam.Application
             serviceDescriptors.AddScoped<IDatabaseBasedExamUserValidator, DatabaseBasedExamUserValidator>();
             serviceDescriptors.AddScoped<IExamUserMapper, ExamUserMapper>();
             serviceDescriptors.AddScoped<IExamUserService, ExamUserService>();
-            serviceDescriptors.AddScoped<IAnswerMapper, AnswerMapper>();
-            serviceDescriptors.AddScoped<IAnswerValidator, AnswerValidator>();
-            serviceDescriptors.AddScoped<IDatabaseBasedAnswerValidator, DatabaseBasedAnswerValidator>();
-            serviceDescriptors.AddScoped<IAnswerService, AnswerService>();
         }
     }
 }

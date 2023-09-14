@@ -19,7 +19,6 @@ namespace OnlineExam.Infrastructure
             serviceDescriptors.AddScoped<IFileFieldRepository, FileFieldRepository>();
             serviceDescriptors.AddScoped<IAllowedFileTypesFieldOptionRepository, AllowedFileTypesFieldOptionRepository>();
             serviceDescriptors.AddScoped<IExamUserRepository, ExamUserRepository>();
-            serviceDescriptors.AddScoped<IAnswerRepository, AnswerRepository>();
             
             serviceDescriptors.AddDbContext<OnlineExamContext>(option => option.UseSqlServer(ConnectionString));
         }

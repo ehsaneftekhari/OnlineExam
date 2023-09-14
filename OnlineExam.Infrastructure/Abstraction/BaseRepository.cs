@@ -4,7 +4,7 @@ using OnlineExam.Model;
 
 namespace OnlineExam.Infrastructure.Abstraction
 {
-    public abstract class BaseRepository<TEntity> : IAddRepository<TEntity>, IGetRepository<TEntity, int>,
+    public abstract class BaseRepository<TEntity> : IAddRepository<TEntity>, IGetRepository<TEntity>,
         IUpdateRepository<TEntity>, IDeleteRepository<TEntity>, IGetQueryableRepository<TEntity> where TEntity : BaseModel
     {
         protected readonly OnlineExamContext _context;
