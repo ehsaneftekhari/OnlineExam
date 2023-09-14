@@ -35,7 +35,7 @@ namespace OnlineExam.Application.Validators
             var section = _sectionService.GetById(question!.SectionId);
 
             if (examUser.ExamId != section.ExamId)
-                throw new ApplicationValidationException($"ExamUser by id: {dTO.ExamUserId} is not meant for Exam by id: {examUser.ExamId}");
+                throw new ApplicationValidationException($"ExamUser by id: {dTO.ExamUserId} is not meant for Exam by id: {section.ExamId}");
 
 
             var exam = _examService.GetById(examUser.ExamId);
@@ -56,7 +56,7 @@ namespace OnlineExam.Application.Validators
             var question = _questionService.GetById(answer.QuestionId);
 
             if (question.Score < dTO.EarnedScore)
-                throw new ApplicationValidationException($"EarnedScore for question (questionId: {question}) can not be more than {question.Score}");
+                throw new ApplicationValidationException($"EarnedScore for question (questionId: {question.Id}) can not be more than {question.Score}");
         }
     }
 }
