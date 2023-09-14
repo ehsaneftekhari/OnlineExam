@@ -3,7 +3,7 @@ using OnlineExam.Application.Contract.Exceptions;
 using OnlineExam.Infrastructure.Contract.IRepositories;
 using OnlineExam.Model.Models;
 
-namespace OnlineExam.Application.Services
+namespace OnlineExam.Application.Services.ExamServices
 {
     public class ExamInternalService
     {

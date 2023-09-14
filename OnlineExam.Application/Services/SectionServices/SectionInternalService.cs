@@ -1,9 +1,10 @@
 ﻿using OnlineExam.Application.Contract.DTOs.SectionDTOs;
 using OnlineExam.Application.Contract.Exceptions;
+using OnlineExam.Application.Services.ExamServices;
 using OnlineExam.Infrastructure.Contract.IRepositories;
 using OnlineExam.Model.Models;
 
-namespace OnlineExam.Application.Services
+namespace OnlineExam.Application.Services.SectionServices
 {
     public class SectionInternalService
     {

@@ -5,7 +5,7 @@ using OnlineExam.Application.Contract.Exceptions;
 using OnlineExam.Application.Contract.IServices;
 using OnlineExam.Infrastructure.Contract.IRepositories;
 
-namespace OnlineExam.Application.Services
+namespace OnlineExam.Application.Services.CheckFieldServices
 {
     public class CheckFieldService : ICheckFieldService
     {

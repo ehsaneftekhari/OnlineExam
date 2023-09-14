@@ -2,7 +2,7 @@
 using OnlineExam.Application.Contract.DTOs.QuestionDTOs;
 using OnlineExam.Application.Contract.IServices;
 
-namespace OnlineExam.Application.Services
+namespace OnlineExam.Application.Services.QuestionServices
 {
     public class QuestionService : IQuestionService
     {

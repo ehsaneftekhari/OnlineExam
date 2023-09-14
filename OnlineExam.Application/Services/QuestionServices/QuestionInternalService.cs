@@ -1,9 +1,10 @@
 ﻿using OnlineExam.Application.Contract.DTOs.QuestionDTOs;
 using OnlineExam.Application.Contract.Exceptions;
+using OnlineExam.Application.Services.SectionServices;
 using OnlineExam.Infrastructure.Contract.IRepositories;
 using OnlineExam.Model.Models;
 
-namespace OnlineExam.Application.Services
+namespace OnlineExam.Application.Services.QuestionServices
 {
     public class QuestionInternalService
     {
