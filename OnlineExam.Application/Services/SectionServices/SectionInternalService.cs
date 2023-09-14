@@ -17,9 +17,9 @@ namespace OnlineExam.Application.Services.SectionServices
             _sectionRepository = sectionRepository;
         }
 
-        internal Section Add(int examId, Section newSection)
+        internal Section Add(Section newSection)
         {
-            _examInternalService.ThrowIfExamIdIsNotValid(examId);
+            _examInternalService.ThrowIfExamIdIsNotValid(newSection.ExamId);
 
             ThrowIfSectionIsNotValid(newSection);
 
@@ -32,7 +32,7 @@ namespace OnlineExam.Application.Services.SectionServices
             }
             catch
             {
-                _examInternalService.ThrowExceptionIfExamIsNotExists(examId);
+                _examInternalService.ThrowExceptionIfExamIsNotExists(newSection.ExamId);
 
                 throw;
             }

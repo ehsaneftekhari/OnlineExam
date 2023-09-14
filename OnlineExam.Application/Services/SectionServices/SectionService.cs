@@ -20,7 +20,7 @@ namespace OnlineExam.Application.Services.SectionServices
         public ShowSectionDTO Add(int examId, AddSectionDTO Section)
         {
             var newSection = _sectionMapper.AddDTOToEntity(examId, Section)!;
-            _sectionInternalService.Add(examId, newSection);
+            _sectionInternalService.Add(newSection);
             return _sectionMapper.EntityToShowDTO(newSection)!;
         }
 

@@ -17,11 +17,11 @@ namespace OnlineExam.Application.Services.QuestionServices
             _sectionInternalService = sectionInternalService;
         }
 
-        internal Question Add(int sectionId, Question newQuestion)
+        internal Question Add(Question newQuestion)
         {
             ThrowIfQuestionIsNotValid(newQuestion);
 
-            _sectionInternalService.ThrowIfSectionIdIsNotValid(sectionId);
+            _sectionInternalService.ThrowIfSectionIdIsNotValid(newQuestion.SectionId);
 
             try
             {
@@ -32,7 +32,7 @@ namespace OnlineExam.Application.Services.QuestionServices
             }
             catch
             {
-                _sectionInternalService.ThrowExceptionIfSectionIsNotExists(sectionId);
+                _sectionInternalService.ThrowExceptionIfSectionIsNotExists(newQuestion.SectionId);
 
                 throw;
             }
