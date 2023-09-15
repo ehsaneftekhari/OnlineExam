@@ -9,126 +9,55 @@ namespace OnlineExam.Application.Services.CheckFieldServices
 {
     public class CheckFieldOptionService : ICheckFieldOptionService
     {
-        readonly ICheckFieldOptionRepository _checkFieldOptionRepository;
-        readonly ICheckFieldRepository _checkFieldRepository;
+        readonly CheckFieldOptionInternalService _checkFieldOptionInternalService;
         readonly ICheckFieldOptionMapper _checkFieldOptionMapper;
         readonly ICheckFieldOptionValidator _checkFieldOptionValidator;
         readonly IDatabaseBasedCheckFieldOptionValidator _databaseBasedCheckFieldOptionValidator;
 
-        public CheckFieldOptionService(ICheckFieldOptionRepository checkFieldOptionRepository, ICheckFieldRepository checkFieldRepository, ICheckFieldOptionMapper checkFieldOptionMapper, ICheckFieldOptionValidator checkFieldOptionValidator, IDatabaseBasedCheckFieldOptionValidator databaseBasedCheckFieldOptionValidator)
+        public CheckFieldOptionService(CheckFieldOptionInternalService checkFieldOptionInternalService,
+                                       ICheckFieldOptionMapper checkFieldOptionMapper,
+                                       ICheckFieldOptionValidator checkFieldOptionValidator,
+                                       IDatabaseBasedCheckFieldOptionValidator databaseBasedCheckFieldOptionValidator)
         {
-            _checkFieldOptionRepository = checkFieldOptionRepository;
-            _checkFieldRepository = checkFieldRepository;
+            _checkFieldOptionInternalService = checkFieldOptionInternalService;
             _checkFieldOptionMapper = checkFieldOptionMapper;
             _checkFieldOptionValidator = checkFieldOptionValidator;
             _databaseBasedCheckFieldOptionValidator = databaseBasedCheckFieldOptionValidator;
         }
 
-        public ShowCheckFieldOptionDTO Add(int checkFieldId, AddCheckFieldOptionDTO dTO)
+        public ShowCheckFieldOptionDTO Add(int checkFieldId, AddCheckFieldOptionDTO CheckFieldOption)
         {
-            if (dTO == null)
-                throw new ArgumentNullException();
+            _checkFieldOptionValidator.ValidateDTO(CheckFieldOption);
 
-            if (checkFieldId < 1)
-                throw new ApplicationValidationException("checkFieldId can not be less than 1");
+            _databaseBasedCheckFieldOptionValidator.DatabaseBasedValidate(checkFieldId, CheckFieldOption);
 
-            _checkFieldOptionValidator.ValidateDTO(dTO);
+            var checkField = _checkFieldOptionMapper.AddDTOToEntity(checkFieldId, CheckFieldOption)!;
 
-            _databaseBasedCheckFieldOptionValidator.DatabaseBasedValidate(checkFieldId, dTO);
+            _checkFieldOptionInternalService.Add(checkField);
 
-            try
-            {
-                var newTextField = _checkFieldOptionMapper.AddDTOToEntity(checkFieldId, dTO)!;
-                if (_checkFieldOptionRepository.Add(newTextField) > 0 && newTextField.Id > 0)
-                    return _checkFieldOptionMapper.EntityToShowDTO(newTextField)!;
-
-                throw new Exception();
-            }
-            catch
-            {
-                if (_checkFieldRepository.GetById(checkFieldId) == null)
-                    throw new OEApplicationException($"CheckField with id:{checkFieldId} is not exists");
-
-                throw;
-            }
+            return _checkFieldOptionMapper.EntityToShowDTO(checkField)!;
         }
 
-        public void Delete(int id)
-        {
-            if (id < 1)
-                throw new ApplicationValidationException("id can not be less than 1");
-
-            var textFieldOption = _checkFieldOptionRepository.GetById(id);
-
-            if (textFieldOption == null)
-                throw new ApplicationSourceNotFoundException($"textFieldOption with id:{id} is not exists");
-
-            if (_checkFieldOptionRepository.Delete(textFieldOption) < 0)
-                throw new Exception();
-        }
+        public void Delete(int CheckFieldOptionId)
+            => _checkFieldOptionInternalService.Delete(CheckFieldOptionId);
 
         public IEnumerable<ShowCheckFieldOptionDTO> GetAllByCheckFieldId(int checkFieldId, int skip = 0, int take = 20)
-        {
-            if (checkFieldId < 1)
-                throw new ApplicationValidationException("checkFieldId can not be less than 1");
+            => _checkFieldOptionInternalService.GetAllByCheckFieldId(checkFieldId, skip, take).Select(_checkFieldOptionMapper.EntityToShowDTO);
 
-            if (skip < 0 || take < 1)
-                throw new OEApplicationException();
-
-            var checkFieldOptions =
-                _checkFieldOptionRepository.GetIQueryable()
-                .Where(q => q.CheckFieldId == checkFieldId)
-                .Skip(skip)
-                .Take(take)
-                .OrderBy(q => q.Order)
-                .ToList()
-                .Select(_checkFieldOptionMapper.EntityToShowDTO);
-
-            if (!checkFieldOptions.Any())
-            {
-                if (_checkFieldRepository.GetById(checkFieldId) == null)
-                    throw new ApplicationSourceNotFoundException($"CheckField with id:{checkFieldId} is not exists");
-
-                throw new ApplicationSourceNotFoundException($"there is no CheckFieldOption within checkField (checkFieldId:{checkFieldId})");
-            }
-
-            return checkFieldOptions!;
-        }
-
-        public ShowCheckFieldOptionDTO? GetById(int id)
-        {
-            if (id < 1)
-                throw new ApplicationValidationException("id can not be less than 1");
-
-            var checkFieldOption = _checkFieldOptionRepository.GetById(id);
-
-            if (checkFieldOption == null)
-                throw new ApplicationSourceNotFoundException($"CheckFieldOption with id:{id} is not exists");
-
-            return _checkFieldOptionMapper.EntityToShowDTO(checkFieldOption);
-        }
+        public ShowCheckFieldOptionDTO? GetById(int CheckFieldOptionId)
+            => _checkFieldOptionMapper.EntityToShowDTO(_checkFieldOptionInternalService.GetById(CheckFieldOptionId));
 
         public void Update(int id, UpdateCheckFieldOptionDTO dTO)
         {
-            if (id < 1)
-                throw new ApplicationValidationException("id can not be less than 1");
-
-            if (dTO == null)
-                throw new ArgumentNullException();
-
             _checkFieldOptionValidator.ValidateDTO(dTO);
 
-            var checkFieldOption = _checkFieldOptionRepository.GetById(id);
-
-            if (checkFieldOption == null)
-                throw new ApplicationSourceNotFoundException($"CheckFieldOption with id:{id} is not exists");
+            var checkFieldOption = _checkFieldOptionInternalService.GetById(id);
 
             _databaseBasedCheckFieldOptionValidator.DatabaseBasedValidate(checkFieldOption.CheckFieldId, id, dTO);
 
             _checkFieldOptionMapper.UpdateEntityByDTO(checkFieldOption, dTO);
 
-            if (_checkFieldOptionRepository.Update(checkFieldOption) <= 0)
-                throw new Exception();
+            _checkFieldOptionInternalService.Update(checkFieldOption);
         }
     }
 }
