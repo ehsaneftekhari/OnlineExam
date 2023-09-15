@@ -11,17 +11,14 @@ namespace OnlineExam.Application.Services.CheckFieldServices
     public class CheckFieldService : ICheckFieldService
     {
         readonly CheckFieldInternalService _checkFieldInternalService;
-        readonly QuestionInternalService _questionInternalService;
         readonly ICheckFieldMapper _checkFieldMapper;
         readonly ICheckFieldValidator _checkFieldValidator;
 
         public CheckFieldService(CheckFieldInternalService checkFieldInternalService,
-                                 QuestionInternalService questionInternalService,
                                  ICheckFieldMapper checkFieldMapper,
                                  ICheckFieldValidator checkFieldValidator)
         {
             _checkFieldInternalService = checkFieldInternalService;
-            _questionInternalService = questionInternalService;
             _checkFieldMapper = checkFieldMapper;
             _checkFieldValidator = checkFieldValidator;
         }

@@ -1,10 +1,5 @@
-﻿using OnlineExam.Application.Abstractions.IMappers;
-using OnlineExam.Application.Abstractions.IValidators;
-using OnlineExam.Application.Contract.DTOs.CheckFieldDTOs;
-using OnlineExam.Application.Contract.Exceptions;
-using OnlineExam.Application.Mappers;
+﻿using OnlineExam.Application.Contract.Exceptions;
 using OnlineExam.Application.Services.QuestionServices;
-using OnlineExam.Application.Validators;
 using OnlineExam.Infrastructure.Contract.IRepositories;
 using OnlineExam.Model.Models;
 
@@ -14,6 +9,13 @@ namespace OnlineExam.Application.Services.CheckFieldServices
     {
         readonly ICheckFieldRepository _checkFieldRepository;
         readonly QuestionInternalService _questionInternalService;
+
+        public CheckFieldInternalService(ICheckFieldRepository checkFieldRepository,
+                                         QuestionInternalService questionInternalService)
+        {
+            _checkFieldRepository = checkFieldRepository;
+            _questionInternalService = questionInternalService;
+        }
 
         internal CheckField Add(CheckField checkField)
         {
