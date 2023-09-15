@@ -6,7 +6,7 @@ using OnlineExam.Application.Contract.IServices;
 using OnlineExam.Infrastructure.Contract.IRepositories;
 using OnlineExam.Model.Models;
 
-namespace OnlineExam.Application.Services
+namespace OnlineExam.Application.Services.FileFieldServices
 {
     public class AllowedFileTypesFieldService : IAllowedFileTypesFieldService
     {
@@ -17,9 +17,9 @@ namespace OnlineExam.Application.Services
 
         public AllowedFileTypesFieldService(
             IAllowedFileTypesFieldOptionRepository repository
-            ,IAllowedFileTypesFieldMapper mapper
-            ,IAllowedFileTypesFieldValidator validator
-            ,IDatabaseBasedAllowedFileTypesFieldValidator databaseBasedValidator)
+            , IAllowedFileTypesFieldMapper mapper
+            , IAllowedFileTypesFieldValidator validator
+            , IDatabaseBasedAllowedFileTypesFieldValidator databaseBasedValidator)
         {
             _repository = repository;
             _mapper = mapper;
@@ -76,7 +76,7 @@ namespace OnlineExam.Application.Services
 
             if (!allowedFileTypesFields.Any())
                 throw new ApplicationSourceNotFoundException($"there is no AllowedFileTypesField");
-            
+
             return allowedFileTypesFields!;
         }
 
@@ -105,7 +105,7 @@ namespace OnlineExam.Application.Services
                 .ToList()
                 : new List<AllowedFileTypesField>();
 
-            if(allowedFileTypesFieldIds.Count() != fetched.Count())
+            if (allowedFileTypesFieldIds.Count() != fetched.Count())
             {
                 var message = "AllowedFileTypesField with ids:";
 
@@ -113,7 +113,7 @@ namespace OnlineExam.Application.Services
                     .Where(id => fetched.Any(t => t.Id == id))
                     .ToList();
 
-                if(notFoundedIds.Count() > 1)
+                if (notFoundedIds.Count() > 1)
                 {
                     notFoundedIds.ForEach(id => message += $"{id}, ");
                     message += " are not exists";
