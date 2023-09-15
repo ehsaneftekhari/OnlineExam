@@ -8,10 +8,20 @@ namespace OnlineExam.Application.Validators
     public class CheckFieldValidator : ICheckFieldValidator
     {
         public void ValidateDTO(AddCheckFieldDTO dTO)
-            => ValidateValues(dTO.MaximumSelection, dTO.CheckFieldUIType);
+        {
+            if(dTO == null)
+                throw new ArgumentNullException();
+
+            ValidateValues(dTO.MaximumSelection, dTO.CheckFieldUIType);
+        }
 
         public void ValidateDTO(UpdateCheckFieldDTO dTO)
-            => ValidateValues(dTO.MaximumSelection, dTO.CheckFieldUIType);
+        {
+            if(dTO == null)
+                throw new ArgumentNullException();
+
+            ValidateValues(dTO.MaximumSelection, dTO.CheckFieldUIType);
+        }
 
         private void ValidateValues(int? maximumSelection, int? checkFieldUIType)
         {
