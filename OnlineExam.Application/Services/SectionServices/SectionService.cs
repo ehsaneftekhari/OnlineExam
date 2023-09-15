@@ -1,6 +1,5 @@
 ﻿using OnlineExam.Application.Abstractions.IMappers;
 using OnlineExam.Application.Contract.DTOs.SectionDTOs;
-using OnlineExam.Application.Contract.Exceptions;
 using OnlineExam.Application.Contract.IServices;
 
 namespace OnlineExam.Application.Services.SectionServices

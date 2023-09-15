@@ -1,5 +1,4 @@
-﻿using OnlineExam.Application.Contract.DTOs.ExamDTOs;
-using OnlineExam.Application.Contract.Exceptions;
+﻿using OnlineExam.Application.Contract.Exceptions;
 using OnlineExam.Infrastructure.Contract.IRepositories;
 using OnlineExam.Model.Models;
 
