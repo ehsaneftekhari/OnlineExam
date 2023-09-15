@@ -80,6 +80,8 @@ namespace OnlineExam.Application.Services.CheckFieldServices
             return checkField;
         }
 
+        internal void ThrowExceptionIfCheckFieldIsNotExists(int checkFieldId) => GetById(checkFieldId);
+
         internal void Update(CheckField checkField)
         {
             ThrowIfCheckFieldIsNotValid(checkField);
