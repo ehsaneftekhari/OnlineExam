@@ -18,6 +18,7 @@ namespace OnlineExam.Application.Services.ExamServices
         public ShowExamDTO Add(AddExamDTO dTO)
         {
             var newExam = _examMapper.AddDTOToEntity(dTO);
+            newExam!.CreatorUserId = "1";
             _internalService.Add(newExam);
             return _examMapper.EntityToShowDTO(newExam)!;
         }
@@ -26,7 +27,7 @@ namespace OnlineExam.Application.Services.ExamServices
 
         public ShowExamDTO? GetById(int id) => _examMapper.EntityToShowDTO(_internalService.GetById(id));
 
-        public IEnumerable<ShowExamDTO> GetAll(int skip, int take) => _internalService.GetAll(skip, take).Select(_examMapper.EntityToShowDTO)!;
+        public IEnumerable<ShowExamDTO> GetAll(int skip, int take) => _internalService.GetAllByQuestionId(skip, take).Select(_examMapper.EntityToShowDTO)!;
 
         public void Update(int id, UpdateExamDTO dTO)
         {

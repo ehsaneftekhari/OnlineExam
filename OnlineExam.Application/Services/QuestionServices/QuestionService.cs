@@ -23,7 +23,7 @@ namespace OnlineExam.Application.Services.QuestionServices
         }
 
         public IEnumerable<ShowQuestionDTO> GetAllBySectionId(int sectionId, int skip, int take)
-            => _questionInternalService.GetAllBySectionId(sectionId, skip, take).Select(_questionMapper.EntityToShowDTO)!;
+            => _questionInternalService.GetAllByParentId(sectionId, skip, take).Select(_questionMapper.EntityToShowDTO)!;
 
         public ShowQuestionDTO? GetById(int questionId)
             => _questionMapper.EntityToShowDTO(_questionInternalService.GetById(questionId));
