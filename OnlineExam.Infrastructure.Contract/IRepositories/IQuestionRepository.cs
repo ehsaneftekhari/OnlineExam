@@ -3,7 +3,8 @@ using OnlineExam.Model.Models;
 
 namespace OnlineExam.Infrastructure.Contract.IRepositories
 {
-    public interface IQuestionRepository : IBaseRepository<Question>
+    public interface IQuestionRepository : IAddRepository<Question>, IGetRepository<Question, int>
+        , IUpdateRepository<Question>, IDeleteRepository<Question>, IGetQueryableRepository<Question>
     {
     }
 }

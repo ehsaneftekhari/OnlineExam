@@ -1,11 +1,11 @@
 ﻿using OnlineExam.Infrastructure.Contexts;
 using OnlineExam.Infrastructure.Contract.Abstractions;
 using OnlineExam.Model;
-using OnlineExam.Model.Models;
 
 namespace OnlineExam.Infrastructure.Abstraction
 {
-    public abstract class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : BaseModel
+    public abstract class BaseRepository<TEntity> : IAddRepository<TEntity>, IGetRepository<TEntity, int>,
+        IUpdateRepository<TEntity>, IDeleteRepository<TEntity>, IGetQueryableRepository<TEntity> where TEntity : BaseModel
     {
         protected readonly OnlineExamContext _context;
 
