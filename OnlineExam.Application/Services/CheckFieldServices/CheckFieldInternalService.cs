@@ -21,18 +21,16 @@ namespace OnlineExam.Application.Services.CheckFieldServices
         {
             ThrowIfCheckFieldIsNotValid(checkField);
 
-            _questionInternalService.ThrowIfQuestionIdIsNotValid(checkField.QuestionId);
-
             try
             {
                 if (_checkFieldRepository.Add(checkField) > 0 && checkField.Id > 0)
                     return checkField;
 
-                throw new Exception();
+                throw new OEApplicationException("CheckField did not Added");
             }
             catch
             {
-                _questionInternalService.ThrowExceptionIfQuestionIsNotExists(checkField.QuestionId);
+                _questionInternalService.ThrowExceptionIfEntityIsNotExists(checkField.QuestionId);
 
                 throw;
             }
@@ -46,7 +44,7 @@ namespace OnlineExam.Application.Services.CheckFieldServices
 
         internal IEnumerable<CheckField> GetAllByQuestionId(int questionId, int skip = 0, int take = 20)
         {
-            _questionInternalService.ThrowIfQuestionIdIsNotValid(questionId);
+            _questionInternalService.ThrowIfdIsNotValid(questionId);
 
             if (skip < 0 || take < 1)
                 throw new OEApplicationException();
@@ -60,7 +58,7 @@ namespace OnlineExam.Application.Services.CheckFieldServices
 
             if (!checkFields.Any())
             {
-                _questionInternalService.ThrowExceptionIfQuestionIsNotExists(questionId);
+                _questionInternalService.ThrowExceptionIfEntityIsNotExists(questionId);
 
                 throw new ApplicationSourceNotFoundException($"there is no CheckField within Question (questionId:{questionId})");
             }
@@ -100,6 +98,8 @@ namespace OnlineExam.Application.Services.CheckFieldServices
         {
             if (checkField == null)
                 throw new ArgumentNullException();
+
+            _questionInternalService.ThrowIfdIsNotValid(checkField.QuestionId);
         }
     }
 }
