@@ -90,15 +90,15 @@ namespace OnlineExam.Application.Abstractions.InternalService
                 throw DidNotDeletedException;
         }
 
-        internal virtual void ThrowIfdIsNotValid(int textFieldId)
+        internal virtual void ThrowIfdIsNotValid(int id)
         {
-            if (textFieldId < 1)
+            if (id < 1)
                 throw IdLessThanOneException;
         }
 
-        internal virtual void ThrowIfEntityIsNull(TEntity textField)
+        internal virtual void ThrowIfEntityIsNull(TEntity record)
         {
-            if (textField == null)
+            if (record == null)
                 throw new ArgumentNullException();
         }
     }
@@ -125,15 +125,15 @@ namespace OnlineExam.Application.Abstractions.InternalService
 
         protected IQueryable<TEntity> GetIQueryable() => _repository.GetIQueryable();
 
-        internal virtual TEntity Add(TEntity entity)
+        internal virtual TEntity Add(TEntity newRecord)
         {
             try
             {
-                return base.Add(entity);
+                return base.Add(newRecord);
             }
             catch
             {
-                _parentInternalService.ThrowExceptionIfEntityIsNotExists(ParentIdProvider.Compile().Invoke(entity));
+                _parentInternalService.ThrowExceptionIfEntityIsNotExists(ParentIdProvider.Compile().Invoke(newRecord));
 
                 throw;
             }
@@ -151,27 +151,27 @@ namespace OnlineExam.Application.Abstractions.InternalService
             var idComparison = Expression.Equal(Expression.Invoke(ParentIdProvider, parameter), Expression.Constant(parentId));
             var predicate = Expression.Lambda<Func<TEntity, bool>>(idComparison, parameter);
             
-            var textFields = GetIQueryable()
+            var records = GetIQueryable()
                 .Where(predicate)
                 .Skip(skip)
                 .Take(take)
                 .ToList();
 
-            if (!textFields.Any())
+            if (!records.Any())
             {
                 _parentInternalService.ThrowExceptionIfEntityIsNotExists(parentId);
 
                 throw ThereIsNoEntityException(parentId);
             }
 
-            return textFields!;
+            return records!;
         }
 
-        internal virtual void ThrowIfEntityIsNull(TEntity entity)
+        internal virtual void ThrowIfEntityIsNull(TEntity record)
         {
-            _parentInternalService.ThrowIfdIsNotValid(ParentIdProvider.Compile().Invoke(entity));
+            _parentInternalService.ThrowIfdIsNotValid(ParentIdProvider.Compile().Invoke(record));
 
-            if (entity == null)
+            if (record == null)
                 throw new ArgumentNullException();
         }
     }
