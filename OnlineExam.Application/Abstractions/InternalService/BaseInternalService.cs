@@ -2,10 +2,11 @@
 using OnlineExam.Infrastructure.Contract.Abstractions;
 using OnlineExam.Model;
 using System.Linq.Expressions;
+using System.Reflection.Metadata;
 
 namespace OnlineExam.Application.Abstractions.InternalService
 {
-    public abstract class BaseInternalService<TEntity, TRepository> 
+    public abstract class BaseInternalService<TEntity, TRepository>
         where TEntity : BaseModel
         where TRepository : IBaseRepository<TEntity>
     {
@@ -145,9 +146,13 @@ namespace OnlineExam.Application.Abstractions.InternalService
             if (skip < 0 || take < 1)
                 throw new OEApplicationException();
 
-            var textFields =
-                GetIQueryable()
-                .Where(q => ParentIdProvider.Compile().Invoke(q) == parentId)
+
+            var parameter = Expression.Parameter(typeof(TEntity), "e");
+            var idComparison = Expression.Equal(Expression.Invoke(ParentIdProvider, parameter), Expression.Constant(parentId));
+            var predicate = Expression.Lambda<Func<TEntity, bool>>(idComparison, parameter);
+            
+            var textFields = GetIQueryable()
+                .Where(predicate)
                 .Skip(skip)
                 .Take(take)
                 .ToList();
