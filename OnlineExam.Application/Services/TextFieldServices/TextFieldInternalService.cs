@@ -4,7 +4,7 @@ using OnlineExam.Infrastructure.Contract.IRepositories;
 using OnlineExam.Model.Models;
 using System.Linq.Expressions;
 
-namespace OnlineExam.Application.Services
+namespace OnlineExam.Application.Services.TextFieldServices
 {
     public class TextFieldInternalService : BaseInternalService<TextField, ITextFieldRepository, Question, IQuestionRepository>
     {
