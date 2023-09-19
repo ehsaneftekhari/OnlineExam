@@ -2,7 +2,6 @@
 using OnlineExam.Infrastructure.Contract.Abstractions;
 using OnlineExam.Model;
 using System.Linq.Expressions;
-using System.Reflection.Metadata;
 
 namespace OnlineExam.Application.Abstractions.InternalService
 {

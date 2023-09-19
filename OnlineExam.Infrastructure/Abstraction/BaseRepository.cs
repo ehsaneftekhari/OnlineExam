@@ -1,7 +1,6 @@
 ﻿using OnlineExam.Infrastructure.Contexts;
 using OnlineExam.Infrastructure.Contract.Abstractions;
 using OnlineExam.Model;
-using OnlineExam.Model.Models;
 
 namespace OnlineExam.Infrastructure.Abstraction
 {
