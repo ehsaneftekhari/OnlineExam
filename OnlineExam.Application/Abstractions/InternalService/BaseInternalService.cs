@@ -17,7 +17,7 @@ namespace OnlineExam.Application.Abstractions.InternalService
             _repository = repository;
         }
 
-        internal virtual string EntityName => nameof(TEntity);
+        internal virtual string EntityName => typeof(TEntity).Name;
 
         internal virtual string EntityIdName => $"{EntityName.Substring(0, 1).ToLower()}{EntityName.Substring(1)}Id";
 
@@ -57,7 +57,7 @@ namespace OnlineExam.Application.Abstractions.InternalService
 
         internal virtual void ThrowExceptionIfEntityIsNotExists(int entityId) => GetById(entityId);
 
-        internal virtual IEnumerable<TEntity> GetAllByQuestionId(int skip = 0, int take = 20)
+        internal virtual IEnumerable<TEntity> GetAll(int skip = 0, int take = 20)
         {
             if (skip < 0 || take < 1)
                 throw new OEApplicationException();
@@ -121,7 +121,7 @@ namespace OnlineExam.Application.Abstractions.InternalService
         protected abstract Expression<Func<TEntity, int>> ParentIdProvider { get; }
 
         protected virtual OEApplicationException ThereIsNoEntityException(int parentId)
-            => new ApplicationSourceNotFoundException($"there is no {EntityName} within {_parentInternalService.EntityName} (id:{parentId})");
+            => new ApplicationSourceNotFoundException($"there is no {EntityName} within {_parentInternalService.EntityName} ({_parentInternalService.EntityIdName}:{parentId})");
 
         protected IQueryable<TEntity> GetIQueryable() => _repository.GetIQueryable();
 
