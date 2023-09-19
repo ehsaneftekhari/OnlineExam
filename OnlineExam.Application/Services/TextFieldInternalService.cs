@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 
 namespace OnlineExam.Application.Services
 {
-    internal class TextFieldInternalService : BaseInternalService<TextField, ITextFieldRepository, Question, IQuestionRepository>
+    public class TextFieldInternalService : BaseInternalService<TextField, ITextFieldRepository, Question, IQuestionRepository>
     {
         public TextFieldInternalService(ITextFieldRepository repository, QuestionInternalService parentInternalService) : base(repository, parentInternalService) { }
 
