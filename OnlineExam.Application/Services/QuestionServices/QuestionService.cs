@@ -15,9 +15,9 @@ namespace OnlineExam.Application.Services.QuestionServices
             _questionMapper = questionMapper;
         }
 
-        public ShowQuestionDTO Add(int sectionId, AddQuestionDTO question)
+        public ShowQuestionDTO Add(int sectionId, AddQuestionDTO dTO)
         {
-            var newQuestion = _questionMapper.AddDTOToEntity(sectionId, question);
+            var newQuestion = _questionMapper.AddDTOToEntity(sectionId, dTO);
             _questionInternalService.Add(newQuestion!);
             return _questionMapper.EntityToShowDTO(newQuestion)!;
         }
