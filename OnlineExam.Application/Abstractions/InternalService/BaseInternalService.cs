@@ -35,7 +35,7 @@ namespace OnlineExam.Application.Abstractions.InternalService
 
         internal virtual TEntity Add(TEntity record)
         {
-            ThrowIfEntityIsNull(record);
+            ThrowIfEntityIsNotValid(record);
 
             if (_repository.Add(record) > 0 && record.Id > 0)
                 return record;
@@ -76,7 +76,7 @@ namespace OnlineExam.Application.Abstractions.InternalService
 
         internal virtual void Update(TEntity record)
         {
-            ThrowIfEntityIsNull(record);
+            ThrowIfEntityIsNotValid(record);
 
             if (_repository.Update(record) <= 0)
                 throw DidNotUpdatedException;
@@ -96,7 +96,7 @@ namespace OnlineExam.Application.Abstractions.InternalService
                 throw IdLessThanOneException;
         }
 
-        internal virtual void ThrowIfEntityIsNull(TEntity record)
+        internal virtual void ThrowIfEntityIsNotValid(TEntity record)
         {
             if (record == null)
                 throw new ArgumentNullException();
@@ -123,7 +123,7 @@ namespace OnlineExam.Application.Abstractions.InternalService
         protected virtual OEApplicationException ThereIsNoEntityException(int parentId)
             => new ApplicationSourceNotFoundException($"there is no {EntityName} within {_parentInternalService.EntityName} ({_parentInternalService.EntityIdName}:{parentId})");
 
-        protected IQueryable<TEntity> GetIQueryable() => _repository.GetIQueryable();
+        protected virtual IQueryable<TEntity> GetIQueryable() => _repository.GetIQueryable();
 
         internal virtual TEntity Add(TEntity newRecord)
         {
@@ -167,12 +167,11 @@ namespace OnlineExam.Application.Abstractions.InternalService
             return records!;
         }
 
-        internal virtual void ThrowIfEntityIsNull(TEntity record)
+        internal override void ThrowIfEntityIsNotValid(TEntity record)
         {
             _parentInternalService.ThrowIfdIsNotValid(ParentIdProvider.Compile().Invoke(record));
 
-            if (record == null)
-                throw new ArgumentNullException();
+            base.ThrowIfEntityIsNotValid(record);
         }
     }
 }
