@@ -35,7 +35,7 @@ namespace OnlineExam.Application.Services.CheckFieldServices
             => _checkFieldInternalService.Delete(checkFieldId);
 
         public IEnumerable<ShowCheckFieldDTO> GetAllByQuestionId(int questionId, int skip = 0, int take = 20)
-            => _checkFieldInternalService.GetAllByQuestionId(questionId, skip, take).Select(_checkFieldMapper.EntityToShowDTO);
+            => _checkFieldInternalService.GetAllByParentId(questionId, skip, take).Select(_checkFieldMapper.EntityToShowDTO);
 
         public ShowCheckFieldDTO? GetById(int checkFieldId)
             => _checkFieldMapper.EntityToShowDTO(_checkFieldInternalService.GetById(checkFieldId));

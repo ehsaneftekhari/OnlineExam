@@ -20,7 +20,7 @@ namespace OnlineExam.Application.Services.CheckFieldServices
         {
             ThrowIfCheckFieldOptionIsNotValid(checkFieldOption);
 
-            _checkFieldInternalService.ThrowIfCheckFieldIdIsNotValid(checkFieldOption.CheckFieldId);
+            _checkFieldInternalService.ThrowIfdIsNotValid(checkFieldOption.CheckFieldId);
 
             try
             {
@@ -31,7 +31,7 @@ namespace OnlineExam.Application.Services.CheckFieldServices
             }
             catch
             {
-                _checkFieldInternalService.ThrowExceptionIfCheckFieldIsNotExists(checkFieldOption.CheckFieldId);
+                _checkFieldInternalService.ThrowExceptionIfEntityIsNotExists(checkFieldOption.CheckFieldId);
 
                 throw;
             }
@@ -45,7 +45,7 @@ namespace OnlineExam.Application.Services.CheckFieldServices
 
         internal IEnumerable<CheckFieldOption> GetAllByCheckFieldId(int checkFieldId, int skip = 0, int take = 20)
         {
-            _checkFieldInternalService.ThrowIfCheckFieldIdIsNotValid(checkFieldId);
+            _checkFieldInternalService.ThrowIfdIsNotValid(checkFieldId);
 
             if (skip < 0 || take < 1)
                 throw new OEApplicationException();
@@ -60,7 +60,7 @@ namespace OnlineExam.Application.Services.CheckFieldServices
 
             if (!checkFieldOptions.Any())
             {
-                _checkFieldInternalService.ThrowExceptionIfCheckFieldIsNotExists(checkFieldId);
+                _checkFieldInternalService.ThrowExceptionIfEntityIsNotExists(checkFieldId);
 
                 throw new ApplicationSourceNotFoundException($"there is no CheckFieldOption within checkField (checkFieldId:{checkFieldId})");
             }
