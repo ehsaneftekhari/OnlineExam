@@ -12,6 +12,6 @@ namespace OnlineExam.Application.Services.CheckFieldServices
 
         protected override Expression<Func<CheckFieldOption, int>> ParentIdProvider => x => x.CheckFieldId;
 
-        protected override IQueryable<CheckFieldOption> GetIQueryable() => _repository.GetIQueryable().OrderBy(q => q.Order);
+        internal override IQueryable<CheckFieldOption> GetIQueryable() => _repository.GetIQueryable().OrderBy(q => q.Order);
     }
 }
