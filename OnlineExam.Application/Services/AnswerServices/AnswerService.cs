@@ -3,7 +3,7 @@ using OnlineExam.Application.Abstractions.IValidators;
 using OnlineExam.Application.Contract.DTOs.AnswerDTOs;
 using OnlineExam.Application.Contract.IServices;
 
-namespace OnlineExam.Application.Services
+namespace OnlineExam.Application.Services.AnswerServices
 {
     public sealed class AnswerService : IAnswerService
     {

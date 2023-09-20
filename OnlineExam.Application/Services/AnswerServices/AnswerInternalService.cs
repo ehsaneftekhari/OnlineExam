@@ -7,7 +7,7 @@ using OnlineExam.Model.Models;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace OnlineExam.Application.Services
+namespace OnlineExam.Application.Services.AnswerServices
 {
     public sealed class AnswerInternalService : BaseInternalService<Answer, IAnswerRepository, ExamUser, IExamUserRepository, Question, IQuestionRepository>
     {
@@ -15,7 +15,8 @@ namespace OnlineExam.Application.Services
                                      ExamUserInternalService firstParentInternalService,
                                      QuestionInternalService secondParentInternalService) : base(repository,
                                                                                                  firstParentInternalService,
-                                                                                                 secondParentInternalService) { }
+                                                                                                 secondParentInternalService)
+        { }
 
         protected override Expression<Func<Answer, int>> FirstParentIdProvider => x => x.ExamUserId;
 
