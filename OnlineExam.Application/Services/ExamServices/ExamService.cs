@@ -4,7 +4,7 @@ using OnlineExam.Application.Contract.IServices;
 
 namespace OnlineExam.Application.Services.ExamServices
 {
-    public class ExamService : IExamService
+    public sealed class ExamService : IExamService
     {
         readonly ExamInternalService _internalService;
         readonly IExamMapper _examMapper;
@@ -18,6 +18,7 @@ namespace OnlineExam.Application.Services.ExamServices
         public ShowExamDTO Add(AddExamDTO dTO)
         {
             var newExam = _examMapper.AddDTOToEntity(dTO);
+            newExam!.CreatorUserId = "1";
             _internalService.Add(newExam);
             return _examMapper.EntityToShowDTO(newExam)!;
         }

@@ -1,13 +1,11 @@
 ﻿using OnlineExam.Application.Abstractions.IMappers;
 using OnlineExam.Application.Abstractions.IValidators;
 using OnlineExam.Application.Contract.DTOs.CheckFieldDTOs;
-using OnlineExam.Application.Contract.Exceptions;
 using OnlineExam.Application.Contract.IServices;
-using OnlineExam.Infrastructure.Contract.IRepositories;
 
 namespace OnlineExam.Application.Services.CheckFieldServices
 {
-    public class CheckFieldOptionService : ICheckFieldOptionService
+    public sealed class CheckFieldOptionService : ICheckFieldOptionService
     {
         readonly CheckFieldOptionInternalService _checkFieldOptionInternalService;
         readonly ICheckFieldOptionMapper _checkFieldOptionMapper;
@@ -42,7 +40,7 @@ namespace OnlineExam.Application.Services.CheckFieldServices
             => _checkFieldOptionInternalService.Delete(CheckFieldOptionId);
 
         public IEnumerable<ShowCheckFieldOptionDTO> GetAllByCheckFieldId(int checkFieldId, int skip = 0, int take = 20)
-            => _checkFieldOptionInternalService.GetAllByCheckFieldId(checkFieldId, skip, take).Select(_checkFieldOptionMapper.EntityToShowDTO);
+            => _checkFieldOptionInternalService.GetAllByParentId(checkFieldId, skip, take).Select(_checkFieldOptionMapper.EntityToShowDTO);
 
         public ShowCheckFieldOptionDTO? GetById(int CheckFieldOptionId)
             => _checkFieldOptionMapper.EntityToShowDTO(_checkFieldOptionInternalService.GetById(CheckFieldOptionId));

@@ -4,7 +4,7 @@ using OnlineExam.Application.Contract.IServices;
 
 namespace OnlineExam.Application.Services.QuestionServices
 {
-    public class QuestionService : IQuestionService
+    public sealed class QuestionService : IQuestionService
     {
         readonly QuestionInternalService _questionInternalService;
         readonly IQuestionMapper _questionMapper;
@@ -15,15 +15,15 @@ namespace OnlineExam.Application.Services.QuestionServices
             _questionMapper = questionMapper;
         }
 
-        public ShowQuestionDTO Add(int sectionId, AddQuestionDTO question)
+        public ShowQuestionDTO Add(int sectionId, AddQuestionDTO dTO)
         {
-            var newQuestion = _questionMapper.AddDTOToEntity(sectionId, question);
+            var newQuestion = _questionMapper.AddDTOToEntity(sectionId, dTO);
             _questionInternalService.Add(newQuestion!);
             return _questionMapper.EntityToShowDTO(newQuestion)!;
         }
 
         public IEnumerable<ShowQuestionDTO> GetAllBySectionId(int sectionId, int skip, int take)
-            => _questionInternalService.GetAllBySectionId(sectionId, skip, take).Select(_questionMapper.EntityToShowDTO)!;
+            => _questionInternalService.GetAllByParentId(sectionId, skip, take).Select(_questionMapper.EntityToShowDTO)!;
 
         public ShowQuestionDTO? GetById(int questionId)
             => _questionMapper.EntityToShowDTO(_questionInternalService.GetById(questionId));

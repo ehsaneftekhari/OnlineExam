@@ -9,6 +9,7 @@ using OnlineExam.Application.Services.ExamServices;
 using OnlineExam.Application.Services.FileFieldServices;
 using OnlineExam.Application.Services.QuestionServices;
 using OnlineExam.Application.Services.SectionServices;
+using OnlineExam.Application.Services.TextFieldServices;
 using OnlineExam.Application.Validators;
 
 namespace OnlineExam.Application
@@ -40,13 +41,14 @@ namespace OnlineExam.Application
             serviceDescriptors.AddScoped<ICheckFieldOptionValidator, CheckFieldOptionValidator>();
             serviceDescriptors.AddScoped<IDatabaseBasedCheckFieldOptionValidator, DatabaseBasedCheckFieldOptionValidator>();
             serviceDescriptors.AddScoped<IAllowedFileTypesFieldService, AllowedFileTypesFieldService>();
-            serviceDescriptors.AddScoped<AllowedFileTypesFieldService>();
+            serviceDescriptors.AddScoped<AllowedFileTypesFieldInternalService>();
             serviceDescriptors.AddScoped<IFileFieldMapper, FileFieldMapper>();
             serviceDescriptors.AddScoped<IAllowedFileTypesFieldMapper, AllowedFileTypesFieldMapper>();
             serviceDescriptors.AddScoped<IDatabaseBasedAllowedFileTypesFieldValidator, DatabaseBasedAllowedFileTypesFieldValidator>();
             serviceDescriptors.AddScoped<IAllowedFileTypesFieldValidator, AllowedFileTypesFieldValidator>();
             serviceDescriptors.AddScoped<IFileFieldValidator, FileFieldValidator>();
             serviceDescriptors.AddScoped<IFileFieldService, FileFieldService>();
+            serviceDescriptors.AddScoped<FileFieldInternalService>();
             serviceDescriptors.AddScoped<IDatabaseBasedExamUserValidator, DatabaseBasedExamUserValidator>();
             serviceDescriptors.AddScoped<IExamUserMapper, ExamUserMapper>();
             serviceDescriptors.AddScoped<IExamUserService, ExamUserService>();

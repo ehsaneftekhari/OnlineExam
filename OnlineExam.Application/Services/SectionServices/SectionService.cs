@@ -4,7 +4,7 @@ using OnlineExam.Application.Contract.IServices;
 
 namespace OnlineExam.Application.Services.SectionServices
 {
-    public class SectionService : ISectionService
+    public sealed class SectionService : ISectionService
     {
         readonly SectionInternalService _sectionInternalService;
         readonly ISectionMapper _sectionMapper;
@@ -24,7 +24,7 @@ namespace OnlineExam.Application.Services.SectionServices
         }
 
         public IEnumerable<ShowSectionDTO> GetAllByExamId(int examId, int skip, int take)
-         => _sectionInternalService.GetAllByExamId(examId, skip, take).Select(_sectionMapper.EntityToShowDTO)!;
+         => _sectionInternalService.GetAllByParentId(examId, skip, take).Select(_sectionMapper.EntityToShowDTO)!;
 
         public void Delete(int sectionId) => _sectionInternalService.Delete(sectionId);
 
