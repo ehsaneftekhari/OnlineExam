@@ -4,7 +4,7 @@ using OnlineExam.Infrastructure.Contract.IRepositories;
 using OnlineExam.Model.Models;
 using System.Linq.Expressions;
 
-namespace OnlineExam.Application.Services
+namespace OnlineExam.Application.Services.ExamUserServices
 {
     public sealed class ExamUserInternalService : BaseInternalService<ExamUser, IExamUserRepository, Exam, IExamRepository>
     {

@@ -3,7 +3,7 @@ using OnlineExam.Application.Abstractions.IValidators;
 using OnlineExam.Application.Contract.DTOs.ExamUserDTOs;
 using OnlineExam.Application.Contract.IServices;
 
-namespace OnlineExam.Application.Services
+namespace OnlineExam.Application.Services.ExamUserServices
 {
     public sealed class ExamUserService : IExamUserService
     {
