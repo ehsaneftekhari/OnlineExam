@@ -1,15 +1,22 @@
 ﻿using OnlineExam.Application.Abstractions.IMappers;
 using OnlineExam.Application.Contract.DTOs.FileFieldDTOs;
+using OnlineExam.Application.Services.FileFieldServices;
 using OnlineExam.Model.Models;
 
 namespace OnlineExam.Application.Mappers
 {
     internal class FileFieldMapper : IFileFieldMapper
     {
+        readonly AllowedFileTypesFieldInternalService _allowedFileTypesFieldInternalService;
+
+        public FileFieldMapper(AllowedFileTypesFieldInternalService allowedFileTypesFieldService)
+        {
+            _allowedFileTypesFieldInternalService = allowedFileTypesFieldService;
+        }
+
         public FileField? AddDTOToEntity(
             int questionId
-            , AddFileFieldDTO? addFileFieldDTO
-            , Func<IEnumerable<int>, IEnumerable<AllowedFileTypesField>> allowedFileTypesFieldExtractor)
+            , AddFileFieldDTO? addFileFieldDTO)
         {
             if (addFileFieldDTO != null)
             {
@@ -17,7 +24,7 @@ namespace OnlineExam.Application.Mappers
                 {
                     QuestionId = questionId,
                     KiloByteMaximumSize = addFileFieldDTO.KiloByteMaximumSize,
-                    AllowedFileTypes = allowedFileTypesFieldExtractor.Invoke(addFileFieldDTO.AllowedFileTypesIds).ToList()
+                    AllowedFileTypes = _allowedFileTypesFieldInternalService.GetByIds(addFileFieldDTO.AllowedFileTypesIds).ToList()
                 };
             }
             return null;
@@ -48,8 +55,7 @@ namespace OnlineExam.Application.Mappers
 
         public void UpdateEntityByDTO(
             FileField old
-            , UpdateFileFieldDTO @new
-            , Func<IEnumerable<int>, IEnumerable<AllowedFileTypesField>> allowedFileTypesFieldExtractor)
+            , UpdateFileFieldDTO @new)
         {
             if (@new != null || old != null)
             {
@@ -57,7 +63,7 @@ namespace OnlineExam.Application.Mappers
                     old.KiloByteMaximumSize = (int)@new.KiloByteMaximumSize;
 
                 if (@new.AllowedFileTypesIds != null && @new.AllowedFileTypesIds.Any())
-                    old.AllowedFileTypes = allowedFileTypesFieldExtractor.Invoke(@new.AllowedFileTypesIds).ToList();
+                    old.AllowedFileTypes = _allowedFileTypesFieldInternalService.GetByIds(@new.AllowedFileTypesIds).ToList();
             }
         }
     }
