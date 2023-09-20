@@ -20,6 +20,8 @@ namespace OnlineExam.Application.Abstractions.InternalService
 
         internal virtual string EntityIdName => $"{EntityName.Substring(0, 1).ToLower()}{EntityName.Substring(1)}Id";
 
+        internal virtual IQueryable<TEntity> GetIQueryable() => _repository.GetIQueryable();
+
         protected virtual OEApplicationException DidNotAddedException => new OEApplicationException($"{EntityName} did not Added");
 
         protected virtual OEApplicationException ThereIsNoEntityException => new ApplicationSourceNotFoundException($"there is no {EntityName}");
@@ -62,7 +64,7 @@ namespace OnlineExam.Application.Abstractions.InternalService
                 throw new OEApplicationException();
 
             var records =
-                _repository.GetIQueryable()
+                GetIQueryable()
                 .Skip(skip)
                 .Take(take)
                 .ToList();
@@ -121,8 +123,6 @@ namespace OnlineExam.Application.Abstractions.InternalService
 
         protected virtual OEApplicationException ThereIsNoEntityException(int parentId)
             => new ApplicationSourceNotFoundException($"there is no {EntityName} within {_parentInternalService.EntityName} ({_parentInternalService.EntityIdName}:{parentId})");
-
-        protected virtual IQueryable<TEntity> GetIQueryable() => _repository.GetIQueryable();
 
         internal virtual TEntity Add(TEntity newRecord)
         {
