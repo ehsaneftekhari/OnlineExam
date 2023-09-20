@@ -37,6 +37,19 @@ namespace OnlineExam.EndPoint.API.Controllers
             return Ok(dto);
         }
 
+        [HttpGet("ExamUsers/{examUserId}/[controller]")]
+        public IActionResult GetAllByExamUserId(int examUserId, int pageNumber, int pageSize)
+        {
+            if (pageNumber < 1)
+                throw new APIValidationException("pageNumber can not be less than 1");
+
+            if (pageSize < 1)
+                throw new APIValidationException("pageSize can not be less than 1");
+
+            var dto = _answerService.GetAllByExamUserId(examUserId, (pageNumber - 1) * pageSize, pageSize);
+            return Ok(dto);
+        }
+
         [HttpPost("ExamUsers/{examUserId}/Questions/{questionId}/[controller]")]
         public IActionResult Create(int examUserId, int questionId, AddAnswerApiDTO answer)
         {
