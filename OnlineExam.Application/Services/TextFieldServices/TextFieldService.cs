@@ -5,7 +5,7 @@ using OnlineExam.Application.Contract.IServices;
 
 namespace OnlineExam.Application.Services.TextFieldServices
 {
-    public class TextFieldService : ITextFieldService
+    public sealed class TextFieldService : ITextFieldService
     {
         readonly TextFieldInternalService _textFieldInternalService;
         readonly ITextFieldMapper _textFieldMapper;

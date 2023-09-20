@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 
 namespace OnlineExam.Application.Services.SectionServices
 {
-    public class SectionInternalService : BaseInternalService<Section, ISectionRepository, Exam, IExamRepository>
+    public sealed class SectionInternalService : BaseInternalService<Section, ISectionRepository, Exam, IExamRepository>
     {
         protected override Expression<Func<Section, int>> ParentIdProvider => x => x.ExamId;
 

@@ -121,10 +121,10 @@ namespace OnlineExam.Application.Abstractions.InternalService
 
         protected abstract Expression<Func<TEntity, int>> ParentIdProvider { get; }
 
-        protected virtual OEApplicationException ThereIsNoEntityException(int parentId)
+        protected OEApplicationException ThereIsNoEntityException(int parentId)
             => new ApplicationSourceNotFoundException($"there is no {EntityName} within {_parentInternalService.EntityName} ({_parentInternalService.EntityIdName}:{parentId})");
 
-        internal virtual TEntity Add(TEntity newRecord)
+        internal override TEntity Add(TEntity newRecord)
         {
             try
             {
@@ -138,7 +138,7 @@ namespace OnlineExam.Application.Abstractions.InternalService
             }
         }
 
-        internal virtual IEnumerable<TEntity> GetAllByParentId(int parentId, int skip = 0, int take = 20)
+        internal IEnumerable<TEntity> GetAllByParentId(int parentId, int skip = 0, int take = 20)
         {
             _parentInternalService.ThrowIfdIsNotValid(parentId);
 

@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 
 namespace OnlineExam.Application.Services.FileFieldServices
 {
-    public class AllowedFileTypesFieldService : IAllowedFileTypesFieldService
+    public sealed class AllowedFileTypesFieldService : IAllowedFileTypesFieldService
     {
         readonly AllowedFileTypesFieldInternalService _internalService;
         readonly IAllowedFileTypesFieldMapper _mapper;

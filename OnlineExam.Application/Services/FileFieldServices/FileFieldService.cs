@@ -5,7 +5,7 @@ using OnlineExam.Application.Contract.IServices;
 
 namespace OnlineExam.Application.Services.FileFieldServices
 {
-    public class FileFieldService : IFileFieldService
+    public sealed class FileFieldService : IFileFieldService
     {
         FileFieldInternalService _fileFieldInternalService;
         readonly IFileFieldMapper _fileFieldMapper;

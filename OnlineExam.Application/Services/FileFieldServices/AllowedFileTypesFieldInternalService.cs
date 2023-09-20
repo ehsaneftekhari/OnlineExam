@@ -5,7 +5,7 @@ using OnlineExam.Model.Models;
 
 namespace OnlineExam.Application.Services.FileFieldServices
 {
-    public class AllowedFileTypesFieldInternalService : BaseInternalService<AllowedFileTypesField, IAllowedFileTypesFieldOptionRepository>
+    public sealed class AllowedFileTypesFieldInternalService : BaseInternalService<AllowedFileTypesField, IAllowedFileTypesFieldOptionRepository>
     {
         public AllowedFileTypesFieldInternalService(IAllowedFileTypesFieldOptionRepository repository) : base(repository) { }
 

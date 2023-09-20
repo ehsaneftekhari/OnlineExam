@@ -4,7 +4,7 @@ using OnlineExam.Application.Contract.IServices;
 
 namespace OnlineExam.Application.Services.SectionServices
 {
-    public class SectionService : ISectionService
+    public sealed class SectionService : ISectionService
     {
         readonly SectionInternalService _sectionInternalService;
         readonly ISectionMapper _sectionMapper;

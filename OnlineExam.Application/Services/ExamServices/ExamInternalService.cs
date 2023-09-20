@@ -5,7 +5,7 @@ using OnlineExam.Model.Models;
 
 namespace OnlineExam.Application.Services.ExamServices
 {
-    public class ExamInternalService : BaseInternalService<Exam, IExamRepository>
+    public sealed class ExamInternalService : BaseInternalService<Exam, IExamRepository>
     {
         public ExamInternalService(IExamRepository examRepository) : base(examRepository) {}
 

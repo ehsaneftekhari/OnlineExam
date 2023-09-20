@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 
 namespace OnlineExam.Application.Services.CheckFieldServices
 {
-    public class CheckFieldInternalService : BaseInternalService<CheckField, ICheckFieldRepository, Question, IQuestionRepository>
+    public sealed class CheckFieldInternalService : BaseInternalService<CheckField, ICheckFieldRepository, Question, IQuestionRepository>
     {
         public CheckFieldInternalService(ICheckFieldRepository repository, QuestionInternalService parentInternalService) : base(repository, parentInternalService) { }
 

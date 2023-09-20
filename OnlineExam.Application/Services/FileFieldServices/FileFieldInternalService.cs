@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 
 namespace OnlineExam.Application.Services.FileFieldServices
 {
-    public class FileFieldInternalService : BaseInternalService<FileField, IFileFieldRepository, Question, IQuestionRepository>
+    public sealed class FileFieldInternalService : BaseInternalService<FileField, IFileFieldRepository, Question, IQuestionRepository>
     {
         public FileFieldInternalService(IFileFieldRepository repository, QuestionInternalService parentInternalService) : base(repository, parentInternalService){}
 

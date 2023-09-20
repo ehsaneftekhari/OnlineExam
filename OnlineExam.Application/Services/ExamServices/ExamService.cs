@@ -4,7 +4,7 @@ using OnlineExam.Application.Contract.IServices;
 
 namespace OnlineExam.Application.Services.ExamServices
 {
-    public class ExamService : IExamService
+    public sealed class ExamService : IExamService
     {
         readonly ExamInternalService _internalService;
         readonly IExamMapper _examMapper;

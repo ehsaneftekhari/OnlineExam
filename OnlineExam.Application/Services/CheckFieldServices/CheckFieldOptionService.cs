@@ -5,7 +5,7 @@ using OnlineExam.Application.Contract.IServices;
 
 namespace OnlineExam.Application.Services.CheckFieldServices
 {
-    public class CheckFieldOptionService : ICheckFieldOptionService
+    public sealed class CheckFieldOptionService : ICheckFieldOptionService
     {
         readonly CheckFieldOptionInternalService _checkFieldOptionInternalService;
         readonly ICheckFieldOptionMapper _checkFieldOptionMapper;
