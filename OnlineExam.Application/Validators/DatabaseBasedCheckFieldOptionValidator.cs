@@ -1,17 +1,18 @@
 ﻿using OnlineExam.Application.Abstractions.IValidators;
 using OnlineExam.Application.Contract.DTOs.CheckFieldDTOs;
 using OnlineExam.Application.Contract.Exceptions;
+using OnlineExam.Application.Services.CheckFieldServices;
 using OnlineExam.Infrastructure.Contract.IRepositories;
 
 namespace OnlineExam.Application.Validators
 {
     public class DatabaseBasedCheckFieldOptionValidator : IDatabaseBasedCheckFieldOptionValidator
     {
-        readonly ICheckFieldOptionRepository _checkFieldOptionRepository;
+        readonly CheckFieldOptionInternalService _checkFieldOptionInternalService;
 
-        public DatabaseBasedCheckFieldOptionValidator(ICheckFieldOptionRepository checkFieldOptionRepository)
+        public DatabaseBasedCheckFieldOptionValidator(CheckFieldOptionInternalService checkFieldOptionRepository)
         {
-            _checkFieldOptionRepository = checkFieldOptionRepository;
+            _checkFieldOptionInternalService = checkFieldOptionRepository;
         }
 
         public void DatabaseBasedValidate(int checkFieldId, AddCheckFieldOptionDTO dTO)
@@ -25,7 +26,7 @@ namespace OnlineExam.Application.Validators
             if (!order.HasValue)
                 return;
 
-            if (_checkFieldOptionRepository.GetIQueryable()
+            if (_checkFieldOptionInternalService.GetIQueryable()
                 .Where(cfo => cfo.CheckFieldId == checkFieldId)
                 .Where(cfo => !checkFieldOptionId.HasValue
                     || cfo.Id != checkFieldOptionId.Value)
