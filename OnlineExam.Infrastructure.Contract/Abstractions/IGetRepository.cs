@@ -1,6 +1,4 @@
-﻿using System.Linq.Expressions;
-
-namespace OnlineExam.Infrastructure.Contract.Abstractions
+﻿namespace OnlineExam.Infrastructure.Contract.Abstractions
 {
     public interface IGetRepository<TEntity, TId> where TEntity : class
     {

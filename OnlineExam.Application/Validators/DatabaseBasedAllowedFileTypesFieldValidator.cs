@@ -2,7 +2,6 @@
 using OnlineExam.Application.Contract.DTOs.AllowedFileTypesFieldDTOs;
 using OnlineExam.Application.Contract.Exceptions;
 using OnlineExam.Application.Services.FileFieldServices;
-using OnlineExam.Infrastructure.Contract.IRepositories;
 
 namespace OnlineExam.Application.Validators
 {

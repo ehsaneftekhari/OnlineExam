@@ -2,7 +2,6 @@
 using OnlineExam.Application.Contract.DTOs.CheckFieldDTOs;
 using OnlineExam.Application.Contract.Exceptions;
 using OnlineExam.Application.Services.CheckFieldServices;
-using OnlineExam.Infrastructure.Contract.IRepositories;
 
 namespace OnlineExam.Application.Validators
 {

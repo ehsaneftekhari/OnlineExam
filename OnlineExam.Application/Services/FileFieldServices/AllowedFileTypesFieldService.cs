@@ -2,7 +2,6 @@
 using OnlineExam.Application.Abstractions.IValidators;
 using OnlineExam.Application.Contract.DTOs.AllowedFileTypesFieldDTOs;
 using OnlineExam.Application.Contract.IServices;
-using System.Linq.Expressions;
 
 namespace OnlineExam.Application.Services.FileFieldServices
 {

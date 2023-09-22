@@ -1,8 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using OnlineExam.Infrastructure.Contexts;
+﻿using OnlineExam.Infrastructure.Contexts;
 using OnlineExam.Infrastructure.Contract.Abstractions;
 using OnlineExam.Model;
-using System.Linq.Expressions;
 
 namespace OnlineExam.Infrastructure.Abstraction
 {

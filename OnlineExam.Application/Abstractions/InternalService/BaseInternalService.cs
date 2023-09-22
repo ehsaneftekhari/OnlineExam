@@ -1,8 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using OnlineExam.Application.Contract.Exceptions;
+﻿using OnlineExam.Application.Contract.Exceptions;
 using OnlineExam.Infrastructure.Contract.Abstractions;
 using OnlineExam.Model;
-using System.Linq;
 using System.Linq.Expressions;
 
 namespace OnlineExam.Application.Abstractions.InternalService
