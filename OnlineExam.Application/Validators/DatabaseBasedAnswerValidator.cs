@@ -2,42 +2,34 @@
 using OnlineExam.Application.Contract.DTOs.AnswerDTOs;
 using OnlineExam.Application.Contract.Exceptions;
 using OnlineExam.Application.Contract.IServices;
+using OnlineExam.Application.Services.AnswerServices;
+using OnlineExam.Application.Services.ExamServices;
+using OnlineExam.Application.Services.ExamUserServices;
+using OnlineExam.Application.Services.QuestionServices;
+using OnlineExam.Application.Services.SectionServices;
 using OnlineExam.Infrastructure.Contract.IRepositories;
 
 namespace OnlineExam.Application.Validators
 {
     internal class DatabaseBasedAnswerValidator : IDatabaseBasedAnswerValidator
     {
-        readonly IAnswerRepository _answerRepository;
-        readonly IExamService _examService;
-        readonly ISectionService _sectionService;
-        readonly IExamUserService _examUserService;
-        readonly IQuestionService _questionService;
-
-        public DatabaseBasedAnswerValidator(IAnswerRepository answerRepository,
-                                            IExamService examService,
-                                            ISectionService sectionService,
-                                            IExamUserService examUserService,
-                                            IQuestionService questionService)
-        {
-            _answerRepository = answerRepository;
-            _examService = examService;
-            _sectionService = sectionService;
-            _examUserService = examUserService;
-            _questionService = questionService;
-        }
+        readonly AnswerInternalService _answerInternalService;
+        readonly ExamUserInternalService _examUserInternalService;
+        readonly QuestionInternalService _questionInternalService;
+        readonly SectionInternalService _sectionInternalService;
+        readonly ExamInternalService _examInternalService;
 
         public void ValidateBeforeAdd(AddAnswerDTO dTO)
         {
-            var examUser = _examUserService.GetById(dTO.ExamUserId);
-            var question = _questionService.GetById(dTO.QuestionId);
-            var section = _sectionService.GetById(question!.SectionId);
+            var examUser = _examUserInternalService.GetById(dTO.ExamUserId);
+            var question = _questionInternalService.GetById(dTO.QuestionId);
+            var section = _sectionInternalService.GetById(question!.SectionId);
 
             if (examUser.ExamId != section.ExamId)
                 throw new ApplicationValidationException($"ExamUser by id: {dTO.ExamUserId} is not meant for Exam by id: {section.ExamId}");
 
 
-            var exam = _examService.GetById(examUser.ExamId);
+            var exam = _examInternalService.GetById(examUser.ExamId);
 
             if (!exam.Published)
                 throw new ApplicationValidationException($"Exam by id: {exam.Id} is not published yet");
@@ -51,8 +43,8 @@ namespace OnlineExam.Application.Validators
 
         public void ValidateBeforeUpdate(UpdateAnswerDTO dTO)
         {
-            var answer = _answerRepository.GetById(dTO.Id);
-            var question = _questionService.GetById(answer.QuestionId);
+            var answer = _answerInternalService.GetById(dTO.Id);
+            var question = _questionInternalService.GetById(answer.QuestionId);
 
             if (question.Score < dTO.EarnedScore)
                 throw new ApplicationValidationException($"EarnedScore for question (questionId: {question.Id}) can not be more than {question.Score}");

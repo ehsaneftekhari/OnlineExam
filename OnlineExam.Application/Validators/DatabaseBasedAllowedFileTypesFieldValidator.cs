@@ -1,17 +1,18 @@
 ﻿using OnlineExam.Application.Abstractions.IValidators;
 using OnlineExam.Application.Contract.DTOs.AllowedFileTypesFieldDTOs;
 using OnlineExam.Application.Contract.Exceptions;
+using OnlineExam.Application.Services.FileFieldServices;
 using OnlineExam.Infrastructure.Contract.IRepositories;
 
 namespace OnlineExam.Application.Validators
 {
     public class DatabaseBasedAllowedFileTypesFieldValidator : IDatabaseBasedAllowedFileTypesFieldValidator
     {
-        readonly IAllowedFileTypesFieldOptionRepository _repository;
+        readonly AllowedFileTypesFieldInternalService _internalService;
 
-        public DatabaseBasedAllowedFileTypesFieldValidator(IAllowedFileTypesFieldOptionRepository repository)
+        public DatabaseBasedAllowedFileTypesFieldValidator(AllowedFileTypesFieldInternalService repository)
         {
-            _repository = repository;
+            _internalService = repository;
         }
 
         public void DatabaseBasedValidate(AddAllowedFileTypesFieldDTO dTO)
@@ -22,11 +23,11 @@ namespace OnlineExam.Application.Validators
 
         private void DatabaseBasedValidateValues(string extension, int? id = null)
         {
-            if (_repository.GetIQueryable()
+            if (_internalService.GetIQueryable()
                 .Where(cfo => !id.HasValue
                     || cfo.Id != id.Value)
                 .Any(e => e.Extension == extension))
-                throw new ApplicationValidationException($"duplicate name: an other FileType has {extension} as Extension");
+                throw new ApplicationValidationException($"duplicate extension: an other FileType has {extension} as Extension");
         }
     }
 }

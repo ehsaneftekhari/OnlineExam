@@ -7,10 +7,20 @@ namespace OnlineExam.Application.Validators
     public class CheckFieldOptionValidator : ICheckFieldOptionValidator
     {
         public void ValidateDTO(AddCheckFieldOptionDTO dTO)
-            => ValidateValues(dTO.Order, dTO.Text);
+        {
+            if (dTO == null)
+                throw new ArgumentNullException();
+
+            ValidateValues(dTO.Order, dTO.Text);
+        }
 
         public void ValidateDTO(UpdateCheckFieldOptionDTO dTO)
-            => ValidateValues(dTO.Order, dTO.Text);
+        {
+            if (dTO == null)
+                throw new ArgumentNullException();
+
+            ValidateValues(dTO.Order, dTO.Text);
+        }
 
         private void ValidateValues(int? Order, string? Text)
         {

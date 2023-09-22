@@ -1,17 +1,18 @@
 ﻿using OnlineExam.Application.Abstractions.IValidators;
 using OnlineExam.Application.Contract.DTOs.ExamUserDTOs;
 using OnlineExam.Application.Contract.Exceptions;
+using OnlineExam.Application.Services.ExamServices;
 using OnlineExam.Infrastructure.Contract.IRepositories;
 
 namespace OnlineExam.Application.Validators
 {
     public class DatabaseBasedExamUserValidator : IDatabaseBasedExamUserValidator
     {
-        readonly IExamRepository _examRepository;
+        readonly ExamInternalService _examInternalService;
 
-        public DatabaseBasedExamUserValidator(IExamRepository examRepository)
+        public DatabaseBasedExamUserValidator(ExamInternalService examRepository)
         {
-            _examRepository = examRepository;
+            _examInternalService = examRepository;
         }
 
         public void DatabaseBasedValidate(AddExamUserDTO dTO)
@@ -19,7 +20,7 @@ namespace OnlineExam.Application.Validators
 
         private void DatabaseBasedValidateValues(int examId)
         {
-            var exam = _examRepository.GetById(examId);
+            var exam = _examInternalService.GetById(examId);
 
             if(exam == null)
                 throw new ApplicationValidationException($"there is no Exam with id: {examId}");

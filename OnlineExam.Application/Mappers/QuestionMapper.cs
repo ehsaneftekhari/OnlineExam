@@ -6,13 +6,6 @@ namespace OnlineExam.Application.Mappers
 {
     internal class QuestionMapper : IQuestionMapper
     {
-        private readonly ISectionMapper _sectionMapper;
-
-        public QuestionMapper(ISectionMapper sectionMapper)
-        {
-            _sectionMapper = sectionMapper;
-        }
-
         public Question? AddDTOToEntity(int sectionId, AddQuestionDTO? addQuestionDTO)
         {
             if (addQuestionDTO != null)
@@ -22,8 +15,7 @@ namespace OnlineExam.Application.Mappers
                     Text = addQuestionDTO.Text,
                     Score = addQuestionDTO.Score,
                     Duration = new TimeSpan(
-                        addQuestionDTO.DurationDays
-                        , addQuestionDTO.DurationHours
+                        addQuestionDTO.DurationHours
                         , addQuestionDTO.DurationMinutes
                         , addQuestionDTO.DurationSeconds),
                     Order = addQuestionDTO.Order
@@ -63,11 +55,10 @@ namespace OnlineExam.Application.Mappers
                 if (@new.Score.HasValue)
                     old.Score = @new.Score.Value;
 
-                if (@new.DurationDays.HasValue
-                    || @new.DurationHours.HasValue
+                if (@new.DurationHours.HasValue
                     || @new.DurationMinutes.HasValue
                     || @new.DurationSeconds.HasValue)
-                    old.Duration = new TimeSpan(@new.DurationDays ?? 0, @new.DurationHours ?? 0
+                    old.Duration = new TimeSpan(@new.DurationHours ?? 0
                         , @new.DurationMinutes ?? 0, @new.DurationSeconds ?? 0);
 
                 if (@new.Order.HasValue)
