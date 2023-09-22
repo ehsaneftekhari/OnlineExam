@@ -7,5 +7,6 @@
         public bool RandomizeQuestions { get; set; }
         public int ExamId { get; set; }
         public Exam Exam { get; set; }
+        public ICollection<Question> Question { get; set; } = new List<Question>();
     }
 }
