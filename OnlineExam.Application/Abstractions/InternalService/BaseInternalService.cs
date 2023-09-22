@@ -1,7 +1,7 @@
-﻿using OnlineExam.Application.Contract.Exceptions;
+﻿using Microsoft.EntityFrameworkCore;
+using OnlineExam.Application.Contract.Exceptions;
 using OnlineExam.Infrastructure.Contract.Abstractions;
 using OnlineExam.Model;
-using OnlineExam.Model.Models;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -47,10 +47,18 @@ namespace OnlineExam.Application.Abstractions.InternalService
         }
 
         internal virtual TEntity GetById(int id)
+            => GetById(id, null);
+
+        internal virtual TEntity GetById(int id, IQueryable<TEntity> queryable)
         {
             ThrowIfdIsNotValid(id);
 
-            var records = _repository.GetById(id);
+            TEntity records;
+
+            if (queryable == null)
+                records = _repository.GetById(id);
+            else
+                records = _repository.GetById(id, queryable);
 
             if (records == null)
                 throw IsNotExistsException(id);
@@ -151,7 +159,7 @@ namespace OnlineExam.Application.Abstractions.InternalService
             var parameter = Expression.Parameter(typeof(TEntity), "e");
             var idComparison = Expression.Equal(Expression.Invoke(ParentIdProvider, parameter), Expression.Constant(parentId));
             var predicate = Expression.Lambda<Func<TEntity, bool>>(idComparison, parameter);
-            
+
             var records = GetIQueryable()
                 .Where(predicate)
                 .Skip(skip)
