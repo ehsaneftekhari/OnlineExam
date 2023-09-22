@@ -8,5 +8,6 @@
         public DateTime End { get; set; }
         public bool Published { get; set; }
         public virtual ICollection<Section> Sections { get; set; } = new List<Section>();
+        public ICollection<ExamUser> ExamUsers { get; set; } = new List<ExamUser>();
     }
 }

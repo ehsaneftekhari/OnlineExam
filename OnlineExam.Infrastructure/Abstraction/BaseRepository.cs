@@ -30,6 +30,11 @@ namespace OnlineExam.Infrastructure.Abstraction
             return _context.Set<TEntity>().FirstOrDefault(x => x.Id == id);
         }
 
+        public TEntity? GetById(int id, IQueryable<TEntity> queryable)
+        {
+            return queryable.FirstOrDefault(x => x.Id == id);
+        }
+
         public virtual IQueryable<TEntity> GetIQueryable()
         {
             return _context.Set<TEntity>();

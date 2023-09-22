@@ -2,7 +2,6 @@
 using OnlineExam.Application.Contract.DTOs.ExamUserDTOs;
 using OnlineExam.Application.Contract.Exceptions;
 using OnlineExam.Application.Services.ExamServices;
-using OnlineExam.Infrastructure.Contract.IRepositories;
 
 namespace OnlineExam.Application.Validators
 {

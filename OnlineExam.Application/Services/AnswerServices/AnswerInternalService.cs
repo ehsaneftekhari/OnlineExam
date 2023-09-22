@@ -1,10 +1,8 @@
 ﻿using OnlineExam.Application.Abstractions.InternalService;
-using OnlineExam.Application.Contract.Exceptions;
 using OnlineExam.Application.Services.ExamUserServices;
 using OnlineExam.Application.Services.QuestionServices;
 using OnlineExam.Infrastructure.Contract.IRepositories;
 using OnlineExam.Model.Models;
-using System.Linq;
 using System.Linq.Expressions;
 
 namespace OnlineExam.Application.Services.AnswerServices
