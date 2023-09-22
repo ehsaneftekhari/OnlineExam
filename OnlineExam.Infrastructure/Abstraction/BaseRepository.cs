@@ -1,6 +1,8 @@
-﻿using OnlineExam.Infrastructure.Contexts;
+﻿using Microsoft.EntityFrameworkCore;
+using OnlineExam.Infrastructure.Contexts;
 using OnlineExam.Infrastructure.Contract.Abstractions;
 using OnlineExam.Model;
+using System.Linq.Expressions;
 
 namespace OnlineExam.Infrastructure.Abstraction
 {
@@ -28,6 +30,11 @@ namespace OnlineExam.Infrastructure.Abstraction
         public virtual TEntity? GetById(int id)
         {
             return _context.Set<TEntity>().FirstOrDefault(x => x.Id == id);
+        }
+
+        public TEntity? GetById(int id, IQueryable<TEntity> queryable)
+        {
+            return queryable.FirstOrDefault(x => x.Id == id);
         }
 
         public virtual IQueryable<TEntity> GetIQueryable()
