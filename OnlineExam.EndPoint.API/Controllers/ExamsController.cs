@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OnlineExam.Application.Contract.DTOs.ExamDTOs;
 using OnlineExam.Application.Contract.IServices;
+using OnlineExam.EndPoint.API.Exceptions;
 
 namespace OnlineExam.EndPoint.API.Controllers
 {
@@ -15,53 +16,50 @@ namespace OnlineExam.EndPoint.API.Controllers
             _examService = examService;
         }
 
-        [HttpGet("GetById/{id}")]
+        [HttpGet]
+        public IActionResult GetAll(int pageNumber, int pageSize)
+        {
+            if (pageNumber < 1)
+                throw new APIValidationException("pageNumber can not be less than 1");
+
+            if (pageSize < 1)
+                throw new APIValidationException("pageSize can not be less than 1");
+
+            var dto = _examService.GetAll((pageNumber - 1) * pageSize, pageSize);
+            return Ok(dto);
+        }
+
+        [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            if(id < 0)
-                return BadRequest("id can not be less than zero");
-
             var dto = _examService.GetById(id);
             return Ok(dto);
         }
 
-        [HttpPost("Create")]
+        [HttpPost]
         public IActionResult Create(AddExamDTO exam)
         {
             if (exam == null)
-                return BadRequest();
+                throw new APIValidationException("exam can not be null");
 
-            if (_examService.Add(exam))
-                return Ok("Created");
-
-            return BadRequest();
+            return Ok(_examService.Add(exam));
         }
 
-        [HttpPost("Update")]
-        public IActionResult Update(UpdateExamDTO exam)
+        [HttpPatch("{id}")]
+        public IActionResult Update(int id, UpdateExamDTO exam)
         {
-            if(exam == null)
-                return BadRequest();
+            if (exam == null)
+                throw new APIValidationException("exam can not be null");
 
-            if (_examService.Update(exam))
-                return Ok("Updated");
-            
-            if(_examService.GetById(exam.Id) == null)
-                return BadRequest($"did not updated");
-
-            throw new Exception();
+            _examService.Update(id, exam);
+            return Ok();
         }
 
-        [HttpDelete("Delete")]
+        [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            if (id < 0)
-                return BadRequest("id can not be less than zero");
-
-            if(_examService.Delete(id))
-                return Ok("Deleted");
-
-            return BadRequest($"did not deleted");
+            _examService.Delete(id);
+            return Ok();
         }
     }
 }

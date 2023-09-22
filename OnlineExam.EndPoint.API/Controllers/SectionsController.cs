@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OnlineExam.Application.Contract.DTOs.SectionDTOs;
 using OnlineExam.Application.Contract.IServices;
+using OnlineExam.EndPoint.API.Exceptions;
 
 namespace OnlineExam.EndPoint.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api")]
     [ApiController]
     public class SectionsController : ControllerBase
     {
@@ -15,53 +16,50 @@ namespace OnlineExam.EndPoint.API.Controllers
             _sectionService = sectionService;
         }
 
-        [HttpGet("GetById/{id}")]
+        [HttpGet("Exams/{id}/[controller]")]
+        public IActionResult GetAllByExamId(int id, int pageNumber, int pageSize)
+        {
+            if (pageNumber < 1)
+                throw new APIValidationException("pageNumber can not be less than 1");
+
+            if (pageSize < 1)
+                throw new APIValidationException("pageSize can not be less than 1");
+
+            var dto = _sectionService.GetAllByExamId(id, (pageNumber - 1) * pageSize, pageSize);
+            return Ok(dto);
+        }
+
+        [HttpGet("[controller]/{id}")]
         public IActionResult GetById(int id)
         {
-            if (id < 0)
-                return BadRequest("id can not be less than zero");
-
             var dto = _sectionService.GetById(id);
             return Ok(dto);
         }
 
-        [HttpPost("Create")]
-        public IActionResult Create(AddSectionDTO section)
+        [HttpPost("Exams/{id}/[controller]")]
+        public IActionResult Create(int id, AddSectionDTO section)
         {
             if (section == null)
-                return BadRequest();
+                throw new APIValidationException("section can not be null");
 
-            if (_sectionService.Add(section))
-                return Ok("Created");
-
-            return BadRequest();
+            return Ok(_sectionService.Add(id, section));
         }
 
-        [HttpPost("Update")]
-        public IActionResult Update(UpdateSectionDTO section)
+        [HttpPatch("[controller]/{id}")]
+        public IActionResult Update(int id, UpdateSectionDTO section)
         {
             if (section == null)
-                return BadRequest();
+                throw new APIValidationException("section can not be null");
 
-            if (_sectionService.Update(section))
-                return Ok("Updated");
-
-            if (_sectionService.GetById(section.Id) == null)
-                return BadRequest($"there is no section by id {section.Id}");
-
-            throw new Exception();
+            _sectionService.Update(id, section);
+            return Ok();
         }
 
-        [HttpDelete("Delete")]
+        [HttpDelete("[controller]/{id}")]
         public IActionResult Delete(int id)
         {
-            if (id < 0)
-                return BadRequest("id can not be less than zero");
-
-            if (_sectionService.Delete(id))
-                return Ok("Deleted");
-
-            return BadRequest($"there is no section by id {id} to deleted");
+            _sectionService.Delete(id);
+            return Ok();
         }
     }
 }

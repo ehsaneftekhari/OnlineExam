@@ -1,7 +1,9 @@
 ﻿namespace OnlineExam.Infrastructure.Contract.Abstractions
 {
-    public interface IGetRepository<TEntity> where TEntity : class
+    public interface IGetRepository<TEntity, TId> where TEntity : class
     {
-        TEntity? GetById(int id);
+        TEntity? GetById(TId id);
+
+        TEntity? GetById(int id, IQueryable<TEntity> queryable);
     }
 }

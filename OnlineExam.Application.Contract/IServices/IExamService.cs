@@ -4,12 +4,14 @@ namespace OnlineExam.Application.Contract.IServices
 {
     public interface IExamService
     {
-        bool Add(AddExamDTO dTO);
+        ShowExamDTO Add(AddExamDTO dTO);
 
         ShowExamDTO? GetById(int id);
 
-        bool Update(UpdateExamDTO dTO);
+        IEnumerable<ShowExamDTO> GetAll(int skip, int take);
 
-        bool Delete(int id);
+        void Update(int id, UpdateExamDTO dTO);
+
+        void Delete(int id);
     }
 }
