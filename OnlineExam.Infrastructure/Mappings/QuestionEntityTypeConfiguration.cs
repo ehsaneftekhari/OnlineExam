@@ -11,7 +11,7 @@ namespace OnlineExam.Infrastructure.Mappings
         public override void ConcreteConfigure(EntityTypeBuilder<Question> builder)
         {
             builder.HasOne(p => p.Section)
-               .WithMany()
+               .WithMany(s => s.Question)
                .HasForeignKey(x => x.SectionId)
                .IsRequired()
                .OnDelete(DeleteBehavior.Cascade);
