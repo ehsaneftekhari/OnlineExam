@@ -8,6 +8,16 @@ namespace OnlineExam.EndPoint.API
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowedLocalHostOrigin", builder =>
+                {
+                    builder.WithOrigins("http://localhost")
+                           .AllowAnyHeader()
+                           .AllowAnyMethod();
+                });
+            });
+
             builder.Services.AddControllers();
             builder.Services.AddSwaggerGen();
 
@@ -26,7 +36,7 @@ namespace OnlineExam.EndPoint.API
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
+            app.UseCors("AllowedLocalHostOrigin");
             //app.UseAuthorization();
 
             app.MapControllers();
