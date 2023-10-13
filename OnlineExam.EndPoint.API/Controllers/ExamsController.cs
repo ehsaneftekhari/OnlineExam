@@ -16,14 +16,27 @@ namespace OnlineExam.EndPoint.API.Controllers
             _examService = examService;
         }
 
-        [HttpGet("GetById/{id}")]
+        [HttpGet]
+        public IActionResult GetAll(int pageNumber, int pageSize)
+        {
+            if (pageNumber < 1)
+                throw new APIValidationException("pageNumber can not be less than 1");
+
+            if (pageSize < 1)
+                throw new APIValidationException("pageSize can not be less than 1");
+
+            var dto = _examService.GetAll((pageNumber - 1) * pageSize, pageSize);
+            return Ok(dto);
+        }
+
+        [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
             var dto = _examService.GetById(id);
             return Ok(dto);
         }
 
-        [HttpPost("Create")]
+        [HttpPost]
         public IActionResult Create(AddExamDTO exam)
         {
             if (exam == null)
@@ -32,17 +45,17 @@ namespace OnlineExam.EndPoint.API.Controllers
             return Ok(_examService.Add(exam));
         }
 
-        [HttpPost("Update")]
-        public IActionResult Update(UpdateExamDTO exam)
+        [HttpPatch("{id}")]
+        public IActionResult Update(int id, UpdateExamDTO exam)
         {
             if (exam == null)
                 throw new APIValidationException("exam can not be null");
 
-            _examService.Update(exam);
+            _examService.Update(id, exam);
             return Ok();
         }
 
-        [HttpDelete("Delete")]
+        [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
             _examService.Delete(id);

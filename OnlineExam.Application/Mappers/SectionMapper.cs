@@ -1,19 +1,12 @@
-﻿using OnlineExam.Application.Contract.DTOs.SectionDTOs;
-using OnlineExam.Application.IMappers;
+﻿using OnlineExam.Application.Abstractions.IMappers;
+using OnlineExam.Application.Contract.DTOs.SectionDTOs;
 using OnlineExam.Model.Models;
 
 namespace OnlineExam.Application.Mappers
 {
     internal class SectionMapper : ISectionMapper
     {
-        private readonly IExamMapper _examMapper;
-
-        public SectionMapper(IExamMapper examMapper)
-        {
-            _examMapper = examMapper;
-        }
-
-        public Section? AddDTOToEntity(AddSectionDTO? addSectionDTO)
+        public Section? AddDTOToEntity(int examId, AddSectionDTO? addSectionDTO)
         {
             if (addSectionDTO != null)
                 return new()
@@ -21,7 +14,7 @@ namespace OnlineExam.Application.Mappers
                     Title = addSectionDTO.Title,
                     Order = addSectionDTO.Order,
                     RandomizeQuestions = addSectionDTO.RandomizeQuestions,
-                    ExamId = addSectionDTO.ExamId
+                    ExamId = examId
                 };
             return null;
         }
@@ -33,10 +26,10 @@ namespace OnlineExam.Application.Mappers
                 return new()
                 {
                     Id = entity.Id,
+                    ExamId = entity.ExamId,
                     Title = entity.Title,
                     Order = entity.Order,
-                    RandomizeQuestions = entity.RandomizeQuestions,
-                    Exam = entity.Exam != null ? _examMapper.EntityToShowDTO(entity.Exam)! : null,
+                    RandomizeQuestions = entity.RandomizeQuestions
                 };
             }
 

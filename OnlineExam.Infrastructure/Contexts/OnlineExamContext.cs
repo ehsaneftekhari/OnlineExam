@@ -14,11 +14,35 @@ namespace OnlineExam.Infrastructure.Contexts
 
         public DbSet<Section> Section { get; set; }
 
+        public DbSet<Question> Question { get; set; }
+
+        public DbSet<TextField> TextField { get; set; }
+
+        public DbSet<CheckField> CheckField { get; set; }
+
+        public DbSet<CheckFieldOption> CheckFieldOption { get; set; }
+
+        public DbSet<FileField> FileField { get; set; }
+
+        public DbSet<AllowedFileTypesField> AllowedFileTypes { get; set; }
+
+        public DbSet<ExamUser> ExamUser { get; set; }
+
+        public DbSet<Answer> Answer { get; set; }
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .ApplyConfiguration(new ExamEntityTypeConfiguration())
-                .ApplyConfiguration(new SectionEntityTypeConfiguration());
+                .ApplyConfiguration(new SectionEntityTypeConfiguration())
+                .ApplyConfiguration(new QuestionEntityTypeConfiguration())
+                .ApplyConfiguration(new TextFieldEntityTypeConfiguration())
+                .ApplyConfiguration(new CheckFieldEntityTypeConfiguration())
+                .ApplyConfiguration(new CheckFieldOptionEntityTypeConfiguration())
+                .ApplyConfiguration(new FileFieldEntityTypeConfiguration())
+                .ApplyConfiguration(new AllowedFileTypesEntityTypeConfiguration())
+                .ApplyConfiguration(new ExamUserEntityTypeConfiguration())
+                .ApplyConfiguration(new AnswerEntityTypeConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }
