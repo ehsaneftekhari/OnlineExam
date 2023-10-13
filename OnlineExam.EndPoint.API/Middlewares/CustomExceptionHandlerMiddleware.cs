@@ -25,6 +25,12 @@ namespace OnlineExam.EndPoint.API.Middlewares
                 context.Response.ContentType = "application/json";
                 await context.Response.WriteAsync(JsonConvert.SerializeObject(new ApplicationExceptionHttpMessageBody(ex.Message)));
             }
+            catch (ApplicationUnAuthenticateException ex)
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                context.Response.ContentType = "application/json";
+                await context.Response.WriteAsync(JsonConvert.SerializeObject(new ApplicationExceptionHttpMessageBody(ex.Message)));
+            }
             catch (ApplicationValidationException ex)
             {
                 context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
