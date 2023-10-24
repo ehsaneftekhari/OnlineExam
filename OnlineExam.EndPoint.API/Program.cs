@@ -1,5 +1,8 @@
+ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using OnlineExam.EndPoint.API.Middlewares;
+using OnlineExam.Infrastructure.Contexts;
 using OnlineExam.Model.ConfigProviders;
 
 namespace OnlineExam.EndPoint.API
@@ -27,18 +30,26 @@ namespace OnlineExam.EndPoint.API
             builder.Services.AddSingleton(sp =>
             {
                 var configuration = sp.GetRequiredService<IConfiguration>();
+                var configurations = configuration.GetSection("MyIdentityConfiguration").GetChildren();
                 return new IdentityConfiguration()
                 {
-                    Key = configuration
-                        .GetSection("MyIdentityConfiguration")
-                        .GetChildren()
-                        .First(x => x.Key == "TokenKey").Value
-                        
+                    Key = configurations
+                        .First(x => x.Key == "TokenKey").Value,
+
+                    ExpirationMinutes = TimeSpan.FromMinutes(
+                        int.Parse(configurations
+                        .First(x => x.Key == "ExpirationTime").Value)),
+
+                    Audience = configurations
+                        .First(x => x.Key == "Audience").Value,
                 };
             });
 
             Application.Config.RegisterServices(builder.Services);
             Infrastructure.Config.RegisterServices(builder.Services, builder.Configuration.GetConnectionString("OnlineExamConnectionStrings"));
+            builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<OnlineExamContext>();
+                //.AddDefaultTokenProviders();
             //builder.Services.AddAuthorization();
 
 
@@ -52,6 +63,7 @@ namespace OnlineExam.EndPoint.API
                 app.UseSwaggerUI();
             }
             app.UseCors("AllowedLocalHostOrigin");
+            //app.UseAuthentication();
             //app.UseAuthorization();
 
             app.MapControllers();
