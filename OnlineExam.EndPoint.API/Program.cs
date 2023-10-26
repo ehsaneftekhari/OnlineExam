@@ -33,15 +33,10 @@ namespace OnlineExam.EndPoint.API
                 var configurations = configuration.GetSection("MyIdentityConfiguration").GetChildren();
                 return new IdentityConfiguration()
                 {
-                    Key = configurations
-                        .First(x => x.Key == "TokenKey").Value,
-
-                    ExpirationMinutes = TimeSpan.FromMinutes(
-                        int.Parse(configurations
-                        .First(x => x.Key == "ExpirationTime").Value)),
-
-                    Audience = configurations
-                        .First(x => x.Key == "Audience").Value,
+                    TokenSigningKey = configurations.First(x => x.Key == "TokenSigningKey").Value,
+                    TokenEncryptingKey = configurations.First(x => x.Key == "TokenEncryptingKey").Value,
+                    ExpirationMinutes = TimeSpan.FromMinutes(int.Parse(configurations.First(x => x.Key == "ExpirationMinutes").Value)),
+                    Audience = configurations.First(x => x.Key == "Audience").Value,
                 };
             });
 
