@@ -1,10 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using OnlineExam.Infrastructure.Mappings;
 using OnlineExam.Model.Models;
 
 namespace OnlineExam.Infrastructure.Contexts
 {
-    public class OnlineExamContext : DbContext
+    public class OnlineExamContext : IdentityDbContext
     {
         public OnlineExamContext(DbContextOptions<OnlineExamContext> options) : base(options)
         {

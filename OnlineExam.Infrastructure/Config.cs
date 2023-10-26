@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using OnlineExam.Infrastructure.Contexts;
 using OnlineExam.Infrastructure.Contract.IRepositories;
@@ -22,6 +23,13 @@ namespace OnlineExam.Infrastructure
             serviceDescriptors.AddScoped<IAnswerRepository, AnswerRepository>();
             
             serviceDescriptors.AddDbContext<OnlineExamContext>(option => option.UseSqlServer(ConnectionString));
+            //serviceDescriptors.AddIdentity<IdentityUser>()
+            //    .AddEntityFrameworkStores<OnlineExamContext>()
+            //    .AddUserStore<IdentityUser>()
+            //    .AddRoles<IdentityRole>()
+            //    .AddRoleStore<IdentityRole>()
+            //    .AddUserManager<UserManager<IdentityUser>>();
+
         }
     }
 }

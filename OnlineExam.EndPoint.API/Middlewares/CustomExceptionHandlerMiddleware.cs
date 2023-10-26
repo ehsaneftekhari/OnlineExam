@@ -21,7 +21,7 @@ namespace OnlineExam.EndPoint.API.Middlewares
             }
             catch (ApplicationUnAuthorizedException ex)
             {
-                context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
                 context.Response.ContentType = "application/json";
                 await context.Response.WriteAsync(JsonConvert.SerializeObject(new ApplicationExceptionHttpMessageBody(ex.Message)));
             }
