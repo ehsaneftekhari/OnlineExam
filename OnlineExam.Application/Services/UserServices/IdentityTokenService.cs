@@ -4,7 +4,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace OnlineExam.Application.Services
+namespace OnlineExam.Application.Services.UserServices
 {
     public class IdentityTokenService
     {
@@ -46,7 +46,7 @@ namespace OnlineExam.Application.Services
                 claimsPrincipal = _tokenHandler.ValidateToken(token, new TokenValidationParameters()
                 {
                     RequireExpirationTime = true,
-                    
+
                     RequireAudience = true,
                     ValidateAudience = true,
                     ValidAudience = _identityConfiguration.Audience,
@@ -71,8 +71,8 @@ namespace OnlineExam.Application.Services
             return true;
         }
 
-        private bool LifetimeValidator(DateTime? notBefore,DateTime? expires,
-            SecurityToken securityToken,TokenValidationParameters validationParameters)
+        private bool LifetimeValidator(DateTime? notBefore, DateTime? expires,
+            SecurityToken securityToken, TokenValidationParameters validationParameters)
             => notBefore + _identityConfiguration.ExpirationMinutes == expires;
     }
 }

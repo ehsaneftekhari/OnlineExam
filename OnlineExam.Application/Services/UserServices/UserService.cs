@@ -8,7 +8,7 @@ using OnlineExam.Application.Contract.IServices;
 using System.Data;
 using System.Security.Claims;
 
-namespace OnlineExam.Application.Services
+namespace OnlineExam.Application.Services.UserServices
 {
     public class UserService : IUserService
     {
@@ -50,7 +50,7 @@ namespace OnlineExam.Application.Services
                 result.IsAuthenticated = false;
 
             if (!HasRole(claimsPrincipal, expectedRoleNames))
-                    result.IsAuthorized = false;
+                result.IsAuthorized = false;
 
             return result;
         }
