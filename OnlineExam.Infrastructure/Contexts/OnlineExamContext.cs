@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using OnlineExam.Infrastructure.Mappings;
+using OnlineExam.Infrastructure.SeedData;
 using OnlineExam.Model.Models;
 
 namespace OnlineExam.Infrastructure.Contexts
@@ -44,6 +46,8 @@ namespace OnlineExam.Infrastructure.Contexts
                 .ApplyConfiguration(new AllowedFileTypesEntityTypeConfiguration())
                 .ApplyConfiguration(new ExamUserEntityTypeConfiguration())
                 .ApplyConfiguration(new AnswerEntityTypeConfiguration());
+
+            modelBuilder.Entity<IdentityRole>().HasData(IdentitySeedData.IdentityRoles);
 
             base.OnModelCreating(modelBuilder);
         }
