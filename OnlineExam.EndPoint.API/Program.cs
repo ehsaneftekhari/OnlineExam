@@ -25,6 +25,7 @@ namespace OnlineExam.EndPoint.API
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json")
                 .Build();
+
             var fluentConfigurator = FluentConfigurator.Create(builder.Services, configuration);
 
             fluentConfigurator.AddCors()

@@ -14,8 +14,6 @@ namespace OnlineExam.Infrastructure.SeedData
                 new IdentityRole() {Name = "ExamUser", NormalizedName = "EXAMUSER", Id = "55693B5A-9729-484A-87B8-4AE24A06FB56", ConcurrencyStamp = "17066ecd-ee6b-40b5-a2aa-ca7cc429efee"}
             };
         }
-
-
     }
 
     public static class IdentityRoleNames 

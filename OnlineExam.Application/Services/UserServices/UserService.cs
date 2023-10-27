@@ -42,20 +42,15 @@ namespace OnlineExam.Application.Services.UserServices
             return _tokenService.GenerateToken("www.ehsan.com", claims);
         }
 
-        public ValidateTokenResult ValidateToken(string token, IEnumerable<string> expectedRoleNames)
+        public bool ValidateToken(string token, IEnumerable<string> expectedRoleNames)
         {
-            var result = new ValidateTokenResult() { IsAuthorized = true, IsAuthenticated = true };
-
             if (!ValidateToken(token, out ClaimsPrincipal claimsPrincipal))
-            {
-                result.IsAuthenticated = false;
-                result.IsAuthorized = false;
-            }
-            else
-            if (!HasRole(claimsPrincipal, expectedRoleNames))
-                result.IsAuthorized = false;
+                throw new ApplicationUnAuthenticateException("you are not Authenticated");
 
-            return result;
+            if (!HasRole(claimsPrincipal, expectedRoleNames))
+                throw new ApplicationUnAuthorizedException("you are not Authorized");
+
+            return true;
         }
 
         public bool ValidateToken(string token, out ClaimsPrincipal claimsPrincipal)

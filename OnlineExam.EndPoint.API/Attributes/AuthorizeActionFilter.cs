@@ -24,16 +24,10 @@ namespace OnlineExam.EndPoint.API.Attributes
             _userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
             var authorizationHeader = context.HttpContext.Request.Headers.Authorization.ToString();
 
-            if (string.IsNullOrWhiteSpace(authorizationHeader)|| !authorizationHeader.Contains("Bearer "))
+            if (string.IsNullOrWhiteSpace(authorizationHeader) || !authorizationHeader.Contains("Bearer "))
                 throw new ApplicationUnAuthenticateException("you are not Authenticated");
 
-            var validateTokenResult = _userService.ValidateToken(authorizationHeader.Replace("Bearer ", ""), Roles);
-
-            if(!validateTokenResult.IsAuthenticated)
-                throw new ApplicationUnAuthenticateException("you are not Authenticated");
-
-            if(!validateTokenResult.IsAuthorized)
-                throw new ApplicationUnAuthorizedException("you are not Authorized");
+            _userService.ValidateToken(authorizationHeader.Replace("Bearer ", ""), Roles);
 
             base.OnActionExecuting(context);
         }

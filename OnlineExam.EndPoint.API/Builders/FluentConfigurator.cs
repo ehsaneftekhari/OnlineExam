@@ -64,8 +64,7 @@ namespace OnlineExam.EndPoint.API.Builders
         {
             _ServiceCollection.AddSingleton(sp =>
             {
-                var configuration = sp.GetRequiredService<IConfiguration>();
-                var configurations = configuration.GetSection("MyIdentityConfiguration").GetChildren();
+                var configurations = _Configuration.GetSection("MyIdentityConfiguration").GetChildren();
                 return new IdentityConfiguration()
                 {
                     TokenSigningKey = configurations.First(x => x.Key == "TokenSigningKey").Value,
