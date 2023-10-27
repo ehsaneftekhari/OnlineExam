@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
@@ -47,8 +47,11 @@ namespace OnlineExam.Application.Services.UserServices
             var result = new ValidateTokenResult() { IsAuthorized = true, IsAuthenticated = true };
 
             if (!ValidateToken(token, out ClaimsPrincipal claimsPrincipal))
+            {
                 result.IsAuthenticated = false;
-
+                result.IsAuthorized = false;
+            }
+            else
             if (!HasRole(claimsPrincipal, expectedRoleNames))
                 result.IsAuthorized = false;
 
