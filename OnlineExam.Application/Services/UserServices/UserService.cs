@@ -1,10 +1,11 @@
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using OnlineExam.Application.Contract.DTOs;
 using OnlineExam.Application.Contract.Exceptions;
 using OnlineExam.Application.Contract.IServices;
+using OnlineExam.Infrastructure.SeedData;
 using System.Data;
 using System.Security.Claims;
 
@@ -32,14 +33,13 @@ namespace OnlineExam.Application.Services.UserServices
             if (!signInResult.Succeeded)
                 throw new ApplicationUnAuthorizedException("");
 
-            var claims = new List<Claim>()
+            var claims = new List<Claim>(
+                _userManager.GetRolesAsync(user).GetAwaiter().GetResult().Select(r => new Claim(ClaimTypes.Role, r)))
             {
-                new Claim(ClaimTypes.Name, user.UserName),
-                new Claim(ClaimTypes.Role, "Admin")
+                new Claim(ClaimTypes.Name, user.UserName) 
             };
 
-            var t = _tokenService.GenerateToken("www.ehsan.com", claims);
-            return t;
+            return _tokenService.GenerateToken("www.ehsan.com", claims);
         }
 
         public ValidateTokenResult ValidateToken(string token, IEnumerable<string> expectedRoleNames)
@@ -73,6 +73,7 @@ namespace OnlineExam.Application.Services.UserServices
             var newUser = new IdentityUser(dto.username);
             newUser.PasswordHash = _userManager.PasswordHasher.HashPassword(newUser, dto.password);
             _userManager.CreateAsync(newUser).GetAwaiter().GetResult();
+            _userManager.AddToRolesAsync(newUser, new string[] { IdentityRoleNames.ExamCreator, IdentityRoleNames.ExamUser }).GetAwaiter().GetResult(); ;
             return newUser.UserName;
         }
     }
