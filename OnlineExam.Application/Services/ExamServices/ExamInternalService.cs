@@ -7,7 +7,7 @@ namespace OnlineExam.Application.Services.ExamServices
 {
     public sealed class ExamInternalService : BaseInternalService<Exam, IExamRepository>
     {
-        public ExamInternalService(IExamRepository examRepository) : base(examRepository) {}
+        public ExamInternalService(IExamRepository examRepository) : base(examRepository) { }
 
         internal override Exam Add(Exam newExam)
         {

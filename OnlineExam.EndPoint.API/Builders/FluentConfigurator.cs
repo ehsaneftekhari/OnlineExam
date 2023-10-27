@@ -97,7 +97,7 @@ namespace OnlineExam.EndPoint.API.Builders
 
         public IAppFluentConfigurator OnApp(WebApplication webApplication)
         {
-            if(webApplication == null)
+            if (webApplication == null)
                 throw new ArgumentNullException(nameof(webApplication));
 
             _WebApplication = webApplication;

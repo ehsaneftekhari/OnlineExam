@@ -74,7 +74,7 @@ namespace OnlineExam.Application.Services.UserServices
             SecurityToken securityToken, TokenValidationParameters validationParameters)
         {
             var now = DateTime.UtcNow;
-            return (notBefore + _identityConfiguration.ExpirationMinutes == expires) 
+            return (notBefore + _identityConfiguration.ExpirationMinutes == expires)
                 && (notBefore < now)
                 && (expires > now);
         }

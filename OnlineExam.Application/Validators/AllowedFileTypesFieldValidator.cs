@@ -16,7 +16,7 @@ namespace OnlineExam.Application.Validators
         {
             if (name != null && name.Length > 512)
                 throw new ApplicationValidationException("Name can not be longer than 512 characters");
-            
+
             if (extension != null && extension.Length > 8)
                 throw new ApplicationValidationException("extension can not be longer than 8 characters");
         }

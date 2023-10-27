@@ -29,7 +29,7 @@ namespace OnlineExam.Application.Services.FileFieldServices
             _databaseBasedValidator.DatabaseBasedValidate(dTO);
             var allowedFileTypesField = _mapper.AddDTOToEntity(dTO)!;
             _internalService.Add(allowedFileTypesField);
-             return _mapper.EntityToShowDTO(allowedFileTypesField)!;
+            return _mapper.EntityToShowDTO(allowedFileTypesField)!;
         }
 
         public void Delete(int allowedFileTypeId)

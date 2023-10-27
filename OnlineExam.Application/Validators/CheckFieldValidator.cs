@@ -9,7 +9,7 @@ namespace OnlineExam.Application.Validators
     {
         public void ValidateDTO(AddCheckFieldDTO dTO)
         {
-            if(dTO == null)
+            if (dTO == null)
                 throw new ArgumentNullException();
 
             ValidateValues(dTO.MaximumSelection, dTO.CheckFieldUIType);
@@ -17,7 +17,7 @@ namespace OnlineExam.Application.Validators
 
         public void ValidateDTO(UpdateCheckFieldDTO dTO)
         {
-            if(dTO == null)
+            if (dTO == null)
                 throw new ArgumentNullException();
 
             ValidateValues(dTO.MaximumSelection, dTO.CheckFieldUIType);

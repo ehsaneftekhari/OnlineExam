@@ -1,12 +1,5 @@
-using Microsoft.AspNetCore.Cors.Infrastructure;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using OnlineExam.EndPoint.API.Builders;
 using OnlineExam.EndPoint.API.Middlewares;
-using OnlineExam.Infrastructure.Contexts;
-using OnlineExam.Model.ConfigProviders;
 
 namespace OnlineExam.EndPoint.API
 {
@@ -28,10 +21,10 @@ namespace OnlineExam.EndPoint.API
 
             var fluentConfigurator = FluentConfigurator.Create(builder.Services, configuration);
 
-            fluentConfigurator.AddCors()
-                .AddMyIdentityConfiguration()
-                .AddApplication()
-                .AddInfrastructure();
+            fluentConfigurator.AddCors();
+            fluentConfigurator.AddMyIdentityConfiguration();
+            fluentConfigurator.AddApplication();
+            fluentConfigurator.AddInfrastructure();
 
             var app = builder.Build();
 

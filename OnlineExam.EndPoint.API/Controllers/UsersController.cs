@@ -1,10 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using OnlineExam.Application.Contract.DTOs;
 using OnlineExam.Application.Contract.IServices;
 using OnlineExam.EndPoint.API.Attributes;
-using OnlineExam.Infrastructure.SeedData;
 using OnlineExam.Model.Constants;
 
 namespace OnlineExam.EndPoint.API.Controllers
@@ -31,7 +28,7 @@ namespace OnlineExam.EndPoint.API.Controllers
         {
             return Ok(_userService.Register(dto));
         }
-        
+
         [HttpPost("Test")]
         [AuthorizeActionFilter(IdentityRoleNames.ExamUser)]
         public IActionResult Test(string dto)

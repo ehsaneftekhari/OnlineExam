@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using OnlineExam.Model.Constants;
-using System.Xml.Linq;
 
 namespace OnlineExam.Infrastructure.SeedData
 {

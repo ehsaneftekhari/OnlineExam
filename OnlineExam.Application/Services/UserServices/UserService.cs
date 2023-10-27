@@ -1,11 +1,7 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.AspNetCore.Identity;
 using OnlineExam.Application.Contract.DTOs;
 using OnlineExam.Application.Contract.Exceptions;
 using OnlineExam.Application.Contract.IServices;
-using OnlineExam.Infrastructure.SeedData;
 using OnlineExam.Model.Constants;
 using System.Data;
 using System.Security.Claims;
@@ -37,7 +33,7 @@ namespace OnlineExam.Application.Services.UserServices
             var claims = new List<Claim>(
                 _userManager.GetRolesAsync(user).GetAwaiter().GetResult().Select(r => new Claim(ClaimTypes.Role, r)))
             {
-                new Claim(ClaimTypes.Name, user.UserName) 
+                new Claim(ClaimTypes.Name, user.UserName)
             };
 
             return _tokenService.GenerateToken("www.ehsan.com", claims);

@@ -1,10 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json.Linq;
 using OnlineExam.Application.Contract.Exceptions;
 using OnlineExam.Application.Contract.IServices;
-using OnlineExam.Application.Services;
-using System.Security.Claims;
 
 namespace OnlineExam.EndPoint.API.Attributes
 {

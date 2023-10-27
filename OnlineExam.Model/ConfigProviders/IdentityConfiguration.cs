@@ -5,7 +5,8 @@
         string _tokenEncryptingKey { get; set; }
 
         public string TokenSigningKey { get; set; }
-        public string TokenEncryptingKey {
+        public string TokenEncryptingKey
+        {
             get => _tokenEncryptingKey;
             set
             {

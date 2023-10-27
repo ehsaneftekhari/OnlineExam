@@ -32,7 +32,7 @@ namespace OnlineExam.Infrastructure.Contexts
         public DbSet<ExamUser> ExamUser { get; set; }
 
         public DbSet<Answer> Answer { get; set; }
-        
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder

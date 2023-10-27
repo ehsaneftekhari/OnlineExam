@@ -21,7 +21,7 @@ namespace OnlineExam.Application.Validators
         {
             var exam = _examInternalService.GetById(examId);
 
-            if(exam == null)
+            if (exam == null)
                 throw new ApplicationValidationException($"there is no Exam with id: {examId}");
 
             if (!exam.Published)

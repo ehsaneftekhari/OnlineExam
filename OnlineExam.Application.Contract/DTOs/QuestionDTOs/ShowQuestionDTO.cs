@@ -1,6 +1,6 @@
 ﻿namespace OnlineExam.Application.Contract.DTOs.QuestionDTOs
 {
-    public class ShowQuestionDTO 
+    public class ShowQuestionDTO
     {
         public int Id { get; set; }
         public int SectionId { get; set; }

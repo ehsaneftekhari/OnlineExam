@@ -26,7 +26,7 @@ namespace OnlineExam.Application.Validators
             var examUser = _examUserInternalService.GetById(dTO.ExamUserId,
                 _examUserInternalService.GetIQueryable().Include(x => x.Exam));
 
-            var question = _questionInternalService.GetById(dTO.QuestionId, 
+            var question = _questionInternalService.GetById(dTO.QuestionId,
                 _questionInternalService.GetIQueryable().Include(x => x.Section));
 
 
@@ -46,7 +46,7 @@ namespace OnlineExam.Application.Validators
 
         public void ValidateBeforeUpdate(UpdateAnswerDTO dTO)
         {
-            var answer = _answerInternalService.GetById(dTO.Id, 
+            var answer = _answerInternalService.GetById(dTO.Id,
                 _answerInternalService.GetIQueryable().Include(x => x.Question));
 
             if (answer.Question.Score < dTO.EarnedScore)
