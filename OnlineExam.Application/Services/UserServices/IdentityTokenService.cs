@@ -62,7 +62,6 @@ namespace OnlineExam.Application.Services.UserServices
 
                     TokenDecryptionKey = _encryptingSecurityKey
                 }, out _);
-
             }
             catch (Exception)
             {
@@ -73,6 +72,11 @@ namespace OnlineExam.Application.Services.UserServices
 
         private bool LifetimeValidator(DateTime? notBefore, DateTime? expires,
             SecurityToken securityToken, TokenValidationParameters validationParameters)
-            => notBefore + _identityConfiguration.ExpirationMinutes == expires;
+        {
+            var now = DateTime.UtcNow;
+            return (notBefore + _identityConfiguration.ExpirationMinutes == expires) 
+                && (notBefore < now)
+                && (expires > now);
+        }
     }
 }
