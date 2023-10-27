@@ -1,6 +1,9 @@
- using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Cors.Infrastructure;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using OnlineExam.EndPoint.API.Builders;
 using OnlineExam.EndPoint.API.Middlewares;
 using OnlineExam.Infrastructure.Contexts;
 using OnlineExam.Model.ConfigProviders;
@@ -13,42 +16,25 @@ namespace OnlineExam.EndPoint.API
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddCors(options =>
-            {
-                options.AddPolicy("AllowedLocalHostOrigin", builder =>
-                {
-                    builder.WithOrigins("http://localhost")
-                           .AllowAnyHeader()
-                           .AllowAnyMethod();
-                });
-            });
-
             builder.Services.AddControllers();
             builder.Services.AddSwaggerGen();
 
             // Add services to the container.
-            builder.Services.AddSingleton(sp =>
-            {
-                var configuration = sp.GetRequiredService<IConfiguration>();
-                var configurations = configuration.GetSection("MyIdentityConfiguration").GetChildren();
-                return new IdentityConfiguration()
-                {
-                    TokenSigningKey = configurations.First(x => x.Key == "TokenSigningKey").Value,
-                    TokenEncryptingKey = configurations.First(x => x.Key == "TokenEncryptingKey").Value,
-                    ExpirationMinutes = TimeSpan.FromMinutes(int.Parse(configurations.First(x => x.Key == "ExpirationMinutes").Value)),
-                    Audience = configurations.First(x => x.Key == "Audience").Value,
-                };
-            });
 
-            Application.Config.RegisterServices(builder.Services);
-            Infrastructure.Config.RegisterServices(builder.Services, builder.Configuration.GetConnectionString("OnlineExamConnectionStrings"));
-            builder.Services.AddIdentity<IdentityUser, IdentityRole>()
-                .AddEntityFrameworkStores<OnlineExamContext>();
-                //.AddDefaultTokenProviders();
-            //builder.Services.AddAuthorization();
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json")
+                .Build();
+            var fluentConfigurator = FluentConfigurator.Create(builder.Services, configuration);
 
+            fluentConfigurator.AddCors()
+                .AddMyIdentityConfiguration()
+                .AddApplication()
+                .AddInfrastructure();
 
             var app = builder.Build();
+
+            var appFluentConfigurator = fluentConfigurator.OnApp(app);
 
             // Configure the HTTP request pipeline.
 
@@ -57,7 +43,9 @@ namespace OnlineExam.EndPoint.API
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-            app.UseCors("AllowedLocalHostOrigin");
+
+            appFluentConfigurator.UseCors();
+
             //app.UseAuthentication();
             //app.UseAuthorization();
 
