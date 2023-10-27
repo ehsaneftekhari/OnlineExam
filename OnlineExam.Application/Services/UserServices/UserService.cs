@@ -6,6 +6,7 @@ using OnlineExam.Application.Contract.DTOs;
 using OnlineExam.Application.Contract.Exceptions;
 using OnlineExam.Application.Contract.IServices;
 using OnlineExam.Infrastructure.SeedData;
+using OnlineExam.Model.Constants;
 using System.Data;
 using System.Security.Claims;
 
