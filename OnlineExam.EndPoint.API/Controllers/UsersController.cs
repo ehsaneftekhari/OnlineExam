@@ -30,7 +30,7 @@ namespace OnlineExam.EndPoint.API.Controllers
         }
 
         [HttpPost("Test")]
-        [AuthorizeActionFilter(IdentityRoleNames.ExamUser)]
+        [AuthorizeActionFilter(IdentityRoleNames.ExamUser, IdentityRoleNames.ExamCreator)]
         public IActionResult Test(string dto)
         {
             return Ok();
