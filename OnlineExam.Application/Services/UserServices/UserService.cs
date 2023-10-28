@@ -25,6 +25,9 @@ namespace OnlineExam.Application.Services.UserServices
         {
             var user = _userManager.FindByNameAsync(logInDto.username).GetAwaiter().GetResult();
 
+            if (user == null)
+                throw new ApplicationSourceNotFoundException($"User with username:{logInDto.username} is not exists");
+
             var signInResult = _signInManager.PasswordSignInAsync(user, logInDto.password, false, false).GetAwaiter().GetResult();
 
             if (!signInResult.Succeeded)
