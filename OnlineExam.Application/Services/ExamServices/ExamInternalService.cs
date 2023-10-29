@@ -1,11 +1,14 @@
 ﻿using OnlineExam.Application.Abstractions.BaseInternalServices;
+using OnlineExam.Application.Abstractions.IInternalService;
 using OnlineExam.Application.Contract.Exceptions;
 using OnlineExam.Infrastructure.Contract.IRepositories;
 using OnlineExam.Model.Models;
 
 namespace OnlineExam.Application.Services.ExamServices
 {
-    public sealed class ExamInternalService : BaseInternalService<Exam, IExamRepository>
+    public sealed class ExamInternalService 
+        : BaseInternalService<Exam, IExamRepository>
+        , IExamInternalService
     {
         public ExamInternalService(IExamRepository examRepository) : base(examRepository) { }
 

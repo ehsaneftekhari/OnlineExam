@@ -11,13 +11,13 @@ namespace OnlineExam.Application.Validators
     internal class DatabaseBasedAnswerValidator : IDatabaseBasedAnswerValidator
     {
         readonly IAnswerInternalService _answerInternalService;
-        readonly IBaseInternalService<ExamUser, Exam> _examUserInternalService;
-        readonly IBaseInternalService<Question, Section> _questionInternalService;
+        readonly IExamUserInternalService _examUserInternalService;
+        readonly IQuestionInternalService _questionInternalService;
 
         public DatabaseBasedAnswerValidator(
             IAnswerInternalService answerInternalService
-            , IBaseInternalService<ExamUser, Exam> examUserInternalService
-            , IBaseInternalService<Question, Section> questionInternalService)
+            , IExamUserInternalService examUserInternalService
+            , IQuestionInternalService questionInternalService)
         {
             _answerInternalService = answerInternalService;
             _examUserInternalService = examUserInternalService;

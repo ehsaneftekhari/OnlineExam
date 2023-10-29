@@ -10,15 +10,15 @@ namespace OnlineExam.Application.Abstractions.BaseInternalServices
     {
         internal virtual string EntityName => typeof(TEntity).Name;
 
-        internal virtual string EntityIdName => $"{EntityName.Substring(0, 1).ToLower()}{EntityName.Substring(1)}Id";
+        internal virtual string EntityIdName => $"{EntityName[..1].ToLower()}{EntityName[1..]}Id";
 
-        protected virtual OEApplicationException DidNotAddedException => new OEApplicationException($"{EntityName} did not Added");
+        protected virtual OEApplicationException DidNotAddedException => new($"{EntityName} did not Added");
 
         protected virtual OEApplicationException ThereIsNoEntityException => new ApplicationSourceNotFoundException($"there is no {EntityName}");
 
-        protected virtual OEApplicationException DidNotUpdatedException => new OEApplicationException($"{EntityName} did not updated");
+        protected virtual OEApplicationException DidNotUpdatedException => new($"{EntityName} did not updated");
 
-        protected virtual OEApplicationException DidNotDeletedException => new OEApplicationException($"{EntityName} did not Deleted");
+        protected virtual OEApplicationException DidNotDeletedException => new($"{EntityName} did not Deleted");
 
         protected virtual OEApplicationException IdLessThanOneException => new ApplicationValidationException($"{EntityIdName} can not be less than 1");
 

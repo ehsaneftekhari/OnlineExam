@@ -25,7 +25,7 @@ namespace OnlineExam.Application.Abstractions.BaseInternalServices
 
         protected abstract Expression<Func<TEntity, int>> ParentIdProvider { get; }
 
-        protected OEApplicationException ThereIsNoEntityException(int parentId)
+        protected new OEApplicationException ThereIsNoEntityException(int parentId)
             => new ApplicationSourceNotFoundException($"there is no {EntityName} within {_parentInternalService.EntityName} ({_parentInternalService.EntityIdName}:{parentId})");
 
         internal override TEntity Add(TEntity newRecord)

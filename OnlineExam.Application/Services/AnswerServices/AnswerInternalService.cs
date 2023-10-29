@@ -12,8 +12,8 @@ namespace OnlineExam.Application.Services.AnswerServices
         , IAnswerInternalService
     {
         public AnswerInternalService(IAnswerRepository repository,
-                                     IBaseInternalService<ExamUser, Exam> firstParentInternalService,
-                                     IBaseInternalService<Question, Section> secondParentInternalService) : base(repository,
+                                     IExamUserInternalService firstParentInternalService,
+                                     IQuestionInternalService secondParentInternalService) : base(repository,
                                                                                                  firstParentInternalService,
                                                                                                  secondParentInternalService)
         { }

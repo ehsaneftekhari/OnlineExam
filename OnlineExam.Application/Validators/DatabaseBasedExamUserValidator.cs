@@ -1,4 +1,5 @@
 ﻿using OnlineExam.Application.Abstractions.BaseInternalServices;
+using OnlineExam.Application.Abstractions.IInternalService;
 using OnlineExam.Application.Abstractions.IValidators;
 using OnlineExam.Application.Contract.DTOs.ExamUserDTOs;
 using OnlineExam.Application.Contract.Exceptions;
@@ -8,9 +9,9 @@ namespace OnlineExam.Application.Validators
 {
     public class DatabaseBasedExamUserValidator : IDatabaseBasedExamUserValidator
     {
-        readonly IBaseInternalService<Exam> _examInternalService;
+        readonly IExamInternalService _examInternalService;
 
-        public DatabaseBasedExamUserValidator(IBaseInternalService<Exam> examRepository)
+        public DatabaseBasedExamUserValidator(IExamInternalService examRepository)
         {
             _examInternalService = examRepository;
         }

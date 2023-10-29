@@ -1,4 +1,5 @@
 ﻿using OnlineExam.Application.Abstractions.BaseInternalServices;
+using OnlineExam.Application.Abstractions.IInternalService;
 using OnlineExam.Application.Abstractions.IMappers;
 using OnlineExam.Application.Contract.DTOs.SectionDTOs;
 using OnlineExam.Application.Contract.IServices;
@@ -8,10 +9,10 @@ namespace OnlineExam.Application.Services.SectionServices
 {
     public sealed class SectionService : ISectionService
     {
-        readonly IBaseInternalService<Section, Exam> _sectionInternalService;
+        readonly ISectionInternalService _sectionInternalService;
         readonly ISectionMapper _sectionMapper;
 
-        public SectionService(IBaseInternalService<Section, Exam> sectionInternalService,
+        public SectionService(ISectionInternalService sectionInternalService,
                               ISectionMapper sectionMapper)
         {
             _sectionInternalService = sectionInternalService;

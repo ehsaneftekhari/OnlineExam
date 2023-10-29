@@ -35,7 +35,7 @@ namespace OnlineExam.Application.Mappers
             if (fileField != null)
             {
 
-                Dictionary<int, string> allowedFileTypesNameIdPairs = new Dictionary<int, string>();
+                Dictionary<int, string> allowedFileTypesNameIdPairs = new();
                 foreach (var item in fileField.AllowedFileTypes)
                 {
                     allowedFileTypesNameIdPairs.Add(item.Id, item.Name);

@@ -1,4 +1,4 @@
-﻿using OnlineExam.Application.Abstractions.BaseInternalServices;
+﻿using OnlineExam.Application.Abstractions.IInternalService;
 using OnlineExam.Application.Abstractions.IMappers;
 using OnlineExam.Application.Abstractions.IValidators;
 using OnlineExam.Application.Contract.DTOs.ExamUserDTOs;
@@ -9,11 +9,11 @@ namespace OnlineExam.Application.Services.ExamUserServices
 {
     public sealed class ExamUserService : IExamUserService
     {
-        readonly IBaseInternalService<ExamUser, Exam> _examUserService;
+        readonly IExamUserInternalService _examUserService;
         readonly IExamUserMapper _mapper;
         readonly IDatabaseBasedExamUserValidator _validator;
 
-        public ExamUserService(IBaseInternalService<ExamUser, Exam> examUserService, IExamUserMapper mapper, IDatabaseBasedExamUserValidator validator)
+        public ExamUserService(IExamUserInternalService examUserService, IExamUserMapper mapper, IDatabaseBasedExamUserValidator validator)
         {
             _examUserService = examUserService;
             _mapper = mapper;

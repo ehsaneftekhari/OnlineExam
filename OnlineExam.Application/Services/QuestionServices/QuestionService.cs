@@ -1,4 +1,5 @@
 ﻿using OnlineExam.Application.Abstractions.BaseInternalServices;
+using OnlineExam.Application.Abstractions.IInternalService;
 using OnlineExam.Application.Abstractions.IMappers;
 using OnlineExam.Application.Contract.DTOs.QuestionDTOs;
 using OnlineExam.Application.Contract.IServices;
@@ -8,10 +9,10 @@ namespace OnlineExam.Application.Services.QuestionServices
 {
     public sealed class QuestionService : IQuestionService
     {
-        readonly IBaseInternalService<Question, Section> _questionInternalService;
+        readonly IQuestionInternalService _questionInternalService;
         readonly IQuestionMapper _questionMapper;
 
-        public QuestionService(IBaseInternalService<Question, Section> questionInternalService, IQuestionMapper questionMapper)
+        public QuestionService(IQuestionInternalService questionInternalService, IQuestionMapper questionMapper)
         {
             _questionInternalService = questionInternalService;
             _questionMapper = questionMapper;

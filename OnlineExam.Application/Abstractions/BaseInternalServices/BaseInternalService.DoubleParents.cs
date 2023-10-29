@@ -36,7 +36,7 @@ namespace OnlineExam.Application.Abstractions.BaseInternalServices
         protected OEApplicationException ThereIsNoEntityInFirstParentException(int parentId)
             => new ApplicationSourceNotFoundException($"there is no {EntityName} within {_firstParentInternalService.EntityName} ({_firstParentInternalService.EntityIdName}:{parentId})");
 
-        protected OEApplicationException ThereIsNoEntityException(int firstParentId, int secondParentId)
+        protected new OEApplicationException ThereIsNoEntityException(int firstParentId, int secondParentId)
             => new ApplicationSourceNotFoundException($"there is no {EntityName} for {_firstParentInternalService.EntityName} ({_firstParentInternalService.EntityIdName}:{firstParentId}) and {_secondParentInternalService.EntityName} ({_secondParentInternalService.EntityIdName}:{secondParentId})");
 
         internal override TEntity Add(TEntity newRecord)

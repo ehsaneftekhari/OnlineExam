@@ -9,9 +9,9 @@ namespace OnlineExam.Application.Services.UserServices
     public class IdentityTokenService
     {
         readonly IdentityConfiguration _identityConfiguration;
-        JwtSecurityTokenHandler _tokenHandler;
-        SecurityKey _signingSecurityKey;
-        SecurityKey _encryptingSecurityKey;
+        readonly JwtSecurityTokenHandler _tokenHandler;
+        readonly SecurityKey _signingSecurityKey;
+        readonly SecurityKey _encryptingSecurityKey;
         public IdentityTokenService(IdentityConfiguration identityConfiguration)
         {
             _identityConfiguration = identityConfiguration;

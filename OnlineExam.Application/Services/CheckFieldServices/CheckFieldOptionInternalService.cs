@@ -1,14 +1,17 @@
 ﻿using OnlineExam.Application.Abstractions.BaseInternalServices;
+using OnlineExam.Application.Abstractions.IInternalService;
 using OnlineExam.Infrastructure.Contract.IRepositories;
 using OnlineExam.Model.Models;
 using System.Linq.Expressions;
 
 namespace OnlineExam.Application.Services.CheckFieldServices
 {
-    public sealed class CheckFieldOptionInternalService : BaseInternalService<CheckFieldOption, ICheckFieldOptionRepository, Question, IQuestionRepository>
+    public sealed class CheckFieldOptionInternalService 
+        : BaseInternalService<CheckFieldOption, ICheckFieldOptionRepository, Question, IQuestionRepository>
+        , ICheckFieldOptionInternalService
     {
         public CheckFieldOptionInternalService(ICheckFieldOptionRepository repository,
-            IBaseInternalService<Question, Section> parentInternalService) : base(repository, parentInternalService) { }
+            IQuestionInternalService parentInternalService) : base(repository, parentInternalService) { }
 
         protected override Expression<Func<CheckFieldOption, int>> ParentIdProvider => x => x.CheckFieldId;
 
