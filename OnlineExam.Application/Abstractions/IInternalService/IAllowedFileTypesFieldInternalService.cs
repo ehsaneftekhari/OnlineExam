@@ -1,6 +1,7 @@
-﻿using OnlineExam.Model.Models;
+﻿using OnlineExam.Application.Abstractions.BaseInternalServices;
+using OnlineExam.Model.Models;
 
-namespace OnlineExam.Application.Abstractions.InternalService
+namespace OnlineExam.Application.Abstractions.IInternalService
 {
     public interface IAllowedFileTypesFieldInternalService : IBaseInternalService<AllowedFileTypesField>
     {

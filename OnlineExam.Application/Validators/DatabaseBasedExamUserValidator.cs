@@ -1,4 +1,4 @@
-﻿using OnlineExam.Application.Abstractions.InternalService;
+﻿using OnlineExam.Application.Abstractions.BaseInternalServices;
 using OnlineExam.Application.Abstractions.IValidators;
 using OnlineExam.Application.Contract.DTOs.ExamUserDTOs;
 using OnlineExam.Application.Contract.Exceptions;

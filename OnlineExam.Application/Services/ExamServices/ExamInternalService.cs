@@ -1,4 +1,4 @@
-﻿using OnlineExam.Application.Abstractions.InternalService;
+﻿using OnlineExam.Application.Abstractions.BaseInternalServices;
 using OnlineExam.Application.Contract.Exceptions;
 using OnlineExam.Infrastructure.Contract.IRepositories;
 using OnlineExam.Model.Models;

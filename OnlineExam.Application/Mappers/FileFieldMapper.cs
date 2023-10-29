@@ -1,5 +1,5 @@
 ﻿using OnlineExam.Application.Abstractions.IMappers;
-using OnlineExam.Application.Abstractions.InternalService;
+using OnlineExam.Application.Abstractions.IInternalService;
 using OnlineExam.Application.Contract.DTOs.FileFieldDTOs;
 using OnlineExam.Model.Models;
 
