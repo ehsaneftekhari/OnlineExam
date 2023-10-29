@@ -10,6 +10,6 @@ namespace OnlineExam.Application.Services.SectionServices
     {
         protected override Expression<Func<Section, int>> ParentIdProvider => x => x.ExamId;
 
-        public SectionInternalService(ISectionRepository repository, ExamInternalService parentInternalService) : base(repository, parentInternalService) { }
+        public SectionInternalService(ISectionRepository repository, IBaseInternalService<Exam> parentInternalService) : base(repository, parentInternalService) { }
     }
 }

@@ -1,20 +1,25 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using OnlineExam.Application.Abstractions.InternalService;
 using OnlineExam.Application.Abstractions.IValidators;
 using OnlineExam.Application.Contract.DTOs.AnswerDTOs;
 using OnlineExam.Application.Contract.Exceptions;
 using OnlineExam.Application.Services.AnswerServices;
 using OnlineExam.Application.Services.ExamUserServices;
 using OnlineExam.Application.Services.QuestionServices;
+using OnlineExam.Model.Models;
 
 namespace OnlineExam.Application.Validators
 {
     internal class DatabaseBasedAnswerValidator : IDatabaseBasedAnswerValidator
     {
-        readonly AnswerInternalService _answerInternalService;
-        readonly ExamUserInternalService _examUserInternalService;
-        readonly QuestionInternalService _questionInternalService;
+        readonly IAnswerInternalService _answerInternalService;
+        readonly IBaseInternalService<ExamUser, Exam> _examUserInternalService;
+        readonly IBaseInternalService<Question, Section> _questionInternalService;
 
-        public DatabaseBasedAnswerValidator(AnswerInternalService answerInternalService, ExamUserInternalService examUserInternalService, QuestionInternalService questionInternalService)
+        public DatabaseBasedAnswerValidator(
+            IAnswerInternalService answerInternalService
+            , IBaseInternalService<ExamUser, Exam> examUserInternalService
+            , IBaseInternalService<Question, Section> questionInternalService)
         {
             _answerInternalService = answerInternalService;
             _examUserInternalService = examUserInternalService;

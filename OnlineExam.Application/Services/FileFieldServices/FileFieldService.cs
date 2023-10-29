@@ -1,17 +1,19 @@
 ﻿using OnlineExam.Application.Abstractions.IMappers;
+using OnlineExam.Application.Abstractions.InternalService;
 using OnlineExam.Application.Abstractions.IValidators;
 using OnlineExam.Application.Contract.DTOs.FileFieldDTOs;
 using OnlineExam.Application.Contract.IServices;
+using OnlineExam.Model.Models;
 
 namespace OnlineExam.Application.Services.FileFieldServices
 {
     public sealed class FileFieldService : IFileFieldService
     {
-        FileFieldInternalService _fileFieldInternalService;
+        IBaseInternalService<FileField, Question> _fileFieldInternalService;
         readonly IFileFieldMapper _fileFieldMapper;
         readonly IFileFieldValidator _fileFieldValidator;
 
-        public FileFieldService(FileFieldInternalService fileFieldInternalService,
+        public FileFieldService(IBaseInternalService<FileField, Question> fileFieldInternalService,
                                 IFileFieldMapper fileFieldMapper,
                                 IFileFieldValidator fileFieldValidator)
         {

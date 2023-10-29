@@ -1,8 +1,11 @@
-﻿namespace OnlineExam.Model.Models
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace OnlineExam.Model.Models
 {
     public class Exam : BaseModel
     {
-        public string CreatorUserId { get; set; }
+        public string CreatorUserId { get; set; } = null!;
+        public IdentityUser CreatorUser { get; set; }
         public string Title { get; set; }
         public DateTime Start { get; set; }
         public DateTime End { get; set; }

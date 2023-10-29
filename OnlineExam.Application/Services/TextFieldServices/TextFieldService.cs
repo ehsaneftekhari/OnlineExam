@@ -1,17 +1,20 @@
 ﻿using OnlineExam.Application.Abstractions.IMappers;
+using OnlineExam.Application.Abstractions.InternalService;
 using OnlineExam.Application.Abstractions.IValidators;
 using OnlineExam.Application.Contract.DTOs.TextFieldDTOs;
 using OnlineExam.Application.Contract.IServices;
+using OnlineExam.Infrastructure.Contract.IRepositories;
+using OnlineExam.Model.Models;
 
 namespace OnlineExam.Application.Services.TextFieldServices
 {
     public sealed class TextFieldService : ITextFieldService
     {
-        readonly TextFieldInternalService _textFieldInternalService;
+        readonly IBaseInternalService<TextField, Question> _textFieldInternalService;
         readonly ITextFieldMapper _textFieldMapper;
         readonly ITextFieldValidator _textFieldValidator;
 
-        public TextFieldService(TextFieldInternalService textFieldInternalService, ITextFieldMapper textFieldMapper, ITextFieldValidator textFieldValidator)
+        public TextFieldService(IBaseInternalService<TextField, Question> textFieldInternalService, ITextFieldMapper textFieldMapper, ITextFieldValidator textFieldValidator)
         {
             _textFieldInternalService = textFieldInternalService;
             _textFieldMapper = textFieldMapper;

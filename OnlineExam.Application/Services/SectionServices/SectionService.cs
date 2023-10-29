@@ -1,15 +1,17 @@
 ﻿using OnlineExam.Application.Abstractions.IMappers;
+using OnlineExam.Application.Abstractions.InternalService;
 using OnlineExam.Application.Contract.DTOs.SectionDTOs;
 using OnlineExam.Application.Contract.IServices;
+using OnlineExam.Model.Models;
 
 namespace OnlineExam.Application.Services.SectionServices
 {
     public sealed class SectionService : ISectionService
     {
-        readonly SectionInternalService _sectionInternalService;
+        readonly IBaseInternalService<Section, Exam> _sectionInternalService;
         readonly ISectionMapper _sectionMapper;
 
-        public SectionService(SectionInternalService sectionInternalService,
+        public SectionService(IBaseInternalService<Section, Exam> sectionInternalService,
                               ISectionMapper sectionMapper)
         {
             _sectionInternalService = sectionInternalService;

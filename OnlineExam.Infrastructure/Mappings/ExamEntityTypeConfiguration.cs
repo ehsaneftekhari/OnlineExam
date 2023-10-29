@@ -15,6 +15,11 @@ namespace OnlineExam.Infrastructure.Mappings
                 .HasMaxLength(256)
                 .HasColumnType(nameof(SqlDbType.NVarChar));
 
+            builder.HasOne(x => x.CreatorUser)
+                .WithMany()
+                .HasForeignKey(x => x.CreatorUserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             builder.Property(p => p.Start)
                .IsRequired()
                .HasColumnType(nameof(SqlDbType.DateTime));

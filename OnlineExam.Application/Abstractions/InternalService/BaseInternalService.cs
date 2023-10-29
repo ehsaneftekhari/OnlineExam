@@ -5,22 +5,52 @@ using System.Linq.Expressions;
 
 namespace OnlineExam.Application.Abstractions.InternalService
 {
-    public abstract class BaseInternalService<TEntity, TRepository>
-        where TEntity : BaseModel
-        where TRepository : IBaseRepository<TEntity>
+    public interface IBaseInternalService<TEntity>
     {
-        protected readonly TRepository _repository;
+        internal string EntityName { get; }
 
-        protected BaseInternalService(TRepository repository)
-        {
-            _repository = repository;
-        }
+        internal string EntityIdName { get; }
 
+        internal IQueryable<TEntity> GetIQueryable();
+
+        internal TEntity Add(TEntity record);
+
+        internal TEntity GetById(int id);
+
+        internal TEntity GetById(int id, IQueryable<TEntity> queryable);
+
+        internal void ThrowExceptionIfEntityIsNotExists(int entityId) => GetById(entityId);
+
+        internal IEnumerable<TEntity> GetAll(int skip = 0, int take = 20);
+
+        internal void Update(TEntity record);
+
+        internal void Delete(int id);
+
+        internal void ThrowIfdIsNotValid(int id);
+
+        internal void ThrowIfEntityIsNotValid(TEntity record);
+    }
+
+    public interface IBaseInternalService<TEntity, TParentEntity> 
+        : IBaseInternalService<TEntity>
+    {
+        internal IEnumerable<TEntity> GetAllByParentId(int parentId, int skip = 0, int take = 20);
+    }
+
+    public interface IBaseInternalService<TEntity, TFirstParentEntity, TSecondParentEntity> 
+        : IBaseInternalService<TEntity>
+    {
+        internal IEnumerable<TEntity> GetAllByFirstParentId(int firstParentId, int skip = 0, int take = 20);
+
+        internal IEnumerable<TEntity> GetAllByParentsIds(int firstParentId, int secondParentId, int skip = 0, int take = 20);
+    }
+
+    public abstract class BaseInternalService<TEntity>
+    {
         internal virtual string EntityName => typeof(TEntity).Name;
 
         internal virtual string EntityIdName => $"{EntityName.Substring(0, 1).ToLower()}{EntityName.Substring(1)}Id";
-
-        internal virtual IQueryable<TEntity> GetIQueryable() => _repository.GetIQueryable();
 
         protected virtual OEApplicationException DidNotAddedException => new OEApplicationException($"{EntityName} did not Added");
 
@@ -33,6 +63,38 @@ namespace OnlineExam.Application.Abstractions.InternalService
         protected virtual OEApplicationException IdLessThanOneException => new ApplicationValidationException($"{EntityIdName} can not be less than 1");
 
         protected virtual OEApplicationException IsNotExistsException(int id) => new ApplicationSourceNotFoundException($"{EntityName} with id:{id} is not exists");
+
+        internal virtual void ThrowIfdIsNotValid(int id)
+        {
+            if (id < 1)
+                throw IdLessThanOneException;
+        }
+
+        internal virtual void ThrowIfEntityIsNotValid(TEntity record)
+        {
+            if (record == null)
+                throw new ArgumentNullException();
+        }
+    }
+
+    public abstract class BaseInternalService<TEntity, TRepository> 
+        : BaseInternalService<TEntity>
+        , IBaseInternalService<TEntity>
+        where TEntity : BaseModel
+        where TRepository : IBaseRepository<TEntity>
+    {
+        protected readonly TRepository _repository;
+
+        string IBaseInternalService<TEntity>.EntityName => EntityName;
+
+        string IBaseInternalService<TEntity>.EntityIdName => EntityIdName;
+
+        protected BaseInternalService(TRepository repository)
+        {
+            _repository = repository;
+        }
+
+        internal virtual IQueryable<TEntity> GetIQueryable() => _repository.GetIQueryable();
 
         internal virtual TEntity Add(TEntity record)
         {
@@ -99,30 +161,40 @@ namespace OnlineExam.Application.Abstractions.InternalService
                 throw DidNotDeletedException;
         }
 
-        internal virtual void ThrowIfdIsNotValid(int id)
-        {
-            if (id < 1)
-                throw IdLessThanOneException;
-        }
+        IQueryable<TEntity> IBaseInternalService<TEntity>.GetIQueryable() => GetIQueryable();
 
-        internal virtual void ThrowIfEntityIsNotValid(TEntity record)
-        {
-            if (record == null)
-                throw new ArgumentNullException();
-        }
+        TEntity IBaseInternalService<TEntity>.Add(TEntity record) => Add(record);
+
+        TEntity IBaseInternalService<TEntity>.GetById(int id) => GetById(id);
+
+        TEntity IBaseInternalService<TEntity>.GetById(int id, IQueryable<TEntity> queryable) => GetById(id, queryable);
+
+        IEnumerable<TEntity> IBaseInternalService<TEntity>.GetAll(int skip, int take) => GetAll(skip, take);
+
+        void IBaseInternalService<TEntity>.Update(TEntity record) => Update(record);
+
+        void IBaseInternalService<TEntity>.Delete(int id) => Delete(id);
+
+        void IBaseInternalService<TEntity>.ThrowIfdIsNotValid(int id) => ThrowIfdIsNotValid(id);
+
+        void IBaseInternalService<TEntity>.ThrowIfEntityIsNotValid(TEntity record) => ThrowIfEntityIsNotValid(record);
     }
 
 
-    public abstract class BaseInternalService<TEntity, TRepository, TParentEntity, TParentRepository> : BaseInternalService<TEntity, TRepository>
+    public abstract class BaseInternalService<TEntity, TRepository, TParentEntity, TParentRepository> 
+
+        : BaseInternalService<TEntity, TRepository>
+        , IBaseInternalService<TEntity, TParentEntity>
+
         where TEntity : BaseModel
         where TRepository : IBaseRepository<TEntity>
         where TParentEntity : BaseModel
         where TParentRepository : IBaseRepository<TParentEntity>
     {
-        protected readonly BaseInternalService<TParentEntity, TParentRepository> _parentInternalService;
+        protected readonly IBaseInternalService<TParentEntity> _parentInternalService;
 
         public BaseInternalService(TRepository repository,
-                                   BaseInternalService<TParentEntity, TParentRepository> parentInternalService) : base(repository)
+                                   IBaseInternalService<TParentEntity> parentInternalService) : base(repository)
         {
             _parentInternalService = parentInternalService;
         }
@@ -180,12 +252,15 @@ namespace OnlineExam.Application.Abstractions.InternalService
 
             base.ThrowIfEntityIsNotValid(record);
         }
+
+        IEnumerable<TEntity> IBaseInternalService<TEntity, TParentEntity>.GetAllByParentId(int parentId, int skip, int take) => GetAllByParentId(parentId, skip, take);
     }
 
     public abstract class BaseInternalService<TEntity, TRepository, TFirstParentEntity,
             TFirstParentRepository, TSecondParentEntity, TSecondParentRepository>
 
         : BaseInternalService<TEntity, TRepository>
+        , IBaseInternalService<TEntity, TFirstParentEntity, TSecondParentEntity>
 
         where TEntity : BaseModel
         where TRepository : IBaseRepository<TEntity>
@@ -194,12 +269,12 @@ namespace OnlineExam.Application.Abstractions.InternalService
         where TSecondParentEntity : BaseModel
         where TSecondParentRepository : IBaseRepository<TSecondParentEntity>
     {
-        protected readonly BaseInternalService<TFirstParentEntity, TFirstParentRepository> _firstParentInternalService;
-        protected readonly BaseInternalService<TSecondParentEntity, TSecondParentRepository> _secondParentInternalService;
+        protected readonly IBaseInternalService<TFirstParentEntity> _firstParentInternalService;
+        protected readonly IBaseInternalService<TSecondParentEntity> _secondParentInternalService;
 
         public BaseInternalService(TRepository repository,
-                                   BaseInternalService<TFirstParentEntity, TFirstParentRepository> firstParentInternalService,
-                                   BaseInternalService<TSecondParentEntity, TSecondParentRepository> secondParentInternalService) : base(repository)
+                                   IBaseInternalService<TFirstParentEntity> firstParentInternalService,
+                                   IBaseInternalService<TSecondParentEntity> secondParentInternalService) : base(repository)
         {
             _firstParentInternalService = firstParentInternalService;
             _secondParentInternalService = secondParentInternalService;
@@ -302,5 +377,11 @@ namespace OnlineExam.Application.Abstractions.InternalService
 
             base.ThrowIfEntityIsNotValid(record);
         }
+
+        IEnumerable<TEntity> IBaseInternalService<TEntity, TFirstParentEntity, TSecondParentEntity>.GetAllByFirstParentId(int firstParentId, int skip, int take)
+            => GetAllByFirstParentId(firstParentId, skip, take);
+
+        IEnumerable<TEntity> IBaseInternalService<TEntity, TFirstParentEntity, TSecondParentEntity>.GetAllByParentsIds(int firstParentId, int secondParentId, int skip, int take)
+            => GetAllByParentsIds(firstParentId, firstParentId, skip, take);
     }
 }

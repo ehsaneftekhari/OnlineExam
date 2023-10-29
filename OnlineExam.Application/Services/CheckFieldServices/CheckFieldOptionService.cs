@@ -1,18 +1,21 @@
 ﻿using OnlineExam.Application.Abstractions.IMappers;
+using OnlineExam.Application.Abstractions.InternalService;
 using OnlineExam.Application.Abstractions.IValidators;
 using OnlineExam.Application.Contract.DTOs.CheckFieldDTOs;
 using OnlineExam.Application.Contract.IServices;
+using OnlineExam.Infrastructure.Contract.IRepositories;
+using OnlineExam.Model.Models;
 
 namespace OnlineExam.Application.Services.CheckFieldServices
 {
     public sealed class CheckFieldOptionService : ICheckFieldOptionService
     {
-        readonly CheckFieldOptionInternalService _checkFieldOptionInternalService;
+        readonly IBaseInternalService<CheckFieldOption, Question> _checkFieldOptionInternalService;
         readonly ICheckFieldOptionMapper _checkFieldOptionMapper;
         readonly ICheckFieldOptionValidator _checkFieldOptionValidator;
         readonly IDatabaseBasedCheckFieldOptionValidator _databaseBasedCheckFieldOptionValidator;
 
-        public CheckFieldOptionService(CheckFieldOptionInternalService checkFieldOptionInternalService,
+        public CheckFieldOptionService(IBaseInternalService<CheckFieldOption, Question> checkFieldOptionInternalService,
                                        ICheckFieldOptionMapper checkFieldOptionMapper,
                                        ICheckFieldOptionValidator checkFieldOptionValidator,
                                        IDatabaseBasedCheckFieldOptionValidator databaseBasedCheckFieldOptionValidator)

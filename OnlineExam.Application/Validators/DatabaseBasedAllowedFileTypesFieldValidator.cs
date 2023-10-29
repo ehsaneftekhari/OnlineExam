@@ -1,4 +1,5 @@
-﻿using OnlineExam.Application.Abstractions.IValidators;
+﻿using OnlineExam.Application.Abstractions.InternalService;
+using OnlineExam.Application.Abstractions.IValidators;
 using OnlineExam.Application.Contract.DTOs.AllowedFileTypesFieldDTOs;
 using OnlineExam.Application.Contract.Exceptions;
 using OnlineExam.Application.Services.FileFieldServices;
@@ -7,9 +8,9 @@ namespace OnlineExam.Application.Validators
 {
     public class DatabaseBasedAllowedFileTypesFieldValidator : IDatabaseBasedAllowedFileTypesFieldValidator
     {
-        readonly AllowedFileTypesFieldInternalService _internalService;
+        readonly IAllowedFileTypesFieldInternalService _internalService;
 
-        public DatabaseBasedAllowedFileTypesFieldValidator(AllowedFileTypesFieldInternalService repository)
+        public DatabaseBasedAllowedFileTypesFieldValidator(IAllowedFileTypesFieldInternalService repository)
         {
             _internalService = repository;
         }

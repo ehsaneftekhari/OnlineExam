@@ -8,7 +8,8 @@ namespace OnlineExam.Application.Services.ExamUserServices
 {
     public sealed class ExamUserInternalService : BaseInternalService<ExamUser, IExamUserRepository, Exam, IExamRepository>
     {
-        public ExamUserInternalService(IExamUserRepository repository, ExamInternalService parentInternalService) : base(repository, parentInternalService) { }
+        public ExamUserInternalService(IExamUserRepository repository,
+            IBaseInternalService<Exam> parentInternalService) : base(repository, parentInternalService) { }
 
         protected override Expression<Func<ExamUser, int>> ParentIdProvider => x => x.ExamId;
 
