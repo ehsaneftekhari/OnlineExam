@@ -1,6 +1,4 @@
 ﻿using OnlineExam.Application.Abstractions.InternalService;
-using OnlineExam.Application.Services.ExamUserServices;
-using OnlineExam.Application.Services.QuestionServices;
 using OnlineExam.Infrastructure.Contract.IRepositories;
 using OnlineExam.Model.Models;
 using System.Linq.Expressions;
@@ -8,7 +6,7 @@ using System.Linq.Expressions;
 namespace OnlineExam.Application.Services.AnswerServices
 {
 
-    public sealed class AnswerInternalService 
+    public sealed class AnswerInternalService
         : BaseInternalService<Answer, IAnswerRepository, ExamUser, IExamUserRepository, Question, IQuestionRepository>
         , IAnswerInternalService
     {
@@ -16,7 +14,8 @@ namespace OnlineExam.Application.Services.AnswerServices
                                      IBaseInternalService<ExamUser, Exam> firstParentInternalService,
                                      IBaseInternalService<Question, Section> secondParentInternalService) : base(repository,
                                                                                                  firstParentInternalService,
-                                                                                                 secondParentInternalService) { }
+                                                                                                 secondParentInternalService)
+        { }
 
         protected override Expression<Func<Answer, int>> FirstParentIdProvider => x => x.ExamUserId;
 

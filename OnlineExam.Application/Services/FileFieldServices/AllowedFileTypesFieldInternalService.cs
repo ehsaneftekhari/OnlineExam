@@ -1,12 +1,11 @@
 ﻿using OnlineExam.Application.Abstractions.InternalService;
 using OnlineExam.Application.Contract.Exceptions;
-using OnlineExam.Infrastructure.Contract.Abstractions;
 using OnlineExam.Infrastructure.Contract.IRepositories;
 using OnlineExam.Model.Models;
 
 namespace OnlineExam.Application.Services.FileFieldServices
 {
-    public sealed class AllowedFileTypesFieldInternalService 
+    public sealed class AllowedFileTypesFieldInternalService
         : BaseInternalService<AllowedFileTypesField, IAllowedFileTypesFieldOptionRepository>
         , IAllowedFileTypesFieldInternalService
     {

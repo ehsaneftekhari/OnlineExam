@@ -1,5 +1,4 @@
 ﻿using OnlineExam.Application.Abstractions.InternalService;
-using OnlineExam.Application.Services.ExamServices;
 using OnlineExam.Infrastructure.Contract.IRepositories;
 using OnlineExam.Model.Models;
 using System.Linq.Expressions;

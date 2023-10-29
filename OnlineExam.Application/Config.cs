@@ -48,7 +48,7 @@ namespace OnlineExam.Application
             serviceDescriptors.AddScoped<ICheckFieldValidator, CheckFieldValidator>();
             serviceDescriptors.AddScoped<ICheckFieldOptionService, CheckFieldOptionService>();
             //serviceDescriptors.AddScoped<CheckFieldOptionInternalService>();
-            serviceDescriptors.AddScoped<IBaseInternalService<CheckFieldOption, Question>,CheckFieldOptionInternalService>();
+            serviceDescriptors.AddScoped<IBaseInternalService<CheckFieldOption, Question>, CheckFieldOptionInternalService>();
             serviceDescriptors.AddScoped<ICheckFieldOptionMapper, CheckFieldOptionMapper>();
             serviceDescriptors.AddScoped<ICheckFieldOptionValidator, CheckFieldOptionValidator>();
             serviceDescriptors.AddScoped<IDatabaseBasedCheckFieldOptionValidator, DatabaseBasedCheckFieldOptionValidator>();
@@ -62,12 +62,12 @@ namespace OnlineExam.Application
             serviceDescriptors.AddScoped<IFileFieldValidator, FileFieldValidator>();
             serviceDescriptors.AddScoped<IFileFieldService, FileFieldService>();
             //serviceDescriptors.AddScoped<FileFieldInternalService>();
-            serviceDescriptors.AddScoped<IBaseInternalService<FileField, Question>,FileFieldInternalService>();
+            serviceDescriptors.AddScoped<IBaseInternalService<FileField, Question>, FileFieldInternalService>();
             serviceDescriptors.AddScoped<IDatabaseBasedExamUserValidator, DatabaseBasedExamUserValidator>();
             serviceDescriptors.AddScoped<IExamUserMapper, ExamUserMapper>();
             serviceDescriptors.AddScoped<IExamUserService, ExamUserService>();
             //serviceDescriptors.AddScoped<ExamUserInternalService>();
-            serviceDescriptors.AddScoped<IBaseInternalService<ExamUser, Exam>,ExamUserInternalService>();
+            serviceDescriptors.AddScoped<IBaseInternalService<ExamUser, Exam>, ExamUserInternalService>();
             serviceDescriptors.AddScoped<IAnswerMapper, AnswerMapper>();
             serviceDescriptors.AddScoped<IAnswerValidator, AnswerValidator>();
             serviceDescriptors.AddScoped<IDatabaseBasedAnswerValidator, DatabaseBasedAnswerValidator>();

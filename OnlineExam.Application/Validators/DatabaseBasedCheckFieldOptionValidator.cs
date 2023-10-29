@@ -2,7 +2,6 @@
 using OnlineExam.Application.Abstractions.IValidators;
 using OnlineExam.Application.Contract.DTOs.CheckFieldDTOs;
 using OnlineExam.Application.Contract.Exceptions;
-using OnlineExam.Application.Services.CheckFieldServices;
 using OnlineExam.Model.Models;
 
 namespace OnlineExam.Application.Validators

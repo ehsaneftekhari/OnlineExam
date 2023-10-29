@@ -2,7 +2,6 @@
 using OnlineExam.Application.Abstractions.IValidators;
 using OnlineExam.Application.Contract.DTOs.AllowedFileTypesFieldDTOs;
 using OnlineExam.Application.Contract.Exceptions;
-using OnlineExam.Application.Services.FileFieldServices;
 
 namespace OnlineExam.Application.Validators
 {

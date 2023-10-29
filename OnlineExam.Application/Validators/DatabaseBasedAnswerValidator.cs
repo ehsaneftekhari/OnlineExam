@@ -3,9 +3,6 @@ using OnlineExam.Application.Abstractions.InternalService;
 using OnlineExam.Application.Abstractions.IValidators;
 using OnlineExam.Application.Contract.DTOs.AnswerDTOs;
 using OnlineExam.Application.Contract.Exceptions;
-using OnlineExam.Application.Services.AnswerServices;
-using OnlineExam.Application.Services.ExamUserServices;
-using OnlineExam.Application.Services.QuestionServices;
 using OnlineExam.Model.Models;
 
 namespace OnlineExam.Application.Validators

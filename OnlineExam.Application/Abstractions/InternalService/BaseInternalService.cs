@@ -32,13 +32,13 @@ namespace OnlineExam.Application.Abstractions.InternalService
         internal void ThrowIfEntityIsNotValid(TEntity record);
     }
 
-    public interface IBaseInternalService<TEntity, TParentEntity> 
+    public interface IBaseInternalService<TEntity, TParentEntity>
         : IBaseInternalService<TEntity>
     {
         internal IEnumerable<TEntity> GetAllByParentId(int parentId, int skip = 0, int take = 20);
     }
 
-    public interface IBaseInternalService<TEntity, TFirstParentEntity, TSecondParentEntity> 
+    public interface IBaseInternalService<TEntity, TFirstParentEntity, TSecondParentEntity>
         : IBaseInternalService<TEntity>
     {
         internal IEnumerable<TEntity> GetAllByFirstParentId(int firstParentId, int skip = 0, int take = 20);
@@ -77,7 +77,7 @@ namespace OnlineExam.Application.Abstractions.InternalService
         }
     }
 
-    public abstract class BaseInternalService<TEntity, TRepository> 
+    public abstract class BaseInternalService<TEntity, TRepository>
         : BaseInternalService<TEntity>
         , IBaseInternalService<TEntity>
         where TEntity : BaseModel
@@ -181,7 +181,7 @@ namespace OnlineExam.Application.Abstractions.InternalService
     }
 
 
-    public abstract class BaseInternalService<TEntity, TRepository, TParentEntity, TParentRepository> 
+    public abstract class BaseInternalService<TEntity, TRepository, TParentEntity, TParentRepository>
 
         : BaseInternalService<TEntity, TRepository>
         , IBaseInternalService<TEntity, TParentEntity>

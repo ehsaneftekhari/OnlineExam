@@ -1,7 +1,6 @@
 ﻿using OnlineExam.Application.Abstractions.IMappers;
 using OnlineExam.Application.Abstractions.InternalService;
 using OnlineExam.Application.Contract.DTOs.FileFieldDTOs;
-using OnlineExam.Application.Services.FileFieldServices;
 using OnlineExam.Model.Models;
 
 namespace OnlineExam.Application.Mappers
