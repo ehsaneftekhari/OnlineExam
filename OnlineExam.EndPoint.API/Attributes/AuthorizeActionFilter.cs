@@ -23,7 +23,9 @@ namespace OnlineExam.EndPoint.API.Attributes
             if (string.IsNullOrWhiteSpace(authorizationHeader) || !authorizationHeader.Contains("Bearer "))
                 throw new ApplicationUnAuthenticateException("you are not Authenticated");
 
-            _userService.ValidateToken(authorizationHeader.Replace("Bearer ", ""), Roles);
+            _userService.ValidateToken(authorizationHeader.Replace("Bearer ", ""), Roles, out var claimsPrincipal);
+
+            context.HttpContext.User = claimsPrincipal;
 
             base.OnActionExecuting(context);
         }

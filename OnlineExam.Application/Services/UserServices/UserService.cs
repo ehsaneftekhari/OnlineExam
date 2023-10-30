@@ -42,9 +42,9 @@ namespace OnlineExam.Application.Services.UserServices
             return _tokenService.GenerateToken("www.ehsan.com", claims);
         }
 
-        public bool ValidateToken(string token, IEnumerable<string> expectedRoleNames)
+        public bool ValidateToken(string token, IEnumerable<string> expectedRoleNames, out ClaimsPrincipal claimsPrincipal)
         {
-            if (!ValidateToken(token, out ClaimsPrincipal claimsPrincipal))
+            if (!ValidateToken(token, out claimsPrincipal))
                 throw new ApplicationUnAuthenticateException("you are not Authenticated");
 
             if (!HasRole(claimsPrincipal, expectedRoleNames))
