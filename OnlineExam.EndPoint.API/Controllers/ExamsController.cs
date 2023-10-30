@@ -2,6 +2,7 @@
 using OnlineExam.Application.Contract.DTOs.ExamDTOs;
 using OnlineExam.Application.Contract.IServices;
 using OnlineExam.EndPoint.API.Attributes;
+using OnlineExam.EndPoint.API.DTOs.ExamDTOs;
 using OnlineExam.EndPoint.API.Exceptions;
 using OnlineExam.Model.Constants;
 
@@ -40,12 +41,21 @@ namespace OnlineExam.EndPoint.API.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(AddExamDTO exam)
+        public IActionResult Create(AddExamApiDTO exam)
         {
             if (exam == null)
                 throw new APIValidationException("exam can not be null");
 
-            return Ok(_examService.Add(exam));
+            var newExam = new AddExamDTO()
+            {
+                CreatorUserName = HttpContext.User.Identity.Name,
+                Title = exam.Title,
+                Start = exam.Start,
+                End = exam.End,
+                Published = exam.Published
+            };
+
+            return Ok(_examService.Add(newExam));
         }
 
         [HttpPatch("{id}")]

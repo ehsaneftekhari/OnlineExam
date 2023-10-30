@@ -1,4 +1,5 @@
-﻿using OnlineExam.Application.Abstractions.BaseInternalServices;
+﻿using Microsoft.AspNetCore.Identity;
+using OnlineExam.Application.Abstractions.BaseInternalServices;
 using OnlineExam.Application.Abstractions.IInternalService;
 using OnlineExam.Application.Abstractions.IMappers;
 using OnlineExam.Application.Contract.DTOs.ExamDTOs;
@@ -11,17 +12,20 @@ namespace OnlineExam.Application.Services.ExamServices
     {
         readonly IExamInternalService _internalService;
         readonly IExamMapper _examMapper;
+        readonly UserManager<IdentityUser> _userManager;
 
-        public ExamService(IExamMapper examMapper, IExamInternalService internalService)
+        public ExamService(IExamMapper examMapper, IExamInternalService internalService, UserManager<IdentityUser> userManager)
         {
             _examMapper = examMapper;
             _internalService = internalService;
+            _userManager = userManager;
         }
 
         public ShowExamDTO Add(AddExamDTO dTO)
         {
             var newExam = _examMapper.AddDTOToEntity(dTO);
-            newExam!.CreatorUserId = "1";
+            var user = _userManager.FindByNameAsync(dTO.CreatorUserName).GetAwaiter().GetResult();
+            newExam!.CreatorUserId = user.Id;
             _internalService.Add(newExam);
             return _examMapper.EntityToShowDTO(newExam)!;
         }
