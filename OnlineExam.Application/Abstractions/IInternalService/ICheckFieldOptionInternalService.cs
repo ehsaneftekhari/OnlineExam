@@ -3,7 +3,7 @@ using OnlineExam.Model.Models;
 
 namespace OnlineExam.Application.Abstractions.IInternalService
 {
-    public interface ICheckFieldOptionInternalService : IBaseInternalService<CheckFieldOption, Question>
+    public interface ICheckFieldOptionInternalService : IBaseInternalService<CheckFieldOption, int, Question, int>
     {
 
     }

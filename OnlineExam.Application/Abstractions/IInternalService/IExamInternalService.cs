@@ -3,7 +3,7 @@ using OnlineExam.Model.Models;
 
 namespace OnlineExam.Application.Abstractions.IInternalService
 {
-    public interface IExamInternalService : IBaseInternalService<Exam>
+    public interface IExamInternalService : IBaseInternalService<Exam, int>
     {
 
     }

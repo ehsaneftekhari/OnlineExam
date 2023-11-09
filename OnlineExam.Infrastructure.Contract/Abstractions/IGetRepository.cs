@@ -4,6 +4,6 @@
     {
         TEntity? GetById(TId id);
 
-        TEntity? GetById(int id, IQueryable<TEntity> queryable);
+        TEntity? GetById(TId id, IQueryable<TEntity> queryable);
     }
 }

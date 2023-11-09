@@ -1,4 +1,4 @@
-﻿using OnlineExam.Application.Contract.Exceptions;
+using OnlineExam.Application.Contract.Exceptions;
 using OnlineExam.Infrastructure.Contract.Abstractions;
 using OnlineExam.Model;
 using System.Linq.Expressions;
@@ -9,7 +9,7 @@ namespace OnlineExam.Application.Abstractions.BaseInternalServices
             TFirstParentRepository, TSecondParentEntity, TSecondParentRepository>
 
         : BaseInternalService<TEntity, TRepository>
-        , IBaseInternalService<TEntity, TFirstParentEntity, TSecondParentEntity>
+        , IBaseInternalService<TEntity, int, TFirstParentEntity, int, TSecondParentEntity, int>
 
         where TEntity : BaseModel
         where TRepository : IBaseRepository<TEntity>
@@ -18,12 +18,12 @@ namespace OnlineExam.Application.Abstractions.BaseInternalServices
         where TSecondParentEntity : BaseModel
         where TSecondParentRepository : IBaseRepository<TSecondParentEntity>
     {
-        protected readonly IBaseInternalService<TFirstParentEntity> _firstParentInternalService;
-        protected readonly IBaseInternalService<TSecondParentEntity> _secondParentInternalService;
+        protected readonly IBaseInternalService<TFirstParentEntity, int> _firstParentInternalService;
+        protected readonly IBaseInternalService<TSecondParentEntity, int> _secondParentInternalService;
 
         public BaseInternalService(TRepository repository,
-                                   IBaseInternalService<TFirstParentEntity> firstParentInternalService,
-                                   IBaseInternalService<TSecondParentEntity> secondParentInternalService) : base(repository)
+                                   IBaseInternalService<TFirstParentEntity, int> firstParentInternalService,
+                                   IBaseInternalService<TSecondParentEntity, int> secondParentInternalService) : base(repository)
         {
             _firstParentInternalService = firstParentInternalService;
             _secondParentInternalService = secondParentInternalService;
@@ -127,10 +127,10 @@ namespace OnlineExam.Application.Abstractions.BaseInternalServices
             base.ThrowIfEntityIsNotValid(record);
         }
 
-        IEnumerable<TEntity> IBaseInternalService<TEntity, TFirstParentEntity, TSecondParentEntity>.GetAllByFirstParentId(int firstParentId, int skip, int take)
+        IEnumerable<TEntity> IBaseInternalService<TEntity, int, TFirstParentEntity, int, TSecondParentEntity, int>.GetAllByFirstParentId(int firstParentId, int skip, int take)
             => GetAllByFirstParentId(firstParentId, skip, take);
 
-        IEnumerable<TEntity> IBaseInternalService<TEntity, TFirstParentEntity, TSecondParentEntity>.GetAllByParentsIds(int firstParentId, int secondParentId, int skip, int take)
+        IEnumerable<TEntity> IBaseInternalService<TEntity, int, TFirstParentEntity, int, TSecondParentEntity, int>.GetAllByParentsIds(int firstParentId, int secondParentId, int skip, int take)
             => GetAllByParentsIds(firstParentId, firstParentId, skip, take);
     }
 }

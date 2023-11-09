@@ -3,7 +3,7 @@ using OnlineExam.Model.Models;
 
 namespace OnlineExam.Application.Abstractions.IInternalService
 {
-    public interface ITextFieldInternalService : IBaseInternalService<TextField, Question>
+    public interface ITextFieldInternalService : IBaseInternalService<TextField, int, Question, int>
     {
 
     }

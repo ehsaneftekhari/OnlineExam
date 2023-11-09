@@ -1,4 +1,4 @@
-﻿using OnlineExam.Application.Contract.Exceptions;
+using OnlineExam.Application.Contract.Exceptions;
 using OnlineExam.Infrastructure.Contract.Abstractions;
 using OnlineExam.Model;
 using System.Linq.Expressions;
@@ -8,17 +8,17 @@ namespace OnlineExam.Application.Abstractions.BaseInternalServices
     public abstract class BaseInternalService<TEntity, TRepository, TParentEntity, TParentRepository>
 
         : BaseInternalService<TEntity, TRepository>
-        , IBaseInternalService<TEntity, TParentEntity>
+        , IBaseInternalService<TEntity, int, TParentEntity, int>
 
         where TEntity : BaseModel
         where TRepository : IBaseRepository<TEntity>
         where TParentEntity : BaseModel
         where TParentRepository : IBaseRepository<TParentEntity>
     {
-        protected readonly IBaseInternalService<TParentEntity> _parentInternalService;
+        protected readonly IBaseInternalService<TParentEntity, int> _parentInternalService;
 
         public BaseInternalService(TRepository repository,
-                                   IBaseInternalService<TParentEntity> parentInternalService) : base(repository)
+                                   IBaseInternalService<TParentEntity, int> parentInternalService) : base(repository)
         {
             _parentInternalService = parentInternalService;
         }
@@ -77,6 +77,6 @@ namespace OnlineExam.Application.Abstractions.BaseInternalServices
             base.ThrowIfEntityIsNotValid(record);
         }
 
-        IEnumerable<TEntity> IBaseInternalService<TEntity, TParentEntity>.GetAllByParentId(int parentId, int skip, int take) => GetAllByParentId(parentId, skip, take);
+        IEnumerable<TEntity> IBaseInternalService<TEntity, int, TParentEntity, int>.GetAllByParentId(int parentId, int skip, int take) => GetAllByParentId(parentId, skip, take);
     }
 }
