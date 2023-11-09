@@ -1,4 +1,4 @@
-namespace OnlineExam.Application.Abstractions.BaseInternalServices
+﻿namespace OnlineExam.Application.Abstractions.BaseInternalServices
 {
     public interface IBaseInternalService<TEntity, TKey>
     {
@@ -24,7 +24,7 @@ namespace OnlineExam.Application.Abstractions.BaseInternalServices
 
         internal void ThrowIfdIsNotValid(TKey id);
 
-        internal void ThrowIfEntityIsNotValid(TEntity record);
+        internal void ThrowIfEntityIsNull(TEntity record);
     }
 
     public interface IBaseInternalService<TEntity, TKey, TParentEntity, TParentKey>

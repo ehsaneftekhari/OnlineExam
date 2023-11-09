@@ -9,7 +9,7 @@ namespace OnlineExam.Application.Validators
 {
     public class DatabaseBasedCheckFieldOptionValidator : IDatabaseBasedCheckFieldOptionValidator
     {
-        readonly IBaseInternalService<CheckFieldOption, Question> _checkFieldOptionInternalService;
+        readonly ICheckFieldOptionInternalService _checkFieldOptionInternalService;
 
         public DatabaseBasedCheckFieldOptionValidator(ICheckFieldOptionInternalService checkFieldOptionRepository)
         {

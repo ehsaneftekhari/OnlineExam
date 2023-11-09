@@ -14,7 +14,7 @@ namespace OnlineExam.Application.Services.ExamServices
 
         internal override Exam Add(Exam newExam)
         {
-            ThrowIfEntityIsNotValid(newExam);
+            ThrowIfEntityIsNull(newExam);
 
             if (_repository.Add(newExam) > 0 && newExam.Id > 0)
                 return newExam;

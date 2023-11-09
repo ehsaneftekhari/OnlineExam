@@ -1,4 +1,4 @@
-using OnlineExam.Application.Contract.Exceptions;
+﻿using OnlineExam.Application.Contract.Exceptions;
 using OnlineExam.Infrastructure.Contract.Abstractions;
 using OnlineExam.Model;
 using System.Linq.Expressions;
@@ -119,12 +119,12 @@ namespace OnlineExam.Application.Abstractions.BaseInternalServices
             return records!;
         }
 
-        internal override void ThrowIfEntityIsNotValid(TEntity record)
+        internal override void ThrowIfEntityIsNull(TEntity record)
         {
             _firstParentInternalService.ThrowIfdIsNotValid(FirstParentIdProvider.Compile().Invoke(record));
             _secondParentInternalService.ThrowIfdIsNotValid(SecondParentIdProvider.Compile().Invoke(record));
 
-            base.ThrowIfEntityIsNotValid(record);
+            base.ThrowIfEntityIsNull(record);
         }
 
         IEnumerable<TEntity> IBaseInternalService<TEntity, int, TFirstParentEntity, int, TSecondParentEntity, int>.GetAllByFirstParentId(int firstParentId, int skip, int take)
