@@ -36,7 +36,8 @@ namespace OnlineExam.Application.Services.UserServices
             var claims = new List<Claim>(
                 _userInternalService.GetRoles(user).Select(r => new Claim(ClaimTypes.Role, r)))
             {
-                new Claim(ClaimTypes.Name, user.UserName)
+                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(ClaimTypes.NameIdentifier, user.Id),
             };
 
             return _tokenService.GenerateToken("www.ehsan.com", claims);
