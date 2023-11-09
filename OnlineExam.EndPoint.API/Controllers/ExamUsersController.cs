@@ -2,6 +2,7 @@
 using OnlineExam.Application.Contract.DTOs.ExamUserDTOs;
 using OnlineExam.Application.Contract.IServices;
 using OnlineExam.EndPoint.API.Attributes;
+using OnlineExam.EndPoint.API.DTOs;
 using OnlineExam.EndPoint.API.Exceptions;
 using OnlineExam.Model.Constants;
 
@@ -13,10 +14,12 @@ namespace OnlineExam.EndPoint.API.Controllers
     public class ExamUsersController : ControllerBase
     {
         readonly IExamUserService _examUserService;
+        readonly ScopeDataContainer _scopeDataContainer;
 
-        public ExamUsersController(IExamUserService examUserService)
+        public ExamUsersController(IExamUserService examUserService, ScopeDataContainer scopeDataContainer)
         {
             _examUserService = examUserService;
+            _scopeDataContainer = scopeDataContainer;
         }
 
         [HttpGet("Exams/{id}/[controller]")]
@@ -45,7 +48,7 @@ namespace OnlineExam.EndPoint.API.Controllers
             var examUser = new AddExamUserDTO()
             {
                 ExamId = id,
-                UserId = "1"
+                UserId = _scopeDataContainer.IdentityUserId
             };
 
             return Ok(_examUserService.Add(examUser));

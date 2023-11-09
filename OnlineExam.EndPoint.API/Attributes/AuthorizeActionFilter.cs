@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
 using OnlineExam.Application.Contract.Exceptions;
 using OnlineExam.Application.Contract.IServices;
+using OnlineExam.EndPoint.API.DTOs;
+using System.Security.Claims;
 
 namespace OnlineExam.EndPoint.API.Attributes
 {
@@ -26,6 +28,9 @@ namespace OnlineExam.EndPoint.API.Attributes
             _userService.ValidateToken(authorizationHeader.Replace("Bearer ", ""), Roles, out var claimsPrincipal);
 
             context.HttpContext.User = claimsPrincipal;
+
+            var scopeDataContainer = context.HttpContext.RequestServices.GetRequiredService<ScopeDataContainer>();
+            scopeDataContainer.IdentityUserId = claimsPrincipal.Claims.Single(x => x.Type == ClaimTypes.NameIdentifier).Value;
 
             base.OnActionExecuting(context);
         }
