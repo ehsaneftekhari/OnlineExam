@@ -14,18 +14,15 @@ namespace OnlineExam.Application.Services.ExamServices
         readonly IExamMapper _examMapper;
         readonly UserManager<IdentityUser> _userManager;
 
-        public ExamService(IExamMapper examMapper, IExamInternalService internalService, UserManager<IdentityUser> userManager)
+        public ExamService(IExamMapper examMapper, IExamInternalService internalService)
         {
             _examMapper = examMapper;
             _internalService = internalService;
-            _userManager = userManager;
         }
 
         public ShowExamDTO Add(AddExamDTO dTO)
         {
             var newExam = _examMapper.AddDTOToEntity(dTO);
-            var user = _userManager.FindByNameAsync(dTO.CreatorUserName).GetAwaiter().GetResult();
-            newExam!.CreatorUserId = user.Id;
             _internalService.Add(newExam);
             return _examMapper.EntityToShowDTO(newExam)!;
         }

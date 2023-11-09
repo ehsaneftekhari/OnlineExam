@@ -2,6 +2,7 @@
 using OnlineExam.Application.Contract.DTOs.ExamDTOs;
 using OnlineExam.Application.Contract.IServices;
 using OnlineExam.EndPoint.API.Attributes;
+using OnlineExam.EndPoint.API.DTOs;
 using OnlineExam.EndPoint.API.DTOs.ExamDTOs;
 using OnlineExam.EndPoint.API.Exceptions;
 using OnlineExam.Model.Constants;
@@ -14,10 +15,12 @@ namespace OnlineExam.EndPoint.API.Controllers
     public class ExamsController : ControllerBase
     {
         readonly IExamService _examService;
+        readonly ScopeDataContainer _scopeDataContainer;
 
-        public ExamsController(IExamService examService)
+        public ExamsController(IExamService examService, ScopeDataContainer scopeDataContainer)
         {
             _examService = examService;
+            _scopeDataContainer = scopeDataContainer;
         }
 
         [HttpGet]
@@ -48,7 +51,7 @@ namespace OnlineExam.EndPoint.API.Controllers
 
             var newExam = new AddExamDTO()
             {
-                CreatorUserName = HttpContext.User.Identity.Name,
+                CreatorUserId = _scopeDataContainer.IdentityUserId,
                 Title = exam.Title,
                 Start = exam.Start,
                 End = exam.End,

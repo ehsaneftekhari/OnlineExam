@@ -14,7 +14,8 @@ namespace OnlineExam.Application.Mappers
                     Title = addExamDTO.Title,
                     Start = addExamDTO.Start,
                     End = addExamDTO.End,
-                    Published = addExamDTO.Published
+                    Published = addExamDTO.Published,
+                    CreatorUserId = addExamDTO.CreatorUserId
                 };
             return null;
         }
