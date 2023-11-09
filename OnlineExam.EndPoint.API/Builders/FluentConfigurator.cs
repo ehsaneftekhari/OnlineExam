@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Identity;
+using OnlineExam.EndPoint.API.DTOs;
 using OnlineExam.Infrastructure.Contexts;
 using OnlineExam.Model.ConfigProviders;
 
 namespace OnlineExam.EndPoint.API.Builders
 {
-    public class FluentConfigurator : IReaadyFluentConfigurator, IAppFluentConfigurator
+    public class FluentConfigurator : IReedyFluentConfigurator, IAppFluentConfigurator
     {
         IServiceCollection _ServiceCollection { get; set; }
         IConfiguration _Configuration { get; set; }
@@ -19,12 +20,12 @@ namespace OnlineExam.EndPoint.API.Builders
             _CorsPolices = new List<(string name, CorsPolicy)>();
         }
 
-        public static IReaadyFluentConfigurator Create(IServiceCollection serviceDescriptors, IConfiguration configuration)
+        public static IReedyFluentConfigurator Create(IServiceCollection serviceDescriptors, IConfiguration configuration)
         {
             return new FluentConfigurator(serviceDescriptors, configuration);
         }
 
-        public IReaadyFluentConfigurator AddCors()
+        public IReedyFluentConfigurator AddCors()
         {
             var CorsConfigurationsSections = _Configuration
                     .GetSection("CORSConfiguration")
@@ -60,7 +61,7 @@ namespace OnlineExam.EndPoint.API.Builders
             return this;
         }
 
-        public IReaadyFluentConfigurator AddMyIdentityConfiguration()
+        public IReedyFluentConfigurator AddMyIdentityConfiguration()
         {
             _ServiceCollection.AddSingleton(sp =>
             {
@@ -77,14 +78,20 @@ namespace OnlineExam.EndPoint.API.Builders
             return this;
         }
 
-        public IReaadyFluentConfigurator AddApplication()
+        public IReedyFluentConfigurator AddApiCustomServices()
+        {
+            _ServiceCollection.AddScoped<ScopeDataContainer>();
+            return this;
+        }
+
+        public IReedyFluentConfigurator AddApplication()
         {
             Application.Config.RegisterServices(_ServiceCollection);
 
             return this;
         }
 
-        public IReaadyFluentConfigurator AddInfrastructure()
+        public IReedyFluentConfigurator AddInfrastructure()
         {
             Infrastructure.Config.RegisterServices(_ServiceCollection, _Configuration.GetConnectionString("OnlineExamConnectionStrings"));
             _ServiceCollection.AddIdentity<IdentityUser, IdentityRole>()
@@ -111,12 +118,13 @@ namespace OnlineExam.EndPoint.API.Builders
         }
     }
 
-    public interface IReaadyFluentConfigurator
+    public interface IReedyFluentConfigurator
     {
-        IReaadyFluentConfigurator AddCors();
-        IReaadyFluentConfigurator AddMyIdentityConfiguration();
-        IReaadyFluentConfigurator AddApplication();
-        IReaadyFluentConfigurator AddInfrastructure();
+        IReedyFluentConfigurator AddCors();
+        IReedyFluentConfigurator AddMyIdentityConfiguration();
+        IReedyFluentConfigurator AddApiCustomServices();
+        IReedyFluentConfigurator AddApplication();
+        IReedyFluentConfigurator AddInfrastructure();
         IAppFluentConfigurator OnApp(WebApplication webApplication);
     }
 

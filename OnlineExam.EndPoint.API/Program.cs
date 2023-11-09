@@ -23,6 +23,7 @@ namespace OnlineExam.EndPoint.API
 
             fluentConfigurator.AddCors();
             fluentConfigurator.AddMyIdentityConfiguration();
+            fluentConfigurator.AddApiCustomServices();
             fluentConfigurator.AddApplication();
             fluentConfigurator.AddInfrastructure();
 
