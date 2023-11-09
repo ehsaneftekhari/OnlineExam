@@ -1,42 +1,9 @@
-using OnlineExam.Application.Contract.Exceptions;
+﻿using OnlineExam.Application.Contract.Exceptions;
 using OnlineExam.Infrastructure.Contract.Abstractions;
 using OnlineExam.Model;
-using System.Linq.Expressions;
 
 namespace OnlineExam.Application.Abstractions.BaseInternalServices
 {
-
-    public abstract class BaseInternalServiceBase<TEntity, TKey>
-    {
-        internal virtual string EntityName => typeof(TEntity).Name;
-
-        internal virtual string EntityIdName => $"{EntityName[..1].ToLower()}{EntityName[1..]}Id";
-
-        protected virtual OEApplicationException DidNotAddedException => new($"{EntityName} did not Added");
-
-        protected virtual OEApplicationException ThereIsNoEntityException => new ApplicationSourceNotFoundException($"there is no {EntityName}");
-
-        protected virtual OEApplicationException DidNotUpdatedException => new($"{EntityName} did not updated");
-
-        protected virtual OEApplicationException DidNotDeletedException => new($"{EntityName} did not Deleted");
-
-        protected virtual OEApplicationException IdLessThanOneException => new ApplicationValidationException($"{EntityIdName} can not be less than 1");
-
-        protected virtual OEApplicationException IsNotExistsException(int id) => new ApplicationSourceNotFoundException($"{EntityName} with id:{id} is not exists");
-
-        internal virtual void ThrowIfdIsNotValid(int id)
-        {
-            if (id < 1)
-                throw IdLessThanOneException;
-        }
-
-        internal virtual void ThrowIfEntityIsNotValid(TEntity record)
-        {
-            if (record == null)
-                throw new ArgumentNullException();
-        }
-    }
-
     public abstract class BaseInternalService<TEntity, TRepository>
         : BaseInternalServiceBase<TEntity, int>
         , IBaseInternalService<TEntity, int>
@@ -60,7 +27,7 @@ namespace OnlineExam.Application.Abstractions.BaseInternalServices
 
         internal virtual TEntity Add(TEntity record)
         {
-            ThrowIfEntityIsNotValid(record);
+            ThrowIfEntityIsNull(record);
 
             if (_repository.Add(record) > 0 && record.Id > 0)
                 return record;
@@ -88,7 +55,8 @@ namespace OnlineExam.Application.Abstractions.BaseInternalServices
             return record;
         }
 
-        internal virtual void ThrowExceptionIfEntityIsNotExists(int entityId) => GetById(entityId);
+        internal virtual void ThrowExceptionIfEntityIsNotExists(int entityId) 
+            => GetById(entityId, null);
 
         internal virtual IEnumerable<TEntity> GetAll(int skip = 0, int take = 20)
         {
@@ -109,7 +77,7 @@ namespace OnlineExam.Application.Abstractions.BaseInternalServices
 
         internal virtual void Update(TEntity record)
         {
-            ThrowIfEntityIsNotValid(record);
+            ThrowIfEntityIsNull(record);
 
             if (_repository.Update(record) <= 0)
                 throw DidNotUpdatedException;
@@ -121,6 +89,12 @@ namespace OnlineExam.Application.Abstractions.BaseInternalServices
 
             if (_repository.Delete(textField) < 0)
                 throw DidNotDeletedException;
+        }
+
+        internal virtual void ThrowIfdIsNotValid(int id)
+        {
+            if (id < 1)
+                throw IdLessThanOneException;
         }
 
         IQueryable<TEntity> IBaseInternalService<TEntity, int>.GetIQueryable() => GetIQueryable();
@@ -140,5 +114,8 @@ namespace OnlineExam.Application.Abstractions.BaseInternalServices
         void IBaseInternalService<TEntity, int>.ThrowIfdIsNotValid(int id) => ThrowIfdIsNotValid(id);
 
         void IBaseInternalService<TEntity, int>.ThrowIfEntityIsNull(TEntity record) => ThrowIfEntityIsNull(record);
+
+        void IBaseInternalService<TEntity, int>.ThrowExceptionIfEntityIsNotExists(int entityId)
+            => ThrowExceptionIfEntityIsNotExists (entityId);
     }
 }
