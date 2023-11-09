@@ -65,6 +65,7 @@ namespace OnlineExam.Application
             serviceDescriptors.AddScoped<IDatabaseBasedAnswerValidator, DatabaseBasedAnswerValidator>();
             serviceDescriptors.AddScoped<IAnswerService, AnswerService>();
             serviceDescriptors.AddScoped<IAnswerInternalService, AnswerInternalService>();
+            serviceDescriptors.AddScoped<IUserInternalService, UserInternalService>();
         }
     }
 }

@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using OnlineExam.Application.Abstractions.IInternalService;
 using OnlineExam.Application.Contract.DTOs;
 using OnlineExam.Application.Contract.Exceptions;
 using OnlineExam.Application.Contract.IServices;
 using OnlineExam.Model.Constants;
+using OnlineExam.Model.Models;
 using System.Data;
 using System.Security.Claims;
 
@@ -11,21 +13,19 @@ namespace OnlineExam.Application.Services.UserServices
     public class UserService : IUserService
     {
         readonly IdentityTokenService _tokenService;
-        readonly UserManager<IdentityUser> _userManager;
+        readonly IUserInternalService _userInternalService;
         readonly SignInManager<IdentityUser> _signInManager;
 
-        public UserService(IdentityTokenService tokenService, UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
+        public UserService(IdentityTokenService tokenService, IUserInternalService userInternalService, SignInManager<IdentityUser> signInManager)
         {
             _tokenService = tokenService;
-            _userManager = userManager;
+            _userInternalService = userInternalService;
             _signInManager = signInManager;
         }
 
         public string LogIn(LogInDto logInDto)
         {
-            var user = _userManager.FindByNameAsync(logInDto.username).GetAwaiter().GetResult();
-
-            if (user == null)
+            if(!_userInternalService.TryGetByName(logInDto.username, out var user, out var exception) && exception is ApplicationSourceNotFoundException)
                 throw new ApplicationValidationException("Username or password is incorrect");
 
             var signInResult = _signInManager.PasswordSignInAsync(user, logInDto.password, false, false).GetAwaiter().GetResult();
@@ -34,7 +34,7 @@ namespace OnlineExam.Application.Services.UserServices
                 throw new ApplicationUnAuthorizedException("");
 
             var claims = new List<Claim>(
-                _userManager.GetRolesAsync(user).GetAwaiter().GetResult().Select(r => new Claim(ClaimTypes.Role, r)))
+                _userInternalService.GetRoles(user).Select(r => new Claim(ClaimTypes.Role, r)))
             {
                 new Claim(ClaimTypes.Name, user.UserName)
             };
@@ -66,9 +66,9 @@ namespace OnlineExam.Application.Services.UserServices
         public string Register(RegisterDto dto)
         {
             var newUser = new IdentityUser(dto.username);
-            newUser.PasswordHash = _userManager.PasswordHasher.HashPassword(newUser, dto.password);
-            _userManager.CreateAsync(newUser).GetAwaiter().GetResult();
-            _userManager.AddToRolesAsync(newUser, new string[] { IdentityRoleNames.ExamCreator, IdentityRoleNames.ExamUser }).GetAwaiter().GetResult(); ;
+            newUser.PasswordHash = _userInternalService.HashPassword(newUser, dto.password);
+            _userInternalService.Add(newUser);
+            _userInternalService.AddToRolesAsync(newUser, new string[] { IdentityRoleNames.ExamCreator, IdentityRoleNames.ExamUser });
             return newUser.UserName;
         }
     }
