@@ -45,10 +45,15 @@ namespace OnlineExam.Application.Services.ExamUserServices
             var exam = _examInternalService.GetById(examId);
 
             if (exam.CreatorUserId != issuerUserId)
-                throw new ApplicationValidationException($"User (id : {issuerUserId}) is not the owner of exam (id : {examId})");
+            {
+                throw new ApplicationUnAuthorizedException(
+                    string.Empty,
+                    new ApplicationValidationException($"User (id : {issuerUserId}) is not the owner of exam (id : {examId})"));
+            }
 
             return _examUserService.GetAllByParentId(examId, skip, take).Select(_mapper.EntityToShowDTO)!;
         }
+
         public ShowExamUserDTO? GetById(int examUserId)
             => _mapper.EntityToShowDTO(_examUserService.GetById(examUserId));
     }
