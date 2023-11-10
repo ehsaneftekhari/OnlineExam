@@ -9,7 +9,6 @@ using OnlineExam.Model.Constants;
 
 namespace OnlineExam.EndPoint.API.Controllers
 {
-    [AuthorizeActionFilter(IdentityRoleNames.ExamUser, IdentityRoleNames.ExamCreator)]
     [Route("api/[controller]")]
     [ApiController]
     public class ExamsController : ControllerBase
@@ -44,6 +43,7 @@ namespace OnlineExam.EndPoint.API.Controllers
         }
 
         [HttpPost]
+        [AuthorizeActionFilter(IdentityRoleNames.ExamCreator)]
         public IActionResult Create(AddExamApiDTO exam)
         {
             if (exam == null)
@@ -62,19 +62,21 @@ namespace OnlineExam.EndPoint.API.Controllers
         }
 
         [HttpPatch("{id}")]
+        [AuthorizeActionFilter(IdentityRoleNames.ExamCreator)]
         public IActionResult Update(int id, UpdateExamDTO exam)
         {
             if (exam == null)
                 throw new APIValidationException("exam can not be null");
 
-            _examService.Update(id, exam);
+            _examService.Update(id, _scopeDataContainer.IdentityUserId, exam);
             return Ok();
         }
 
         [HttpDelete("{id}")]
+        [AuthorizeActionFilter(IdentityRoleNames.ExamCreator)]
         public IActionResult Delete(int id)
         {
-            _examService.Delete(id);
+            _examService.Delete(id, _scopeDataContainer.IdentityUserId);
             return Ok();
         }
     }
