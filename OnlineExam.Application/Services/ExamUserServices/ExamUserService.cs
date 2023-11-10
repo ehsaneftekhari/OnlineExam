@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using OnlineExam.Application.Abstractions.IInternalService;
 using OnlineExam.Application.Abstractions.IMappers;
 using OnlineExam.Application.Abstractions.IValidators;
@@ -31,7 +31,7 @@ namespace OnlineExam.Application.Services.ExamUserServices
 
         public ShowExamUserDTO Add(AddExamUserDTO dTO)
         {
-            _validator.DatabaseBasedValidate(dTO);
+            _validator.DatabaseBasedValidateBeforeAdd(dTO);
             var newExamUser = _mapper.AddDTOToEntity(dTO, DateTime.Now)!;
             _examUserService.Add(newExamUser);
             return _mapper.EntityToShowDTO(newExamUser)!;
