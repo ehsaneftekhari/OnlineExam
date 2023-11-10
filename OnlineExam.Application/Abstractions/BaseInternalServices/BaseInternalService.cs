@@ -84,10 +84,11 @@ namespace OnlineExam.Application.Abstractions.BaseInternalServices
         }
 
         internal virtual void Delete(int id)
-        {
-            var textField = GetById(id);
+            => Delete(GetById(id));
 
-            if (_repository.Delete(textField) < 0)
+        internal virtual void Delete(TEntity record)
+        {
+            if (_repository.Delete(record) < 0)
                 throw DidNotDeletedException;
         }
 
@@ -110,6 +111,9 @@ namespace OnlineExam.Application.Abstractions.BaseInternalServices
         void IBaseInternalService<TEntity, int>.Update(TEntity record) => Update(record);
 
         void IBaseInternalService<TEntity, int>.Delete(int id) => Delete(id);
+
+        void IBaseInternalService<TEntity, int>.Delete(TEntity record)
+            => Delete(record);
 
         void IBaseInternalService<TEntity, int>.ThrowIfdIsNotValid(int id) => ThrowIfdIsNotValid(id);
 

@@ -119,9 +119,11 @@ namespace OnlineExam.Application.Services.UserServices
         }
 
         internal void Delete(string id)
+            => Delete(GetById(id));
+
+        internal void Delete(IdentityUser record)
         {
-            var user = GetById(id);
-            var result = _userManager.DeleteAsync(user).GetAwaiter().GetResult();
+            var result = _userManager.DeleteAsync(record).GetAwaiter().GetResult();
 
             if (result.Errors.Any())
                 throw DidNotDeletedException;
@@ -180,6 +182,11 @@ namespace OnlineExam.Application.Services.UserServices
                 messages.Add(errors.First(x => x.Code == "DuplicateUserName").Description);
 
             return messages;
+        }
+
+        void IBaseInternalService<IdentityUser, string>.Delete(IdentityUser record)
+        {
+            throw new NotImplementedException();
         }
     }
 }
