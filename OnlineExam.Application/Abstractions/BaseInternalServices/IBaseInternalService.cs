@@ -22,6 +22,8 @@
 
         internal void Delete(TKey id);
 
+        internal void Delete(TEntity record);
+
         internal void ThrowIfdIsNotValid(TKey id);
 
         internal void ThrowIfEntityIsNull(TEntity record);

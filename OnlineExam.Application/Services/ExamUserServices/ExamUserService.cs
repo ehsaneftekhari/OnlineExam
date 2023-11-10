@@ -37,24 +37,44 @@ namespace OnlineExam.Application.Services.ExamUserServices
             return _mapper.EntityToShowDTO(newExamUser)!;
         }
 
-        public void Delete(int examUserId)
-            => _examUserService.Delete(examUserId);
+        public void Delete(int examUserId, string issuerUserId)
+        {
+            var examUser = _examUserService.GetById(examUserId);
+
+            if (examUser.UserId != issuerUserId && _examInternalService.GetById(examUser.ExamId).CreatorUserId != issuerUserId)
+                throw new ApplicationUnAuthorizedException(
+                string.Empty,
+                new ApplicationValidationException(GenerateUnAuthorizedExceptionMessage(issuerUserId)));
+
+            _examUserService.Delete(examUser);
+        }
 
         public IEnumerable<ShowExamUserDTO> GetAllByExamId(int examId, string issuerUserId, int skip = 0, int take = 20)
         {
-            var exam = _examInternalService.GetById(examId);
-
-            if (exam.CreatorUserId != issuerUserId)
-            {
+            if (_examInternalService.GetById(examId).CreatorUserId != issuerUserId)
                 throw new ApplicationUnAuthorizedException(
                     string.Empty,
-                    new ApplicationValidationException($"User (id : {issuerUserId}) is not the owner of exam (id : {examId})"));
-            }
-
+                    new ApplicationValidationException(GenerateUnAuthorizedExceptionMessage(examId, issuerUserId)));
+            
             return _examUserService.GetAllByParentId(examId, skip, take).Select(_mapper.EntityToShowDTO)!;
         }
 
-        public ShowExamUserDTO? GetById(int examUserId)
-            => _mapper.EntityToShowDTO(_examUserService.GetById(examUserId));
+        public ShowExamUserDTO? GetById(int examUserId, string issuerUserId)
+        {
+            var examUser = _examUserService.GetById(examUserId);
+
+            if(examUser.UserId != issuerUserId && _examInternalService.GetById(examUser.ExamId).CreatorUserId != issuerUserId)
+                throw new ApplicationUnAuthorizedException(
+                string.Empty,
+                new ApplicationValidationException(GenerateUnAuthorizedExceptionMessage(issuerUserId)));
+
+            return _mapper.EntityToShowDTO(examUser);
+        }
+
+        private string GenerateUnAuthorizedExceptionMessage(string issuerUserId)
+            => $"User (id : {issuerUserId}) has no access to this ExamUser";
+        
+        private string GenerateUnAuthorizedExceptionMessage(int examId, string issuerUserId)
+            => $"User (id : {issuerUserId}) is not the owner of exam (id : {examId})";
     }
 }
