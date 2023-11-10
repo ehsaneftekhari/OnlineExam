@@ -8,7 +8,6 @@ using OnlineExam.Model.Constants;
 
 namespace OnlineExam.EndPoint.API.Controllers
 {
-    [AuthorizeActionFilter(IdentityRoleNames.ExamUser, IdentityRoleNames.ExamCreator)]
     [Route("api")]
     [ApiController]
     public class ExamUsersController : ControllerBase
@@ -23,6 +22,7 @@ namespace OnlineExam.EndPoint.API.Controllers
         }
 
         [HttpGet("Exams/{id}/[controller]")]
+        [AuthorizeActionFilter(IdentityRoleNames.ExamCreator)]
         public IActionResult GetAllByExamId(int id, int pageNumber, int pageSize)
         {
             if (pageNumber < 1)
@@ -36,13 +36,15 @@ namespace OnlineExam.EndPoint.API.Controllers
         }
 
         [HttpGet("[controller]/{id}")]
+        [AuthorizeActionFilter(IdentityRoleNames.ExamUser, IdentityRoleNames.ExamCreator)]
         public IActionResult GetById(int id)
         {
-            var dto = _examUserService.GetById(id);
+            var dto = _examUserService.GetById(id, _scopeDataContainer.IdentityUserId);
             return Ok(dto);
         }
 
         [HttpPost("Exams/{id}/[controller]")]
+        [AuthorizeActionFilter(IdentityRoleNames.ExamUser, IdentityRoleNames.ExamCreator)]
         public IActionResult Create(int id)
         {
             var examUser = new AddExamUserDTO()
@@ -55,9 +57,10 @@ namespace OnlineExam.EndPoint.API.Controllers
         }
 
         [HttpDelete("[controller]/{id}")]
+        [AuthorizeActionFilter(IdentityRoleNames.ExamUser, IdentityRoleNames.ExamCreator)]
         public IActionResult Delete(int id)
         {
-            _examUserService.Delete(id);
+            _examUserService.Delete(id, _scopeDataContainer.IdentityUserId);
             return Ok();
         }
     }
