@@ -25,16 +25,25 @@ namespace OnlineExam.Application.Services.ExamServices
         internal override void Delete(int examId)
         {
             var exam = GetById(examId);
+            Delete(exam);
+        }
 
+        internal override void Delete(Exam record)
+        {
             try
             {
-                if (_repository.Delete(exam) < 0)
+                if (_repository.Delete(record) < 0)
                     throw new OEApplicationException("Exam did not deleted");
             }
             catch
             {
-                if (_repository.GetWithSectionsLoaded(examId).Sections.Any())
+                var fullDataExam = _repository.GetFullyLoaded(record.Id);
+
+                if (fullDataExam.Sections.Any())
                     throw new OEApplicationException($"the exam has sections and can not be deleted");
+
+                if (fullDataExam.ExamUsers.Any())
+                    throw new OEApplicationException($"the exam has exam users and can not be deleted");
 
                 throw;
             }
