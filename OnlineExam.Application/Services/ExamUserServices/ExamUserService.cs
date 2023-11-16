@@ -43,7 +43,7 @@ namespace OnlineExam.Application.Services.ExamUserServices
         {
             var examUser = _examUserInternalService.GetById(examUserId);
 
-            _validator.ThrowIfUserIsNotOwnerOrExamOwner(issuerUserId, examUser);
+            _validator.ThrowIfUserIsNotExamUserOwnerOrExamOwner(issuerUserId, examUser);
 
             _examUserInternalService.Delete(examUser);
         }
@@ -52,7 +52,7 @@ namespace OnlineExam.Application.Services.ExamUserServices
         {
             var examUser = _examUserInternalService.GetById(id);
 
-            _validator.ThrowIfUserIsNotOwnerOrExamOwner(issuerUserId, examUser);
+            _validator.ThrowIfUserIsNotExamUserOwnerOrExamOwner(issuerUserId, examUser);
 
             _validator.ValidateIfExamUserCanFinish(issuerUserId, examUser);
 
@@ -72,7 +72,7 @@ namespace OnlineExam.Application.Services.ExamUserServices
         {
             var examUser = _examUserInternalService.GetById(examUserId);
 
-            _validator.ThrowIfUserIsNotOwnerOrExamOwner(issuerUserId, examUser);
+            _validator.ThrowIfUserIsNotExamUserOwnerOrExamOwner(issuerUserId, examUser);
 
             return _mapper.EntityToShowDTO(examUser);
         }

@@ -7,7 +7,7 @@ namespace OnlineExam.Application.Abstractions.IValidators
     {
         void DatabaseBasedValidateBeforeAdd(AddExamUserDTO dTO);
         void ValidateIfExamUserCanFinish(string issuerUserId, ExamUser examUser);
-        void ThrowIfUserIsNotOwnerOrExamOwner(string issuerUserId, ExamUser examUser);
+        void ThrowIfUserIsNotExamUserOwnerOrExamOwner(string issuerUserId, ExamUser examUser);
         void ThrowIfUserIsNotOwner(int examId, string issuerUserId);
     }
 }

@@ -36,7 +36,7 @@ namespace OnlineExam.Application.Validators
                 throw new ApplicationValidationException($"Exam (id: {dTO.ExamId}) is not published");
 
             if (exam.End < DateTime.Now)
-                throw new ApplicationValidationException($"the Exam (id: {dTO.ExamId}) is finished at {exam.End}");
+                throw new ApplicationValidationException($"the Exam (id: {dTO.ExamId}) has finished at {exam.End}");
 
             if (_examUserInternalService
                 .GetIQueryable()
@@ -49,7 +49,7 @@ namespace OnlineExam.Application.Validators
         public void ValidateIfExamUserCanFinish(string issuerUserId, ExamUser examUser)
         {
             if (examUser.End != null)
-                throw new ApplicationValidationException($"The Exam ({examUser.Id}) has finished for User (id : {issuerUserId})");
+                throw new ApplicationValidationException($"The Exam ({examUser.Id}) has finished for User (id : {issuerUserId}) at {examUser.End}");
 
             var exam = _examInternalService.GetById(examUser.ExamId);
 
@@ -59,7 +59,7 @@ namespace OnlineExam.Application.Validators
                 throw new ApplicationValidationException($"The Exam ({examUser.Id}) is already finished");
         }
 
-        public void ThrowIfUserIsNotOwnerOrExamOwner(string issuerUserId, ExamUser examUser)
+        public void ThrowIfUserIsNotExamUserOwnerOrExamOwner(string issuerUserId, ExamUser examUser)
         {
             if (examUser.UserId != issuerUserId && _examInternalService.GetById(examUser.ExamId).CreatorUserId != issuerUserId)
                 throw new ApplicationUnAuthorizedException(
