@@ -11,6 +11,7 @@ namespace OnlineExam.EndPoint.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [AuthorizeActionFilter]
     public class ExamsController : ControllerBase
     {
         readonly IExamService _examService;
@@ -23,6 +24,7 @@ namespace OnlineExam.EndPoint.API.Controllers
         }
 
         [HttpGet]
+        [AuthorizeActionFilter]
         public IActionResult GetAll(int pageNumber, int pageSize)
         {
             if (pageNumber < 1)
@@ -36,6 +38,7 @@ namespace OnlineExam.EndPoint.API.Controllers
         }
 
         [HttpGet("{id}")]
+        [AuthorizeActionFilter]
         public IActionResult GetById(int id)
         {
             var dto = _examService.GetById(id);

@@ -2,6 +2,7 @@
 using OnlineExam.Application.Abstractions.BaseInternalServices;
 using OnlineExam.Application.Abstractions.IInternalService;
 using OnlineExam.Application.Abstractions.IMappers;
+using OnlineExam.Application.Abstractions.IValidators;
 using OnlineExam.Application.Contract.DTOs.ExamDTOs;
 using OnlineExam.Application.Contract.Exceptions;
 using OnlineExam.Application.Contract.IServices;
@@ -11,53 +12,50 @@ namespace OnlineExam.Application.Services.ExamServices
 {
     public sealed class ExamService : IExamService
     {
-        readonly IExamInternalService _internalService;
+        readonly IExamInternalService _examInternalService;
         readonly IExamMapper _examMapper;
+        readonly IExamValidator _examValidator;
 
-        public ExamService(IExamMapper examMapper, IExamInternalService internalService)
+        public ExamService(IExamMapper examMapper,
+                           IExamInternalService internalService,
+                           IExamValidator examValidator)
         {
             _examMapper = examMapper;
-            _internalService = internalService;
+            _examInternalService = internalService;
+            _examValidator = examValidator;
         }
 
         public ShowExamDTO Add(AddExamDTO dTO)
         {
             var newExam = _examMapper.AddDTOToEntity(dTO);
-            _internalService.Add(newExam);
+            _examInternalService.Add(newExam);
             return _examMapper.EntityToShowDTO(newExam)!;
         }
 
         public void Delete(int id, string issuerUserId)
         {
-            var exam = _internalService.GetById(id);
+            var exam = _examInternalService.GetById(id);
 
-            if (exam.CreatorUserId != issuerUserId)
-                throw new ApplicationUnAuthorizedException(
-                    string.Empty,
-                    new ApplicationValidationException(GenerateUnAuthorizedExceptionMessage(id, issuerUserId)));
+            _examValidator.ThrowIfUserIsNotExamCreator(issuerUserId, exam);
 
-            _internalService.Delete(exam);
+            _examInternalService.Delete(exam);
         }
 
-        public ShowExamDTO? GetById(int id) => _examMapper.EntityToShowDTO(_internalService.GetById(id));
+        public ShowExamDTO? GetById(int id) 
+            => _examMapper.EntityToShowDTO(_examInternalService.GetById(id));
 
-        public IEnumerable<ShowExamDTO> GetAll(int skip, int take) => _internalService.GetAll(skip, take).Select(_examMapper.EntityToShowDTO)!;
+        public IEnumerable<ShowExamDTO> GetAll(int skip, int take) 
+            => _examInternalService.GetAll(skip, take).Select(_examMapper.EntityToShowDTO)!;
 
         public void Update(int id, string issuerUserId, UpdateExamDTO dTO)
         {
-            var exam = _internalService.GetById(id);
+            var exam = _examInternalService.GetById(id);
 
-            if (exam.CreatorUserId != issuerUserId)
-                throw new ApplicationUnAuthorizedException(
-                    string.Empty,
-                    new ApplicationValidationException(GenerateUnAuthorizedExceptionMessage(id, issuerUserId)));
+            _examValidator.ThrowIfUserIsNotExamCreator(issuerUserId, exam);
 
             _examMapper.UpdateEntityByDTO(exam, dTO);
 
-            _internalService.Update(exam);
+            _examInternalService.Update(exam);
         }
-
-        private string GenerateUnAuthorizedExceptionMessage(int examId, string issuerUserId)
-             => $"User (id : {issuerUserId}) is not the owner of exam (id : {examId})";
     }
 }
