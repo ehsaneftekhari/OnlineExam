@@ -31,10 +31,7 @@ namespace OnlineExam.Application.Services.ExamServices
         {
             var exam = _internalService.GetById(id);
 
-            if (exam.CreatorUserId != issuerUserId)
-                throw new ApplicationUnAuthorizedException(
-                    string.Empty,
-                    new ApplicationValidationException(GenerateUnAuthorizedExceptionMessage(id, issuerUserId)));
+            ThrowIfUserIsNotExamCreator(issuerUserId, exam);
 
             _internalService.Delete(exam);
         }
@@ -47,14 +44,19 @@ namespace OnlineExam.Application.Services.ExamServices
         {
             var exam = _internalService.GetById(id);
 
-            if (exam.CreatorUserId != issuerUserId)
-                throw new ApplicationUnAuthorizedException(
-                    string.Empty,
-                    new ApplicationValidationException(GenerateUnAuthorizedExceptionMessage(id, issuerUserId)));
+            ThrowIfUserIsNotExamCreator(issuerUserId, exam);
 
             _examMapper.UpdateEntityByDTO(exam, dTO);
 
             _internalService.Update(exam);
+        }
+
+        private void ThrowIfUserIsNotExamCreator(string issuerUserId, Exam exam)
+        {
+            if (exam.CreatorUserId != issuerUserId)
+                throw new ApplicationUnAuthorizedException(
+                    string.Empty,
+                    new ApplicationValidationException(GenerateUnAuthorizedExceptionMessage(exam.Id, issuerUserId)));
         }
 
         private string GenerateUnAuthorizedExceptionMessage(int examId, string issuerUserId)
