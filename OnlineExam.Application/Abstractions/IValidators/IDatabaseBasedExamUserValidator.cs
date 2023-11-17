@@ -5,9 +5,10 @@ namespace OnlineExam.Application.Abstractions.IValidators
 {
     public interface IDatabaseBasedExamUserValidator
     {
-        void DatabaseBasedValidateBeforeAdd(AddExamUserDTO dTO);
+        void ValidateBeforeAdd(AddExamUserDTO dTO);
         void ValidateIfExamUserCanFinish(string issuerUserId, ExamUser examUser);
-        void ThrowIfUserIsNotExamUserOwnerOrExamOwner(string issuerUserId, ExamUser examUser);
-        void ThrowIfUserIsNotOwner(int examId, string issuerUserId);
+        void ThrowIfUserIsNotCreatorOfExamUserOrExam(string issuerUserId, ExamUser examUser);
+        void ThrowIfUserIsNotCreatorOfExamUser(string issuerUserId, ExamUser examUser);
+        void ThrowIfUserIsNotCreatorOfExam(int examId, string issuerUserId);
     }
 }
