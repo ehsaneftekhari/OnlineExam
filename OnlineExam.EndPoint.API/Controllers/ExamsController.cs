@@ -11,6 +11,7 @@ namespace OnlineExam.EndPoint.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [AuthorizeActionFilter]
     public class ExamsController : ControllerBase
     {
         readonly IExamService _examService;

@@ -25,7 +25,7 @@ namespace OnlineExam.Application.Services.UserServices
 
         public string LogIn(LogInDto logInDto)
         {
-            if(!_userInternalService.TryGetByName(logInDto.username, out var user, out var exception) && exception is ApplicationSourceNotFoundException)
+            if (!_userInternalService.TryGetByName(logInDto.username, out var user, out var exception) && exception is ApplicationSourceNotFoundException)
                 throw new ApplicationValidationException("Username or password is incorrect");
 
             var signInResult = _signInManager.PasswordSignInAsync(user, logInDto.password, false, false).GetAwaiter().GetResult();
@@ -48,7 +48,7 @@ namespace OnlineExam.Application.Services.UserServices
             if (!ValidateToken(token, out claimsPrincipal))
                 throw new ApplicationUnAuthenticateException("you are not Authenticated");
 
-            if (!HasRole(claimsPrincipal, expectedRoleNames))
+            if (expectedRoleNames != null && !HasRole(claimsPrincipal, expectedRoleNames))
                 throw new ApplicationUnAuthorizedException("you are not Authorized");
 
             return true;
@@ -61,7 +61,10 @@ namespace OnlineExam.Application.Services.UserServices
 
         public bool HasRole(ClaimsPrincipal claimsPrincipal, IEnumerable<string> roleNames)
         {
-            return roleNames.Any(n => claimsPrincipal.IsInRole(n));
+            if (roleNames == null)
+                throw new ArgumentNullException($"{nameof(roleNames)} can not be null");
+
+            return !roleNames.Any() || roleNames.Any(n => claimsPrincipal.IsInRole(n));
         }
 
         public string Register(RegisterDto dto)
