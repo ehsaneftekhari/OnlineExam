@@ -56,7 +56,7 @@ namespace OnlineExam.Application
             serviceDescriptors.AddScoped<IFileFieldValidator, FileFieldValidator>();
             serviceDescriptors.AddScoped<IFileFieldService, FileFieldService>();
             serviceDescriptors.AddScoped<IFileFieldInternalService, FileFieldInternalService>();
-            serviceDescriptors.AddScoped<IDatabaseBasedExamUserValidator, DatabaseBasedExamUserValidator>();
+            serviceDescriptors.AddScoped<IExamUserValidator, ExamUserValidator>();
             serviceDescriptors.AddScoped<IExamUserMapper, ExamUserMapper>();
             serviceDescriptors.AddScoped<IExamUserService, ExamUserService>();
             serviceDescriptors.AddScoped<IExamUserInternalService, ExamUserInternalService>();
