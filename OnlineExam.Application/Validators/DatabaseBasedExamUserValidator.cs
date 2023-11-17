@@ -25,12 +25,9 @@ namespace OnlineExam.Application.Validators
 
         private IExamUserInternalService _examUserInternalService => examUserInternalService.Value;
 
-        public void DatabaseBasedValidateBeforeAdd(AddExamUserDTO dTO)
+        public void ValidateBeforeAdd(AddExamUserDTO dTO)
         {
             var exam = _examInternalService.GetById(dTO.ExamId);
-
-            if (exam == null)
-                throw new ApplicationValidationException($"there is no Exam with id: {dTO.ExamId}");
 
             if (!exam.Published)
                 throw new ApplicationValidationException($"Exam (id: {dTO.ExamId}) is not published");
@@ -59,21 +56,35 @@ namespace OnlineExam.Application.Validators
                 throw new ApplicationValidationException($"The Exam ({examUser.Id}) is already finished");
         }
 
-        public void ThrowIfUserIsNotExamUserOwnerOrExamOwner(string issuerUserId, ExamUser examUser)
+        public void ThrowIfUserIsNotCreatorOfExamUserOrExam(string issuerUserId, ExamUser examUser)
         {
-            if (examUser.UserId != issuerUserId && _examInternalService.GetById(examUser.ExamId).CreatorUserId != issuerUserId)
+            if (!IsCreatorOfExamUser(examUser, issuerUserId) && !IsCreatorOfExam(examUser.ExamId, issuerUserId))
                 throw new ApplicationUnAuthorizedException(
                 string.Empty,
                 new ApplicationValidationException(GenerateUnAuthorizedExceptionMessage(issuerUserId)));
         }
 
-        public void ThrowIfUserIsNotOwner(int examId, string issuerUserId)
+        public void ThrowIfUserIsNotCreatorOfExamUser(string issuerUserId, ExamUser examUser)
         {
-            if (_examInternalService.GetById(examId).CreatorUserId != issuerUserId)
+            if (IsCreatorOfExamUser(examUser, issuerUserId))
+                throw new ApplicationUnAuthorizedException(
+                string.Empty,
+                new ApplicationValidationException(GenerateUnAuthorizedExceptionMessage(issuerUserId)));
+        }
+
+        public void ThrowIfUserIsNotCreatorOfExam(int examId, string issuerUserId)
+        {
+            if (!IsCreatorOfExam(examId, issuerUserId))
                 throw new ApplicationUnAuthorizedException(
                     string.Empty,
                     new ApplicationValidationException(GenerateUnAuthorizedExceptionMessage(examId, issuerUserId)));
         }
+
+        private bool IsCreatorOfExam(int examId, string userId)
+            => _examInternalService.GetById(examId).CreatorUserId != userId;
+
+        private bool IsCreatorOfExamUser(ExamUser examUser, string userId)
+            => examUser.UserId == userId;
 
         private string GenerateUnAuthorizedExceptionMessage(string issuerUserId)
             => $"User (id : {issuerUserId}) has no access to this ExamUser";

@@ -44,7 +44,7 @@ namespace OnlineExam.EndPoint.API.Controllers
         }
 
         [HttpPost("Exams/{id}/[controller]")]
-        [AuthorizeActionFilter(IdentityRoleNames.ExamUser, IdentityRoleNames.ExamCreator)]
+        [AuthorizeActionFilter(IdentityRoleNames.ExamUser)]
         public IActionResult Create(int id)
         {
             var examUser = new AddExamUserDTO()
@@ -57,7 +57,7 @@ namespace OnlineExam.EndPoint.API.Controllers
         }
 
         [HttpDelete("[controller]/{id}")]
-        [AuthorizeActionFilter(IdentityRoleNames.ExamUser, IdentityRoleNames.ExamCreator)]
+        [AuthorizeActionFilter(IdentityRoleNames.ExamUser)]
         public IActionResult Delete(int id)
         {
             _examUserService.Delete(id, _scopeDataContainer.IdentityUserId);
@@ -65,7 +65,7 @@ namespace OnlineExam.EndPoint.API.Controllers
         }
 
         [HttpPatch("[controller]/Finish/{id}")]
-        [AuthorizeActionFilter(IdentityRoleNames.ExamUser, IdentityRoleNames.ExamCreator)]
+        [AuthorizeActionFilter(IdentityRoleNames.ExamUser)]
         public IActionResult Finish(int id)
         {
             _examUserService.Finish(id, _scopeDataContainer.IdentityUserId);
