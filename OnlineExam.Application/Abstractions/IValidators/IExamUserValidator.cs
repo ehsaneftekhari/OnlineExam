@@ -3,7 +3,7 @@ using OnlineExam.Model.Models;
 
 namespace OnlineExam.Application.Abstractions.IValidators
 {
-    public interface IDatabaseBasedExamUserValidator
+    public interface IExamUserValidator
     {
         void ValidateBeforeAdd(AddExamUserDTO dTO);
         void ValidateIfExamUserCanFinish(string issuerUserId, ExamUser examUser);

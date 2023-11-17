@@ -14,12 +14,12 @@ namespace OnlineExam.Application.Services.ExamUserServices
     {
         readonly IExamUserInternalService _examUserInternalService;
         readonly IExamUserMapper _mapper;
-        readonly IDatabaseBasedExamUserValidator _validator;
+        readonly IExamUserValidator _validator;
         readonly IExamInternalService _examInternalService;
 
         public ExamUserService(IExamUserInternalService examUserService,
                                IExamUserMapper mapper,
-                               IDatabaseBasedExamUserValidator validator,
+                               IExamUserValidator validator,
                                IExamInternalService examInternalService)
         {
             _examUserInternalService = examUserService;
