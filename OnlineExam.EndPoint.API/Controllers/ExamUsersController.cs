@@ -63,5 +63,13 @@ namespace OnlineExam.EndPoint.API.Controllers
             _examUserService.Delete(id, _scopeDataContainer.IdentityUserId);
             return Ok();
         }
+
+        [HttpPatch("[controller]/Finish/{id}")]
+        [AuthorizeActionFilter(IdentityRoleNames.ExamUser, IdentityRoleNames.ExamCreator)]
+        public IActionResult Finish(int id)
+        {
+            _examUserService.Finish(id, _scopeDataContainer.IdentityUserId);
+            return Ok();
+        }
     }
 }

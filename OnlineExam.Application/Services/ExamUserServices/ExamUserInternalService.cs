@@ -14,7 +14,5 @@ namespace OnlineExam.Application.Services.ExamUserServices
             IExamInternalService parentInternalService) : base(repository, parentInternalService) { }
 
         protected override Expression<Func<ExamUser, int>> ParentIdProvider => x => x.ExamId;
-
-        internal override void Update(ExamUser record) => throw new NotImplementedException();
     }
 }
