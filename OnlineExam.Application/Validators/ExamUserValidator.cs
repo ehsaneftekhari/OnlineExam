@@ -10,12 +10,12 @@ using OnlineExam.Model.Models;
 
 namespace OnlineExam.Application.Validators
 {
-    public class DatabaseBasedExamUserValidator : IDatabaseBasedExamUserValidator
+    public class ExamUserValidator : IExamUserValidator
     {
         readonly Lazy<IExamInternalService> examInternalService;
         readonly Lazy<IExamUserInternalService> examUserInternalService;
 
-        public DatabaseBasedExamUserValidator(IServiceProvider serviceProvider)
+        public ExamUserValidator(IServiceProvider serviceProvider)
         {
             examInternalService = new (() => serviceProvider.GetRequiredService<IExamInternalService>());
             examUserInternalService = new(() => serviceProvider.GetRequiredService<IExamUserInternalService>());
