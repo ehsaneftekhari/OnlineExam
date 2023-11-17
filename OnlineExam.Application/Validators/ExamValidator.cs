@@ -6,7 +6,7 @@ namespace OnlineExam.Application.Validators
 {
     internal class ExamValidator : IExamValidator
     {
-        private void ThrowIfUserIsNotExamCreator(string issuerUserId, Exam exam)
+        public void ThrowIfUserIsNotExamCreator(string issuerUserId, Exam exam)
         {
             if (exam.CreatorUserId != issuerUserId)
                 throw new ApplicationUnAuthorizedException(
