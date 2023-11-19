@@ -24,11 +24,13 @@ namespace OnlineExam.Application
         public static void RegisterServices(IServiceCollection serviceDescriptors)
         {
             serviceDescriptors.AddScoped<IExamService, ExamService>();
+            serviceDescriptors.AddScoped<IExamValidator, ExamValidator>();
             serviceDescriptors.AddScoped<IExamInternalService, ExamInternalService>();
             serviceDescriptors.AddScoped<IExamMapper, ExamMapper>();
             serviceDescriptors.AddScoped<IdentityTokenService>();
             serviceDescriptors.AddScoped<IUserService, UserService>();
             serviceDescriptors.AddScoped<ISectionMapper, SectionMapper>();
+            serviceDescriptors.AddScoped<ISectionValidator, SectionValidator>();
             serviceDescriptors.AddScoped<ISectionService, SectionService>();
             serviceDescriptors.AddScoped<ISectionInternalService, SectionInternalService>();
             serviceDescriptors.AddScoped<IQuestionService, QuestionService>();
