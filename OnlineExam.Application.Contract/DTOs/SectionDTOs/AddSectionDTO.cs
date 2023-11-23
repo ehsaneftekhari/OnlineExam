@@ -5,6 +5,5 @@
         public string Title { get; set; }
         public int Order { get; set; }
         public bool RandomizeQuestions { get; set; }
-        public string CreatorUserId { get; set; }
     }
 }
