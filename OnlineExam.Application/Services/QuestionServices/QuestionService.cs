@@ -4,10 +4,12 @@ using OnlineExam.Application.Abstractions.IInternalService;
 using OnlineExam.Application.Abstractions.IMappers;
 using OnlineExam.Application.Abstractions.IValidators;
 using OnlineExam.Application.Contract.DTOs.QuestionDTOs;
+using OnlineExam.Application.Contract.Exceptions;
 using OnlineExam.Application.Contract.IServices;
 using OnlineExam.Application.Services.SectionServices;
 using OnlineExam.Application.Validators;
 using OnlineExam.Model.Models;
+using static System.Collections.Specialized.BitVector32;
 
 namespace OnlineExam.Application.Services.QuestionServices
 {
@@ -40,12 +42,32 @@ namespace OnlineExam.Application.Services.QuestionServices
             return _questionMapper.EntityToShowDTO(newQuestion)!;
         }
 
-        public IEnumerable<ShowQuestionDTO> GetAllBySectionId(int sectionId, int skip, int take)
-            => _questionInternalService.GetAllByParentId(sectionId, skip, take).Select(_questionMapper.EntityToShowDTO)!;
+        public IEnumerable<ShowQuestionDTO> GetAllBySectionId(int sectionId, string issuerUserId, int skip, int take)
+        {
+            var exam = _sectionInternalService
+                .GetById(sectionId, _sectionInternalService
+                                        .GetIQueryable()
+                                        .Include(x => x.Exam)
+                                        .ThenInclude(x => x.ExamUsers)).Exam;
 
-        public ShowQuestionDTO? GetById(int questionId)
-            => _questionMapper.EntityToShowDTO(_questionInternalService.GetById(questionId));
+            if(exam.CreatorUserId != issuerUserId && !exam.ExamUsers.Any(x => x.UserId == issuerUserId))
+                throw new ApplicationUnAuthorizedException($"User has no access to Section");
 
+            return _questionInternalService.GetAllByParentId(sectionId, skip, take).Select(_questionMapper.EntityToShowDTO)!;
+        }
+        public ShowQuestionDTO? GetById(int questionId, string issuerUserId)
+        {
+            var question = _questionInternalService.GetById(questionId, _questionInternalService.GetIQueryable()
+                                        .Include(x => x.Section)
+                                        .ThenInclude(x => x.Exam)
+                                        .ThenInclude(x => x.ExamUsers));
+
+            if (question.Section.Exam.CreatorUserId != issuerUserId 
+                && !question.Section.Exam.ExamUsers.Any(x => x.UserId == issuerUserId))
+                throw new ApplicationUnAuthorizedException($"User has no access to question");
+
+            return _questionMapper.EntityToShowDTO(question);
+        }
         public void Update(int questionId, UpdateQuestionDTO dTO)
         {
             var question = _questionInternalService.GetById(questionId);

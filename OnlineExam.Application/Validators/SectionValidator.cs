@@ -36,6 +36,6 @@ namespace OnlineExam.Application.Validators
         }
 
         private string GenerateUnAuthorizedExceptionMessage(int sectionId, string issuerUserId)
-            => $"User (id : {issuerUserId}) is no access to Section (id : {sectionId})";
+            => $"User (id : {issuerUserId}) has no access to Section (id : {sectionId})";
     }
 }

@@ -26,7 +26,7 @@ namespace OnlineExam.EndPoint.API.Controllers
         [HttpGet("[controller]/{id}")]
         public IActionResult GetById(int id)
         {
-            var dto = _questionService.GetById(id);
+            var dto = _questionService.GetById(id, _scopeDataContainer.IdentityUserId);
             return Ok(dto);
         }
 
@@ -39,7 +39,7 @@ namespace OnlineExam.EndPoint.API.Controllers
             if (pageSize < 1)
                 throw new APIValidationException("pageSize can not be less than 1");
 
-            var dto = _questionService.GetAllBySectionId(id, (pageNumber - 1) * pageSize, pageSize);
+            var dto = _questionService.GetAllBySectionId(id, _scopeDataContainer.IdentityUserId, (pageNumber - 1) * pageSize, pageSize);
             return Ok(dto);
         }
 
