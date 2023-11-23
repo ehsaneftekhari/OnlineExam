@@ -27,9 +27,9 @@ namespace OnlineExam.Application.Services.SectionServices
             _sectionValidator = sectionValidator;
         }
 
-        public ShowSectionDTO Add(int examId, AddSectionDTO Section)
+        public ShowSectionDTO Add(int examId, string issuerUserId, AddSectionDTO Section)
         {
-            _sectionValidator.ThrowIfUserIsNotExamCreator(Section.CreatorUserId, examId);
+            _sectionValidator.ThrowIfUserIsNotExamCreator(issuerUserId, examId);
 
             var newSection = _sectionMapper.AddDTOToEntity(examId, Section)!;
 

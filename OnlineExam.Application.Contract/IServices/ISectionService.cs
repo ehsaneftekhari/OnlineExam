@@ -4,7 +4,7 @@ namespace OnlineExam.Application.Contract.IServices
 {
     public interface ISectionService
     {
-        ShowSectionDTO Add(int examId, AddSectionDTO dTO);
+        ShowSectionDTO Add(int examId, string issuerUserId, AddSectionDTO dTO);
 
         IEnumerable<ShowSectionDTO> GetAllByExamId(int examId, string issuerUserId, int skip, int take);
 

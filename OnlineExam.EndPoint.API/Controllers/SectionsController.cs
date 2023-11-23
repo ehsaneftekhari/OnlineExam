@@ -3,7 +3,6 @@ using OnlineExam.Application.Contract.DTOs.SectionDTOs;
 using OnlineExam.Application.Contract.IServices;
 using OnlineExam.EndPoint.API.Attributes;
 using OnlineExam.EndPoint.API.DTOs;
-using OnlineExam.EndPoint.API.DTOs.SectionDTOs;
 using OnlineExam.EndPoint.API.Exceptions;
 using OnlineExam.Model.Constants;
 using OnlineExam.Model.Models;
@@ -47,18 +46,12 @@ namespace OnlineExam.EndPoint.API.Controllers
 
         [AuthorizeActionFilter(IdentityRoleNames.ExamCreator)]
         [HttpPost("Exams/{id}/[controller]")]
-        public IActionResult Create(int id, AddSectionApiDTO section)
+        public IActionResult Create(int id, AddSectionDTO section)
         {
             if (section == null)
                 throw new APIValidationException("section can not be null");
 
-            return Ok(_sectionService.Add(id, new()
-            {
-                Title = section.Title,
-                Order = section.Order,
-                RandomizeQuestions = section.RandomizeQuestions,
-                CreatorUserId = _scopeDataContainer.IdentityUserId
-            }));
+            return Ok(_sectionService.Add(id, _scopeDataContainer.IdentityUserId, section));
         }
 
         [AuthorizeActionFilter(IdentityRoleNames.ExamCreator)]
