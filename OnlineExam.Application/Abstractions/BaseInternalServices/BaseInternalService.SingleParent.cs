@@ -77,6 +77,7 @@ namespace OnlineExam.Application.Abstractions.BaseInternalServices
             base.ThrowIfEntityIsNull(record);
         }
 
-        IEnumerable<TEntity> IBaseInternalService<TEntity, int, TParentEntity, int>.GetAllByParentId(int parentId, int skip, int take) => GetAllByParentId(parentId, skip, take);
+        IEnumerable<TEntity> IBaseInternalService<TEntity, int, TParentEntity, int>.GetAllByParentId(int parentId, int skip, int take) 
+            => GetAllByParentId(parentId, skip, take);
     }
 }

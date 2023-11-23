@@ -81,7 +81,7 @@ namespace OnlineExam.Application.Validators
         }
 
         private bool IsCreatorOfExam(int examId, string userId)
-            => _examInternalService.GetById(examId).CreatorUserId != userId;
+            => _examInternalService.GetById(examId).CreatorUserId == userId;
 
         private bool IsCreatorOfExamUser(ExamUser examUser, string userId)
             => examUser.UserId == userId;

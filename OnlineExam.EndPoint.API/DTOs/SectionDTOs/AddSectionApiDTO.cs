@@ -1,10 +1,9 @@
-﻿namespace OnlineExam.Application.Contract.DTOs.SectionDTOs
+﻿namespace OnlineExam.EndPoint.API.DTOs.SectionDTOs
 {
-    public class AddSectionDTO
+    public class AddSectionApiDTO
     {
         public string Title { get; set; }
         public int Order { get; set; }
         public bool RandomizeQuestions { get; set; }
-        public string CreatorUserId { get; set; }
     }
 }
