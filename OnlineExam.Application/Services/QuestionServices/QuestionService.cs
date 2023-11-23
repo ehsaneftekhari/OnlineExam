@@ -57,23 +57,19 @@ namespace OnlineExam.Application.Services.QuestionServices
         }
         public ShowQuestionDTO? GetById(int questionId, string issuerUserId)
         {
-            var question = _questionInternalService.GetById(questionId, _questionInternalService.GetIQueryable()
-                                        .Include(x => x.Section)
-                                        .ThenInclude(x => x.Exam)
-                                        .ThenInclude(x => x.ExamUsers));
+            var question = GetQuestionWith_Section_Exam_ExamUser_Included(questionId);
 
-            if (question.Section.Exam.CreatorUserId != issuerUserId 
+            if (question.Section.Exam.CreatorUserId != issuerUserId
                 && !question.Section.Exam.ExamUsers.Any(x => x.UserId == issuerUserId))
                 throw new ApplicationUnAuthorizedException($"User has no access to question");
 
             return _questionMapper.EntityToShowDTO(question);
         }
+
+
         public void Update(int questionId, string issuerUserId, UpdateQuestionDTO dTO)
         {
-            var question = _questionInternalService.GetById(questionId, _questionInternalService.GetIQueryable()
-                                        .Include(x => x.Section)
-                                        .ThenInclude(x => x.Exam)
-                                        .ThenInclude(x => x.ExamUsers));
+            var question = GetQuestionWith_Section_Exam_ExamUser_Included(questionId);
 
             if (question.Section.Exam.CreatorUserId != issuerUserId
                 && !question.Section.Exam.ExamUsers.Any(x => x.UserId == issuerUserId))
@@ -86,16 +82,21 @@ namespace OnlineExam.Application.Services.QuestionServices
 
         public void Delete(int questionId, string issuerUserId)
         {
-            var question = _questionInternalService.GetById(questionId, _questionInternalService.GetIQueryable()
-                                        .Include(x => x.Section)
-                                        .ThenInclude(x => x.Exam)
-                                        .ThenInclude(x => x.ExamUsers));
+            var question = GetQuestionWith_Section_Exam_ExamUser_Included(questionId);
 
             if (question.Section.Exam.CreatorUserId != issuerUserId
                 && !question.Section.Exam.ExamUsers.Any(x => x.UserId == issuerUserId))
                 throw new ApplicationUnAuthorizedException($"User has no access to question");
 
             _questionInternalService.Delete(question);
+        }
+
+        private Question GetQuestionWith_Section_Exam_ExamUser_Included(int questionId)
+        {
+            return _questionInternalService.GetById(questionId, _questionInternalService.GetIQueryable()
+                                        .Include(x => x.Section)
+                                        .ThenInclude(x => x.Exam)
+                                        .ThenInclude(x => x.ExamUsers));
         }
     }
 }
