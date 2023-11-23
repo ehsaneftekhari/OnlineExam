@@ -7,7 +7,7 @@ namespace OnlineExam.Application.Contract.IServices
         ShowQuestionDTO Add(int sectionId, string issuerUserId, AddQuestionDTO dTO);
         ShowQuestionDTO? GetById(int id, string issuerUserId);
         IEnumerable<ShowQuestionDTO> GetAllBySectionId(int sectionId, string issuerUserId, int skip, int take);
-        void Update(int id, UpdateQuestionDTO dTO);
-        void Delete(int id);
+        void Update(int id, string issuerUserId, UpdateQuestionDTO dTO);
+        void Delete(int id, string issuerUserId);
     }
 }

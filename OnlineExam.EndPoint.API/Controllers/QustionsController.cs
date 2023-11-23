@@ -58,14 +58,14 @@ namespace OnlineExam.EndPoint.API.Controllers
             if (question == null)
                 throw new APIValidationException("question can not be null");
 
-            _questionService.Update(id, question);
+            _questionService.Update(id, _scopeDataContainer.IdentityUserId, question);
             return Ok();
         }
 
         [HttpDelete("[controller]/{id}")]
         public IActionResult Delete(int id)
         {
-            _questionService.Delete(id);
+            _questionService.Delete(id, _scopeDataContainer.IdentityUserId);
             return Ok();
         }
     }
