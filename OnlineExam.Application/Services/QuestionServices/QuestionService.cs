@@ -50,11 +50,13 @@ namespace OnlineExam.Application.Services.QuestionServices
                                         .Include(x => x.Exam)
                                         .ThenInclude(x => x.ExamUsers)).Exam;
 
-            if(exam.CreatorUserId != issuerUserId && !exam.ExamUsers.Any(x => x.UserId == issuerUserId))
+            if(exam.CreatorUserId != issuerUserId 
+                && !exam.ExamUsers.Any(x => x.UserId == issuerUserId))
                 throw new ApplicationUnAuthorizedException($"User has no access to Section");
 
             return _questionInternalService.GetAllByParentId(sectionId, skip, take).Select(_questionMapper.EntityToShowDTO)!;
         }
+
         public ShowQuestionDTO? GetById(int questionId, string issuerUserId)
         {
             var question = GetQuestionWith_Section_Exam_ExamUser_Included(questionId);
@@ -71,9 +73,7 @@ namespace OnlineExam.Application.Services.QuestionServices
         {
             var question = GetQuestionWith_Section_Exam_ExamUser_Included(questionId);
 
-            if (question.Section.Exam.CreatorUserId != issuerUserId
-                && !question.Section.Exam.ExamUsers.Any(x => x.UserId == issuerUserId))
-                throw new ApplicationUnAuthorizedException($"User has no access to question");
+            _examValidator.ThrowIfUserIsNotExamCreator(issuerUserId, question.Section.Exam);
 
             _questionMapper.UpdateEntityByDTO(question, dTO);
 
@@ -84,9 +84,7 @@ namespace OnlineExam.Application.Services.QuestionServices
         {
             var question = GetQuestionWith_Section_Exam_ExamUser_Included(questionId);
 
-            if (question.Section.Exam.CreatorUserId != issuerUserId
-                && !question.Section.Exam.ExamUsers.Any(x => x.UserId == issuerUserId))
-                throw new ApplicationUnAuthorizedException($"User has no access to question");
+            _examValidator.ThrowIfUserIsNotExamCreator(issuerUserId, question.Section.Exam);
 
             _questionInternalService.Delete(question);
         }
