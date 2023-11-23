@@ -50,20 +50,17 @@ namespace OnlineExam.Application.Services.QuestionServices
                                         .Include(x => x.Exam)
                                         .ThenInclude(x => x.ExamUsers)).Exam;
 
-            if(exam.CreatorUserId != issuerUserId 
-                && !exam.ExamUsers.Any(x => x.UserId == issuerUserId))
-                throw new ApplicationUnAuthorizedException($"User has no access to Section");
+            ThrowIfUserIsNotExamCreatorOrExamUser(issuerUserId, exam);
 
             return _questionInternalService.GetAllByParentId(sectionId, skip, take).Select(_questionMapper.EntityToShowDTO)!;
         }
+
 
         public ShowQuestionDTO? GetById(int questionId, string issuerUserId)
         {
             var question = GetQuestionWith_Section_Exam_ExamUser_Included(questionId);
 
-            if (question.Section.Exam.CreatorUserId != issuerUserId
-                && !question.Section.Exam.ExamUsers.Any(x => x.UserId == issuerUserId))
-                throw new ApplicationUnAuthorizedException($"User has no access to question");
+            ThrowIfUserIsNotExamCreatorOrExamUser(issuerUserId, question.Section.Exam);
 
             return _questionMapper.EntityToShowDTO(question);
         }
@@ -95,6 +92,13 @@ namespace OnlineExam.Application.Services.QuestionServices
                                         .Include(x => x.Section)
                                         .ThenInclude(x => x.Exam)
                                         .ThenInclude(x => x.ExamUsers));
+        }
+
+        private static void ThrowIfUserIsNotExamCreatorOrExamUser(string issuerUserId, Exam exam)
+        {
+            if (exam.CreatorUserId != issuerUserId
+                && !exam.ExamUsers.Any(x => x.UserId == issuerUserId))
+                throw new ApplicationUnAuthorizedException($"User has no access to Section");
         }
     }
 }
