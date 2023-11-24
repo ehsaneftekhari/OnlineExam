@@ -9,7 +9,6 @@ using OnlineExam.Application.Contract.IServices;
 using OnlineExam.Application.Services.SectionServices;
 using OnlineExam.Application.Validators;
 using OnlineExam.Model.Models;
-using static System.Collections.Specialized.BitVector32;
 
 namespace OnlineExam.Application.Services.QuestionServices
 {
@@ -35,12 +34,13 @@ namespace OnlineExam.Application.Services.QuestionServices
                                         .GetIQueryable()
                                         .Include(x => x.Exam)).Exam;
 
-            _examValidator.ThrowIfUserIsNotExamCreator(issuerUserId, exam);
+            ThrowIfUserIsNotExamCreator(issuerUserId, exam);
 
             var newQuestion = _questionMapper.AddDTOToEntity(sectionId, dTO);
             _questionInternalService.Add(newQuestion!);
             return _questionMapper.EntityToShowDTO(newQuestion)!;
         }
+
 
         public IEnumerable<ShowQuestionDTO> GetAllBySectionId(int sectionId, string issuerUserId, int skip, int take)
         {
@@ -70,7 +70,7 @@ namespace OnlineExam.Application.Services.QuestionServices
         {
             var question = GetQuestionWith_Section_Exam_ExamUser_Included(questionId);
 
-            _examValidator.ThrowIfUserIsNotExamCreator(issuerUserId, question.Section.Exam);
+            ThrowIfUserIsNotExamCreator(issuerUserId, question.Section.Exam);
 
             _questionMapper.UpdateEntityByDTO(question, dTO);
 
@@ -81,7 +81,7 @@ namespace OnlineExam.Application.Services.QuestionServices
         {
             var question = GetQuestionWith_Section_Exam_ExamUser_Included(questionId);
 
-            _examValidator.ThrowIfUserIsNotExamCreator(issuerUserId, question.Section.Exam);
+            ThrowIfUserIsNotExamCreator(issuerUserId, question.Section.Exam);
 
             _questionInternalService.Delete(question);
         }
@@ -98,7 +98,12 @@ namespace OnlineExam.Application.Services.QuestionServices
         {
             if (exam.CreatorUserId != issuerUserId
                 && !exam.ExamUsers.Any(x => x.UserId == issuerUserId))
-                throw new ApplicationUnAuthorizedException($"User has no access to Section");
+                throw new ApplicationUnAuthorizedException($"User has no access to Question");
+        }
+
+        private void ThrowIfUserIsNotExamCreator(string issuerUserId, Exam exam)
+        {
+            _examValidator.ThrowIfUserIsNotExamCreator(issuerUserId, exam);
         }
     }
 }
