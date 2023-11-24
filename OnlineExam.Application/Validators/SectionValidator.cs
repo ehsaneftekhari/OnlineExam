@@ -27,15 +27,12 @@ namespace OnlineExam.Application.Validators
             _examValidator.ThrowIfUserIsNotExamCreator(issuerUserId, exam);
         }
 
-        public void ThrowIfUserIsNotExamCreatorOrExamUserCreator(string userId, Section section)
+        public void ThrowIfUserIsNotExamCreatorOrExamUserCreator(string userId, Exam exam)
         {
-            if (section.Exam != null
-                && section.Exam.CreatorUserId != userId
-                && !section.Exam.ExamUsers.Any(x => x.UserId == userId))
-                throw new ApplicationUnAuthorizedException(GenerateUnAuthorizedExceptionMessage(section.Id, userId));
+            if (exam != null
+                && exam.CreatorUserId != userId
+                && !exam.ExamUsers.Any(x => x.UserId == userId))
+                throw new ApplicationUnAuthorizedException("User has no access to Section");
         }
-
-        private string GenerateUnAuthorizedExceptionMessage(int sectionId, string issuerUserId)
-            => $"User (id : {issuerUserId}) has no access to Section (id : {sectionId})";
     }
 }

@@ -58,7 +58,7 @@ namespace OnlineExam.Application.Services.SectionServices
         {
             var section = GetSectionHasExamThenExamUsersIncluded(id);
 
-            _sectionValidator.ThrowIfUserIsNotExamCreatorOrExamUserCreator(issuerUserId, section);
+            _sectionValidator.ThrowIfUserIsNotExamCreatorOrExamUserCreator(issuerUserId, section.Exam);
 
             return _sectionMapper.EntityToShowDTO(section);
         }
@@ -67,7 +67,7 @@ namespace OnlineExam.Application.Services.SectionServices
         {
             var section = GetSectionHasExamIncluded(id);
 
-            _sectionValidator.ThrowIfUserIsNotExamCreatorOrExamUserCreator(issuerUserId, section);
+            _sectionValidator.ThrowIfUserIsNotExamCreatorOrExamUserCreator(issuerUserId, section.Exam);
 
             _sectionMapper.UpdateEntityByDTO(section, dTO);
 
