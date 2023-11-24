@@ -35,6 +35,7 @@ namespace OnlineExam.Application
             serviceDescriptors.AddScoped<ISectionInternalService, SectionInternalService>();
             serviceDescriptors.AddScoped<IQuestionService, QuestionService>();
             serviceDescriptors.AddScoped<IQuestionInternalService, QuestionInternalService>();
+            serviceDescriptors.AddScoped<IQuestionValidator, QuestionValidator>();
             serviceDescriptors.AddScoped<IQuestionMapper, QuestionMapper>();
             serviceDescriptors.AddScoped<ITextFieldMapper, TextFieldMapper>();
             serviceDescriptors.AddScoped<ITextFieldService, TextFieldService>();
