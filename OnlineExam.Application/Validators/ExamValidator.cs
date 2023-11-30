@@ -9,12 +9,7 @@ namespace OnlineExam.Application.Validators
         public void ThrowIfUserIsNotExamCreator(string issuerUserId, Exam exam)
         {
             if (exam.CreatorUserId != issuerUserId)
-                throw new ApplicationUnAuthorizedException(
-                    string.Empty,
-                    new ApplicationValidationException(GenerateUnAuthorizedExceptionMessage(exam.Id, issuerUserId)));
+                throw new ApplicationUnAuthorizedException("User has no access to Exam");
         }
-
-        private string GenerateUnAuthorizedExceptionMessage(int examId, string issuerUserId)
-             => $"User (id : {issuerUserId}) is not the owner of exam (id : {examId})";
     }
 }
