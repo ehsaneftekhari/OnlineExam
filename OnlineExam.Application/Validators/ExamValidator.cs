@@ -7,12 +7,22 @@ namespace OnlineExam.Application.Validators
     internal class ExamValidator : IExamValidator
     {
 
-        public bool IsUserExamCreator(string issuerUserId, Exam exam)
-            => exam.CreatorUserId != issuerUserId;
-
-        public void ThrowIfUserIsNotExamCreator(string issuerUserId, Exam exam)
+        public bool IsUserExamCreator(string userId, Exam exam)
         {
-            if (IsUserExamCreator(issuerUserId, exam))
+            if(exam == null)
+                throw new ArgumentNullException(nameof(exam));
+
+            return exam.CreatorUserId == userId;
+        }
+
+        public bool IsUserExamCreatorOrExamUser(string userId, Exam exam)
+        {
+            return IsUserExamCreator(userId, exam) || exam.ExamUsers.Any(x => x.UserId == userId);
+        }
+
+        public void ThrowIfUserIsNotExamCreator(string userId, Exam exam)
+        {
+            if (!IsUserExamCreator(userId, exam))
                 throw new ApplicationUnAuthorizedException("User has no access to Exam");
         }
     }

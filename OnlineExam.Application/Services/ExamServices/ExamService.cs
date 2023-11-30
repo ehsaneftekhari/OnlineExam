@@ -28,7 +28,9 @@ namespace OnlineExam.Application.Services.ExamServices
         public ShowExamDTO Add(AddExamDTO dTO)
         {
             var newExam = _examMapper.AddDTOToEntity(dTO);
+
             _examInternalService.Add(newExam);
+
             return _examMapper.EntityToShowDTO(newExam)!;
         }
 

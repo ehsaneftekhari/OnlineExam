@@ -6,6 +6,8 @@ namespace OnlineExam.Application.Abstractions.IValidators
     {
         bool IsUserExamCreator(string issuerUserId, Exam exam);
 
+        bool IsUserExamCreatorOrExamUser(string userId, Exam exam);
+
         void ThrowIfUserIsNotExamCreator(string issuerUserId, Exam exam);
     }
 }
