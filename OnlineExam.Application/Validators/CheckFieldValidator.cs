@@ -37,19 +37,14 @@ namespace OnlineExam.Application.Validators
 
         public void ThrowIfUserIsNotExamCreator(int questionId, string issuerUserId)
         {
-            var question = GetQuestionWith_Section_Exam_Included(questionId);
-
-            if (question.Section.Exam.CreatorUserId != issuerUserId)
-                throw new ApplicationUnAuthorizedException("User has no access to Question");
+            ThrowIfUserIsNotExamCreator(issuerUserId, 
+                GetQuestionWith_Section_Exam_Included(questionId).Section.Exam);
         }
 
         public void ThrowIfUserIsNotExamCreatorOrExamUser(int questionId, string issuerUserId)
         {
-            var question = GetQuestionWith_Section_Exam_ExamUser_Included(questionId);
-
-            if (question.Section.Exam.CreatorUserId != issuerUserId
-                && !question.Section.Exam.ExamUsers.Any(x => x.UserId == issuerUserId))
-                throw new ApplicationUnAuthorizedException($"User has no access to Question");
+            ThrowIfUserIsNotExamCreatorOrExamUser(issuerUserId, 
+                GetQuestionWith_Section_Exam_ExamUser_Included(questionId).Section.Exam);
         }
 
         public void ThrowIfUserIsNotExamCreatorOrExamUser(string issuerUserId, Exam exam)
@@ -68,7 +63,7 @@ namespace OnlineExam.Application.Validators
         private void ValidateValues(int? maximumSelection, int? checkFieldUIType)
         {
             if (maximumSelection.HasValue && maximumSelection < 1)
-                throw new ApplicationValidationException("maximumSelection can not be less then 1");
+                throw new ApplicationValidationException("maximumSelection can not be less than 1");
 
             if (checkFieldUIType.HasValue && !Enum.IsDefined(typeof(CheckFieldUIType), checkFieldUIType))
                 throw new ApplicationValidationException("checkFieldUIType is not valid");
