@@ -7,8 +7,8 @@ namespace OnlineExam.Application.Abstractions.IValidators
     {
         void ValidateDTO(AddCheckFieldOptionDTO dTO);
         void ValidateDTO(UpdateCheckFieldOptionDTO dTO);
-        void ThrowIfUserIsNotExamCreator(int questionId, string userId);
-        void ThrowIfUserIsNotExamCreatorOrExamUser(int questionId, string userId);
+        void ThrowIfUserIsNotExamCreator(int checkFieldId, string userId);
+        void ThrowIfUserIsNotExamCreatorOrExamUser(int checkFieldId, string userId);
         void ThrowIfUserIsNotExamCreatorOrExamUser(string userId, Exam exam);
         void ThrowIfUserIsNotExamCreator(string userId, Exam exam);
     }

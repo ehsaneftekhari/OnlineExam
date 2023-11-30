@@ -35,16 +35,16 @@ namespace OnlineExam.Application.Validators
             ValidateValues(dTO.Order, dTO.Text);
         }
 
-        public void ThrowIfUserIsNotExamCreator(int questionId, string userId)
+        public void ThrowIfUserIsNotExamCreator(int checkFieldId, string userId)
         {
             ThrowIfUserIsNotExamCreator(userId,
-                GetCheckFieldWith_Question_Section_Exam_Included(questionId).Question.Section.Exam);
+                GetCheckFieldWith_Question_Section_Exam_Included(checkFieldId).Question.Section.Exam);
         }
 
-        public void ThrowIfUserIsNotExamCreatorOrExamUser(int questionId, string userId)
+        public void ThrowIfUserIsNotExamCreatorOrExamUser(int checkFieldId, string userId)
         {
             ThrowIfUserIsNotExamCreatorOrExamUser(userId,
-                GetCheckFieldWith_Question_Section_Exam_ExamUser_Included(questionId).Question.Section.Exam);
+                GetCheckFieldWith_Question_Section_Exam_ExamUser_Included(checkFieldId).Question.Section.Exam);
         }
 
         public void ThrowIfUserIsNotExamCreatorOrExamUser(string userId, Exam exam)
