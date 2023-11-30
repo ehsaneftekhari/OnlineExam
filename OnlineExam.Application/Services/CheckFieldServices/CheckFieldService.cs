@@ -30,14 +30,9 @@ namespace OnlineExam.Application.Services.CheckFieldServices
 
         public ShowCheckFieldDTO Add(int questionId, string issuerUserId, AddCheckFieldDTO checkField)
         {
-            var exam = _questionInternalService.GetById(questionId,
-                _questionInternalService.GetIQueryable()
-                .Include(x => x.Section)
-                .ThenInclude(x => x.Exam))
-                .Section
-                .Exam;
+            Question question = GetQuestionWith_Section_Exam_Included(questionId);
 
-            if (exam.CreatorUserId != issuerUserId)
+            if (question.Section.Exam.CreatorUserId != issuerUserId)
                 throw new ApplicationUnAuthorizedException("User has no access to Question");
 
             _checkFieldValidator.ValidateDTO(checkField);
@@ -48,6 +43,8 @@ namespace OnlineExam.Application.Services.CheckFieldServices
 
             return _checkFieldMapper.EntityToShowDTO(newCheckField)!;
         }
+
+        
 
         public void Delete(int checkFieldId, string issuerUserId)
         {
@@ -65,16 +62,10 @@ namespace OnlineExam.Application.Services.CheckFieldServices
 
         public IEnumerable<ShowCheckFieldDTO> GetAllByQuestionId(int questionId, string issuerUserId, int skip = 0, int take = 20)
         {
-            var exam = _questionInternalService.GetById(questionId,
-                _questionInternalService.GetIQueryable()
-                .Include(x => x.Section)
-                .ThenInclude(x => x.Exam)
-                .ThenInclude(x => x.ExamUsers))
-                .Section
-                .Exam;
+            Question question = GetQuestionWith_Section_Exam_ExamUser_Included(questionId);
 
-            if (exam.CreatorUserId != issuerUserId
-                && !exam.ExamUsers.Any(x => x.UserId == issuerUserId))
+            if (question.Section.Exam.CreatorUserId != issuerUserId
+                && !question.Section.Exam.ExamUsers.Any(x => x.UserId == issuerUserId))
                 throw new ApplicationUnAuthorizedException($"User has no access to Question");
 
             return _checkFieldInternalService.GetAllByParentId(questionId, skip, take).Select(_checkFieldMapper.EntityToShowDTO);
@@ -111,6 +102,23 @@ namespace OnlineExam.Application.Services.CheckFieldServices
             _checkFieldMapper.UpdateEntityByDTO(checkField, dTO);
 
             _checkFieldInternalService.Update(checkField);
+        }
+
+        private Question GetQuestionWith_Section_Exam_Included(int questionId)
+        {
+            return _questionInternalService.GetById(questionId,
+                            _questionInternalService.GetIQueryable()
+                            .Include(x => x.Section)
+                            .ThenInclude(x => x.Exam));
+        }
+
+        private Question GetQuestionWith_Section_Exam_ExamUser_Included(int questionId)
+        {
+            return _questionInternalService.GetById(questionId,
+                            _questionInternalService.GetIQueryable()
+                            .Include(x => x.Section)
+                            .ThenInclude(x => x.Exam)
+                            .ThenInclude(x => x.ExamUsers));
         }
     }
 }
