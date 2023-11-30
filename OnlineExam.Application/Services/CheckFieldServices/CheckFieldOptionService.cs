@@ -1,10 +1,8 @@
-﻿using OnlineExam.Application.Abstractions.BaseInternalServices;
-using OnlineExam.Application.Abstractions.IInternalService;
+﻿using OnlineExam.Application.Abstractions.IInternalService;
 using OnlineExam.Application.Abstractions.IMappers;
 using OnlineExam.Application.Abstractions.IValidators;
 using OnlineExam.Application.Contract.DTOs.CheckFieldDTOs;
 using OnlineExam.Application.Contract.IServices;
-using OnlineExam.Model.Models;
 
 namespace OnlineExam.Application.Services.CheckFieldServices
 {
