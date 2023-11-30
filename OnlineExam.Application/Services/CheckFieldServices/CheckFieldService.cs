@@ -5,7 +5,6 @@ using OnlineExam.Application.Abstractions.IValidators;
 using OnlineExam.Application.Contract.DTOs.CheckFieldDTOs;
 using OnlineExam.Application.Contract.Exceptions;
 using OnlineExam.Application.Contract.IServices;
-using OnlineExam.Application.Services.QuestionServices;
 using OnlineExam.Model.Models;
 
 namespace OnlineExam.Application.Services.CheckFieldServices
@@ -40,11 +39,7 @@ namespace OnlineExam.Application.Services.CheckFieldServices
 
         public void Delete(int checkFieldId, string issuerUserId)
         {
-            var checkField = _checkFieldInternalService.GetById(checkFieldId,
-                _checkFieldInternalService.GetIQueryable()
-                .Include(x => x.Question)
-                .ThenInclude(x => x.Section)
-                .ThenInclude(x => x.Exam));
+            var checkField = GetCheckFieldWith_Question_Section_Exam_Included(checkFieldId);
 
             if (checkField.Question.Section.Exam.CreatorUserId != issuerUserId)
                 throw new ApplicationUnAuthorizedException("User has no access to CheckField");
@@ -61,11 +56,7 @@ namespace OnlineExam.Application.Services.CheckFieldServices
 
         public ShowCheckFieldDTO? GetById(int checkFieldId, string issuerUserId)
         {
-            var checkField = _checkFieldInternalService.GetById(checkFieldId,
-                _checkFieldInternalService.GetIQueryable()
-                .Include(x => x.Question)
-                .ThenInclude(x => x.Section)
-                .ThenInclude(x => x.Exam));
+            var checkField = GetCheckFieldWith_Question_Section_Exam_Included(checkFieldId);
 
             if (checkField.Question.Section.Exam.CreatorUserId != issuerUserId
                 && !checkField.Question.Section.Exam.ExamUsers.Any(x => x.UserId == issuerUserId))
@@ -76,11 +67,7 @@ namespace OnlineExam.Application.Services.CheckFieldServices
 
         public void Update(int checkFieldId, string issuerUserId, UpdateCheckFieldDTO dTO)
         {
-            var checkField = _checkFieldInternalService.GetById(checkFieldId,
-                _checkFieldInternalService.GetIQueryable()
-                .Include(x => x.Question)
-                .ThenInclude(x => x.Section)
-                .ThenInclude(x => x.Exam));
+            var checkField = GetCheckFieldWith_Question_Section_Exam_Included(checkFieldId);
 
             if (checkField.Question.Section.Exam.CreatorUserId != issuerUserId)
                 throw new ApplicationUnAuthorizedException("User has no access to CheckField");
@@ -92,5 +79,13 @@ namespace OnlineExam.Application.Services.CheckFieldServices
             _checkFieldInternalService.Update(checkField);
         }
 
+        private CheckField GetCheckFieldWith_Question_Section_Exam_Included(int checkFieldId)
+        {
+            return _checkFieldInternalService.GetById(checkFieldId,
+                _checkFieldInternalService.GetIQueryable()
+                .Include(x => x.Question)
+                .ThenInclude(x => x.Section)
+                .ThenInclude(x => x.Exam));
+        }
     }
 }
