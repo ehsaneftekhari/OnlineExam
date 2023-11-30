@@ -41,8 +41,7 @@ namespace OnlineExam.Application.Services.CheckFieldServices
         {
             var checkField = GetCheckFieldWith_Question_Section_Exam_Included(checkFieldId);
 
-            if (checkField.Question.Section.Exam.CreatorUserId != issuerUserId)
-                throw new ApplicationUnAuthorizedException("User has no access to CheckField");
+            ThrowIfUserIsNotExamCreator(issuerUserId, checkField.Question.Section.Exam);
 
             _checkFieldInternalService.Delete(checkField);
         }
@@ -58,9 +57,7 @@ namespace OnlineExam.Application.Services.CheckFieldServices
         {
             var checkField = GetCheckFieldWith_Question_Section_Exam_Included(checkFieldId);
 
-            if (checkField.Question.Section.Exam.CreatorUserId != issuerUserId
-                && !checkField.Question.Section.Exam.ExamUsers.Any(x => x.UserId == issuerUserId))
-                throw new ApplicationUnAuthorizedException($"User has no access to Question");
+            ThrowIfUserIsNotExamCreatorOrExamUser(issuerUserId, checkField.Question.Section.Exam);
 
             return _checkFieldMapper.EntityToShowDTO(checkField);
         }
@@ -69,14 +66,26 @@ namespace OnlineExam.Application.Services.CheckFieldServices
         {
             var checkField = GetCheckFieldWith_Question_Section_Exam_Included(checkFieldId);
 
-            if (checkField.Question.Section.Exam.CreatorUserId != issuerUserId)
-                throw new ApplicationUnAuthorizedException("User has no access to CheckField");
+            ThrowIfUserIsNotExamCreator(issuerUserId, checkField.Question.Section.Exam);
 
             _checkFieldValidator.ValidateDTO(dTO);
 
             _checkFieldMapper.UpdateEntityByDTO(checkField, dTO);
 
             _checkFieldInternalService.Update(checkField);
+        }
+
+        private static void ThrowIfUserIsNotExamCreatorOrExamUser(string issuerUserId, Exam exam)
+        {
+            if (exam.CreatorUserId != issuerUserId
+                && !exam.ExamUsers.Any(x => x.UserId == issuerUserId))
+                throw new ApplicationUnAuthorizedException($"User has no access to Question");
+        }
+
+        private static void ThrowIfUserIsNotExamCreator(string issuerUserId, Exam exam)
+        {
+            if (exam.CreatorUserId != issuerUserId)
+                throw new ApplicationUnAuthorizedException("User has no access to CheckField");
         }
 
         private CheckField GetCheckFieldWith_Question_Section_Exam_Included(int checkFieldId)
