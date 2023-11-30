@@ -19,17 +19,17 @@ namespace OnlineExam.Application.Validators
             _examValidator = examValidator;
         }
 
-        public void ThrowIfUserIsNotExamCreator(int sectionId, string issuerUserId)
+        public void ThrowIfUserIsNotExamCreator(int sectionId, string userId)
         {
             var exam = _sectionInternalService
                 .GetById(sectionId, _sectionInternalService
                                         .GetIQueryable()
                                         .Include(x => x.Exam)).Exam;
 
-            ThrowIfUserIsNotExamCreator(issuerUserId, exam);
+            ThrowIfUserIsNotExamCreator(userId, exam);
         }
 
-        public void ThrowIfUserIsNotExamCreatorOrExamUser(int sectionId, string issuerUserId)
+        public void ThrowIfUserIsNotExamCreatorOrExamUser(int sectionId, string userId)
         {
             var exam = _sectionInternalService
                 .GetById(sectionId, _sectionInternalService
@@ -37,13 +37,12 @@ namespace OnlineExam.Application.Validators
                                         .Include(x => x.Exam)
                                         .ThenInclude(x => x.ExamUsers)).Exam;
 
-            ThrowIfUserIsNotExamCreatorOrExamUser(issuerUserId, exam);
+            ThrowIfUserIsNotExamCreatorOrExamUser(userId, exam);
         }
 
-        public void ThrowIfUserIsNotExamCreatorOrExamUser(string issuerUserId, Exam exam)
+        public void ThrowIfUserIsNotExamCreatorOrExamUser(string userId, Exam exam)
         {
-            if (exam.CreatorUserId != issuerUserId
-                && !exam.ExamUsers.Any(x => x.UserId == issuerUserId))
+            if (!_examValidator.IsUserExamCreatorOrExamUser(userId, exam))
                 throw new ApplicationUnAuthorizedException($"User has no access to Question");
         }
 

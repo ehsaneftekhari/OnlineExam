@@ -35,28 +35,27 @@ namespace OnlineExam.Application.Validators
             ValidateValues(dTO.MaximumSelection, dTO.CheckFieldUIType);
         }
 
-        public void ThrowIfUserIsNotExamCreator(int questionId, string issuerUserId)
+        public void ThrowIfUserIsNotExamCreator(int questionId, string userId)
         {
-            ThrowIfUserIsNotExamCreator(issuerUserId, 
+            ThrowIfUserIsNotExamCreator(userId, 
                 GetQuestionWith_Section_Exam_Included(questionId).Section.Exam);
         }
 
-        public void ThrowIfUserIsNotExamCreatorOrExamUser(int questionId, string issuerUserId)
+        public void ThrowIfUserIsNotExamCreatorOrExamUser(int questionId, string userId)
         {
-            ThrowIfUserIsNotExamCreatorOrExamUser(issuerUserId, 
+            ThrowIfUserIsNotExamCreatorOrExamUser(userId, 
                 GetQuestionWith_Section_Exam_ExamUser_Included(questionId).Section.Exam);
         }
 
-        public void ThrowIfUserIsNotExamCreatorOrExamUser(string issuerUserId, Exam exam)
+        public void ThrowIfUserIsNotExamCreatorOrExamUser(string userId, Exam exam)
         {
-            if (exam.CreatorUserId != issuerUserId
-                && !exam.ExamUsers.Any(x => x.UserId == issuerUserId))
+            if (!_examValidator.IsUserExamCreatorOrExamUser(userId, exam))
                 throw new ApplicationUnAuthorizedException($"User has no access to Question");
         }
 
-        public void ThrowIfUserIsNotExamCreator(string issuerUserId, Exam exam)
+        public void ThrowIfUserIsNotExamCreator(string userId, Exam exam)
         {
-            _examValidator.ThrowIfUserIsNotExamCreator(issuerUserId, exam);
+            _examValidator.ThrowIfUserIsNotExamCreator(userId, exam);
         }
 
 
