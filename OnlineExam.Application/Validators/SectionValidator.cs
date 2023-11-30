@@ -29,9 +29,7 @@ namespace OnlineExam.Application.Validators
 
         public void ThrowIfUserIsNotExamCreatorOrExamUserCreator(string userId, Exam exam)
         {
-            if (exam != null
-                && exam.CreatorUserId != userId
-                && !exam.ExamUsers.Any(x => x.UserId == userId))
+            if (!_examValidator.IsUserExamCreatorOrExamUser(userId, exam))
                 throw new ApplicationUnAuthorizedException("User has no access to Section");
         }
     }
