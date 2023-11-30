@@ -7,11 +7,11 @@ using System.Linq.Expressions;
 namespace OnlineExam.Application.Services.CheckFieldServices
 {
     public sealed class CheckFieldOptionInternalService 
-        : BaseInternalService<CheckFieldOption, ICheckFieldOptionRepository, Question, IQuestionRepository>
+        : BaseInternalService<CheckFieldOption, ICheckFieldOptionRepository, CheckField, ICheckFieldRepository>
         , ICheckFieldOptionInternalService
     {
         public CheckFieldOptionInternalService(ICheckFieldOptionRepository repository,
-            IQuestionInternalService parentInternalService) : base(repository, parentInternalService) { }
+            ICheckFieldInternalService parentInternalService) : base(repository, parentInternalService) { }
 
         protected override Expression<Func<CheckFieldOption, int>> ParentIdProvider => x => x.CheckFieldId;
 
