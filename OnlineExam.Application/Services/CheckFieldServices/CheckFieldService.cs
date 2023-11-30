@@ -28,14 +28,16 @@ namespace OnlineExam.Application.Services.CheckFieldServices
             _questionInternalService = questionInternalService;
         }
 
-        public ShowCheckFieldDTO Add(int questionId, string issuerUserId,  AddCheckFieldDTO checkField)
+        public ShowCheckFieldDTO Add(int questionId, string issuerUserId, AddCheckFieldDTO checkField)
         {
-            var question = _questionInternalService.GetById(questionId,
+            var exam = _questionInternalService.GetById(questionId,
                 _questionInternalService.GetIQueryable()
                 .Include(x => x.Section)
-                .ThenInclude(x => x.Exam));
+                .ThenInclude(x => x.Exam))
+                .Section
+                .Exam;
 
-            if(question.Section.Exam.CreatorUserId != issuerUserId)
+            if (exam.CreatorUserId != issuerUserId)
                 throw new ApplicationUnAuthorizedException("User has no access to Question");
 
             _checkFieldValidator.ValidateDTO(checkField);
@@ -47,20 +49,64 @@ namespace OnlineExam.Application.Services.CheckFieldServices
             return _checkFieldMapper.EntityToShowDTO(newCheckField)!;
         }
 
-        public void Delete(int checkFieldId)
-            => _checkFieldInternalService.Delete(checkFieldId);
-
-        public IEnumerable<ShowCheckFieldDTO> GetAllByQuestionId(int questionId, int skip = 0, int take = 20)
-            => _checkFieldInternalService.GetAllByParentId(questionId, skip, take).Select(_checkFieldMapper.EntityToShowDTO);
-
-        public ShowCheckFieldDTO? GetById(int checkFieldId)
-            => _checkFieldMapper.EntityToShowDTO(_checkFieldInternalService.GetById(checkFieldId));
-
-        public void Update(int checkFieldId, UpdateCheckFieldDTO dTO)
+        public void Delete(int checkFieldId, string issuerUserId)
         {
-            _checkFieldValidator.ValidateDTO(dTO);
+            var checkField = _checkFieldInternalService.GetById(checkFieldId,
+                _checkFieldInternalService.GetIQueryable()
+                .Include(x => x.Question)
+                .ThenInclude(x => x.Section)
+                .ThenInclude(x => x.Exam));
 
-            var checkField = _checkFieldInternalService.GetById(checkFieldId);
+            if (checkField.Question.Section.Exam.CreatorUserId != issuerUserId)
+                throw new ApplicationUnAuthorizedException("User has no access to CheckField");
+
+            _checkFieldInternalService.Delete(checkField);
+        }
+
+        public IEnumerable<ShowCheckFieldDTO> GetAllByQuestionId(int questionId, string issuerUserId, int skip = 0, int take = 20)
+        {
+            var exam = _questionInternalService.GetById(questionId,
+                _questionInternalService.GetIQueryable()
+                .Include(x => x.Section)
+                .ThenInclude(x => x.Exam)
+                .ThenInclude(x => x.ExamUsers))
+                .Section
+                .Exam;
+
+            if (exam.CreatorUserId != issuerUserId
+                && !exam.ExamUsers.Any(x => x.UserId == issuerUserId))
+                throw new ApplicationUnAuthorizedException($"User has no access to Question");
+
+            return _checkFieldInternalService.GetAllByParentId(questionId, skip, take).Select(_checkFieldMapper.EntityToShowDTO);
+        }
+
+        public ShowCheckFieldDTO? GetById(int checkFieldId, string issuerUserId)
+        {
+            var checkField = _checkFieldInternalService.GetById(checkFieldId,
+                _checkFieldInternalService.GetIQueryable()
+                .Include(x => x.Question)
+                .ThenInclude(x => x.Section)
+                .ThenInclude(x => x.Exam));
+
+            if (checkField.Question.Section.Exam.CreatorUserId != issuerUserId
+                && !checkField.Question.Section.Exam.ExamUsers.Any(x => x.UserId == issuerUserId))
+                throw new ApplicationUnAuthorizedException($"User has no access to Question");
+
+            return _checkFieldMapper.EntityToShowDTO(checkField);
+        }
+
+        public void Update(int checkFieldId, string issuerUserId, UpdateCheckFieldDTO dTO)
+        {
+            var checkField = _checkFieldInternalService.GetById(checkFieldId,
+                _checkFieldInternalService.GetIQueryable()
+                .Include(x => x.Question)
+                .ThenInclude(x => x.Section)
+                .ThenInclude(x => x.Exam));
+
+            if (checkField.Question.Section.Exam.CreatorUserId != issuerUserId)
+                throw new ApplicationUnAuthorizedException("User has no access to CheckField");
+
+            _checkFieldValidator.ValidateDTO(dTO);
 
             _checkFieldMapper.UpdateEntityByDTO(checkField, dTO);
 

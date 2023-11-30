@@ -26,7 +26,7 @@ namespace OnlineExam.EndPoint.API.Controllers
         [HttpGet("[controller]/{id}")]
         public IActionResult GetById(int id)
         {
-            var dto = _checkFieldService.GetById(id);
+            var dto = _checkFieldService.GetById(id, _scopeDataContainer.IdentityUserId);
             return Ok(dto);
         }
 
@@ -39,7 +39,7 @@ namespace OnlineExam.EndPoint.API.Controllers
             if (pageSize < 1)
                 throw new APIValidationException("pageSize can not be less than 1");
 
-            var dto = _checkFieldService.GetAllByQuestionId(id, (pageNumber - 1) * pageSize, pageSize);
+            var dto = _checkFieldService.GetAllByQuestionId(id, _scopeDataContainer.IdentityUserId, (pageNumber - 1) * pageSize, pageSize);
             return Ok(dto);
         }
 
@@ -58,7 +58,7 @@ namespace OnlineExam.EndPoint.API.Controllers
             if (textField == null)
                 throw new APIValidationException("CheckField can not be null");
 
-            _checkFieldService.Update(id, textField);
+            _checkFieldService.Update(id, _scopeDataContainer.IdentityUserId, textField);
             return Ok();
         }
 
@@ -66,7 +66,7 @@ namespace OnlineExam.EndPoint.API.Controllers
         [HttpDelete("[controller]/{id}")]
         public IActionResult Delete(int id)
         {
-            _checkFieldService.Delete(id);
+            _checkFieldService.Delete(id, _scopeDataContainer.IdentityUserId);
             return Ok();
         }
     }
