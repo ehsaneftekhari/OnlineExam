@@ -10,10 +10,13 @@ namespace OnlineExam.Application.Validators
     public class CheckFieldValidator : ICheckFieldValidator
     {
         readonly IQuestionInternalService _questionInternalService;
+        readonly IExamValidator _examValidator;
 
-        public CheckFieldValidator(IQuestionInternalService questionInternalService)
+        public CheckFieldValidator(IQuestionInternalService questionInternalService,
+                                   IExamValidator examValidator)
         {
             _questionInternalService = questionInternalService;
+            _examValidator = examValidator;
         }
 
         public void ValidateDTO(AddCheckFieldDTO dTO)
@@ -48,6 +51,19 @@ namespace OnlineExam.Application.Validators
                 && !question.Section.Exam.ExamUsers.Any(x => x.UserId == issuerUserId))
                 throw new ApplicationUnAuthorizedException($"User has no access to Question");
         }
+
+        public void ThrowIfUserIsNotExamCreatorOrExamUser(string issuerUserId, Exam exam)
+        {
+            if (exam.CreatorUserId != issuerUserId
+                && !exam.ExamUsers.Any(x => x.UserId == issuerUserId))
+                throw new ApplicationUnAuthorizedException($"User has no access to Question");
+        }
+
+        public void ThrowIfUserIsNotExamCreator(string issuerUserId, Exam exam)
+        {
+            _examValidator.ThrowIfUserIsNotExamCreator(issuerUserId, exam);
+        }
+
 
         private void ValidateValues(int? maximumSelection, int? checkFieldUIType)
         {
