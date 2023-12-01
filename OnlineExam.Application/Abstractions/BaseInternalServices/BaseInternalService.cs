@@ -49,8 +49,11 @@ namespace OnlineExam.Application.Abstractions.BaseInternalServices
             else
                 record = _repository.GetById(id, queryable);
 
-            if (record == null)
+            if (record == null && queryable == null)
                 throw IsNotExistsException(id);
+
+            if (record == null)
+                throw IsNotExistsException();
 
             return record;
         }
