@@ -31,7 +31,7 @@ namespace OnlineExam.Application
             serviceDescriptors.AddScoped<IUserInternalService, UserInternalService>();
 
             serviceDescriptors.AddScoped<ISectionMapper, SectionMapper>();
-            serviceDescriptors.AddScoped<ISectionValidator, SectionValidator>();
+            serviceDescriptors.AddScoped<ISectionAccessValidator, SectionAccessValidator>();
             serviceDescriptors.AddScoped<ISectionService, SectionService>();
             serviceDescriptors.AddScoped<ISectionInternalService, SectionInternalService>();
 
