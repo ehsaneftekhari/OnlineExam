@@ -12,21 +12,21 @@ namespace OnlineExam.Application.Services.QuestionServices
     {
         readonly IQuestionInternalService _questionInternalService;
         readonly IQuestionMapper _questionMapper;
-        readonly IQuestionValidator _questionValidator;
+        readonly IQuestionAccessValidator _questionAccessValidator;
 
 
         public QuestionService(IQuestionInternalService questionInternalService,
                                IQuestionMapper questionMapper,
-                               IQuestionValidator questionValidator)
+                               IQuestionAccessValidator questionAccessValidator)
         {
             _questionInternalService = questionInternalService;
             _questionMapper = questionMapper;
-            _questionValidator = questionValidator;
+            _questionAccessValidator = questionAccessValidator;
         }
 
         public ShowQuestionDTO Add(int sectionId, string issuerUserId, AddQuestionDTO dTO)
         {
-            _questionValidator.ThrowIfUserIsNotExamCreator(sectionId, issuerUserId);
+            _questionAccessValidator.ThrowIfUserIsNotExamCreator(sectionId, issuerUserId);
 
             var newQuestion = _questionMapper.AddDTOToEntity(sectionId, dTO);
             _questionInternalService.Add(newQuestion!);
@@ -35,7 +35,7 @@ namespace OnlineExam.Application.Services.QuestionServices
 
         public IEnumerable<ShowQuestionDTO> GetAllBySectionId(int sectionId, string issuerUserId, int skip, int take)
         {
-            _questionValidator.ThrowIfUserIsNotExamCreatorOrExamUser(sectionId, issuerUserId);
+            _questionAccessValidator.ThrowIfUserIsNotExamCreatorOrExamUser(sectionId, issuerUserId);
 
             return _questionInternalService.GetAllByParentId(sectionId, skip, take).Select(_questionMapper.EntityToShowDTO)!;
         }
@@ -44,7 +44,7 @@ namespace OnlineExam.Application.Services.QuestionServices
         {
             var question = GetQuestionWith_Section_Exam_ExamUser_Included(questionId);
 
-            _questionValidator.ThrowIfUserIsNotExamCreatorOrExamUser(issuerUserId, question.Section.Exam);
+            _questionAccessValidator.ThrowIfUserIsNotExamCreatorOrExamUser(issuerUserId, question.Section.Exam);
 
             return _questionMapper.EntityToShowDTO(question);
         }
@@ -53,7 +53,7 @@ namespace OnlineExam.Application.Services.QuestionServices
         {
             var question = GetQuestionWith_Section_Exam_ExamUser_Included(questionId);
 
-            _questionValidator.ThrowIfUserIsNotExamCreator(issuerUserId, question.Section.Exam);
+            _questionAccessValidator.ThrowIfUserIsNotExamCreator(issuerUserId, question.Section.Exam);
 
             _questionMapper.UpdateEntityByDTO(question, dTO);
 
@@ -64,7 +64,7 @@ namespace OnlineExam.Application.Services.QuestionServices
         {
             var question = GetQuestionWith_Section_Exam_ExamUser_Included(questionId);
 
-            _questionValidator.ThrowIfUserIsNotExamCreator(issuerUserId, question.Section.Exam);
+            _questionAccessValidator.ThrowIfUserIsNotExamCreator(issuerUserId, question.Section.Exam);
 
             _questionInternalService.Delete(question);
         }

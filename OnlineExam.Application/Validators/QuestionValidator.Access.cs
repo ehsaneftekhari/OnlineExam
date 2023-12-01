@@ -2,17 +2,16 @@
 using OnlineExam.Application.Abstractions.IInternalService;
 using OnlineExam.Application.Abstractions.IValidators;
 using OnlineExam.Application.Contract.Exceptions;
-using OnlineExam.Application.Services.SectionServices;
 using OnlineExam.Model.Models;
 
 namespace OnlineExam.Application.Validators
 {
-    public class QuestionValidator : IQuestionValidator
+    public class QuestionAccessValidator : IQuestionAccessValidator
     {
         readonly ISectionInternalService _sectionInternalService;
         readonly IExamValidator _examValidator;
 
-        public QuestionValidator(ISectionInternalService sectionInternalService,
+        public QuestionAccessValidator(ISectionInternalService sectionInternalService,
                                  IExamValidator examValidator)
         {
             _sectionInternalService = sectionInternalService;
