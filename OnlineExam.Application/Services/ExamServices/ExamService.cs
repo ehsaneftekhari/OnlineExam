@@ -14,15 +14,15 @@ namespace OnlineExam.Application.Services.ExamServices
     {
         readonly IExamInternalService _examInternalService;
         readonly IExamMapper _examMapper;
-        readonly IExamValidator _examValidator;
+        readonly IExamAccessValidator _examAccessValidator;
 
         public ExamService(IExamMapper examMapper,
                            IExamInternalService internalService,
-                           IExamValidator examValidator)
+                           IExamAccessValidator examAccessValidator)
         {
             _examMapper = examMapper;
             _examInternalService = internalService;
-            _examValidator = examValidator;
+            _examAccessValidator = examAccessValidator;
         }
 
         public ShowExamDTO Add(AddExamDTO dTO)
@@ -38,7 +38,7 @@ namespace OnlineExam.Application.Services.ExamServices
         {
             var exam = _examInternalService.GetById(id);
 
-            _examValidator.ThrowIfUserIsNotExamCreator(issuerUserId, exam);
+            _examAccessValidator.ThrowIfUserIsNotExamCreator(issuerUserId, exam);
 
             _examInternalService.Delete(exam);
         }
@@ -53,7 +53,7 @@ namespace OnlineExam.Application.Services.ExamServices
         {
             var exam = _examInternalService.GetById(id);
 
-            _examValidator.ThrowIfUserIsNotExamCreator(issuerUserId, exam);
+            _examAccessValidator.ThrowIfUserIsNotExamCreator(issuerUserId, exam);
 
             _examMapper.UpdateEntityByDTO(exam, dTO);
 

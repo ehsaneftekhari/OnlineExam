@@ -2,21 +2,20 @@
 using OnlineExam.Application.Abstractions.IInternalService;
 using OnlineExam.Application.Abstractions.IValidators;
 using OnlineExam.Application.Contract.Exceptions;
-using OnlineExam.Application.Services.SectionServices;
 using OnlineExam.Model.Models;
 
 namespace OnlineExam.Application.Validators
 {
-    public class QuestionValidator : IQuestionValidator
+    public class QuestionAccessValidator : IQuestionAccessValidator
     {
         readonly ISectionInternalService _sectionInternalService;
-        readonly IExamValidator _examValidator;
+        readonly IExamAccessValidator _examAccessValidator;
 
-        public QuestionValidator(ISectionInternalService sectionInternalService,
-                                 IExamValidator examValidator)
+        public QuestionAccessValidator(ISectionInternalService sectionInternalService,
+                                 IExamAccessValidator examAccessValidator)
         {
             _sectionInternalService = sectionInternalService;
-            _examValidator = examValidator;
+            _examAccessValidator = examAccessValidator;
         }
 
         public void ThrowIfUserIsNotExamCreator(int sectionId, string userId)
@@ -42,13 +41,13 @@ namespace OnlineExam.Application.Validators
 
         public void ThrowIfUserIsNotExamCreatorOrExamUser(string userId, Exam exam)
         {
-            if (!_examValidator.IsUserExamCreatorOrExamUser(userId, exam))
+            if (!_examAccessValidator.IsUserExamCreatorOrExamUser(userId, exam))
                 throw new ApplicationUnAuthorizedException($"User has no access to Question");
         }
 
         public void ThrowIfUserIsNotExamCreator(string issuerUserId, Exam exam)
         {
-            _examValidator.ThrowIfUserIsNotExamCreator(issuerUserId, exam);
+            _examAccessValidator.ThrowIfUserIsNotExamCreator(issuerUserId, exam);
         }
     }
 }

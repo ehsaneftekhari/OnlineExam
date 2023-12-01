@@ -1,13 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using OnlineExam.Application.Abstractions.BaseInternalServices;
 using OnlineExam.Application.Abstractions.IInternalService;
 using OnlineExam.Application.Abstractions.IMappers;
 using OnlineExam.Application.Abstractions.IValidators;
 using OnlineExam.Application.Contract.DTOs.SectionDTOs;
-using OnlineExam.Application.Contract.Exceptions;
 using OnlineExam.Application.Contract.IServices;
-using OnlineExam.Application.Services.ExamUserServices;
-using OnlineExam.Application.Validators;
 using OnlineExam.Model.Models;
 
 namespace OnlineExam.Application.Services.SectionServices
@@ -16,20 +12,20 @@ namespace OnlineExam.Application.Services.SectionServices
     {
         readonly ISectionInternalService _sectionInternalService;
         readonly ISectionMapper _sectionMapper;
-        readonly ISectionValidator _sectionValidator;
+        readonly ISectionAccessValidator _sectionAccessValidator;
 
         public SectionService(ISectionInternalService sectionInternalService,
                               ISectionMapper sectionMapper,
-                              ISectionValidator sectionValidator)
+                              ISectionAccessValidator sectionAccessValidator)
         {
             _sectionInternalService = sectionInternalService;
             _sectionMapper = sectionMapper;
-            _sectionValidator = sectionValidator;
+            _sectionAccessValidator = sectionAccessValidator;
         }
 
         public ShowSectionDTO Add(int examId, string issuerUserId, AddSectionDTO Section)
         {
-            _sectionValidator.ThrowIfUserIsNotExamCreator(issuerUserId, examId);
+            _sectionAccessValidator.ThrowIfUserIsNotExamCreator(issuerUserId, examId);
 
             var newSection = _sectionMapper.AddDTOToEntity(examId, Section)!;
 
@@ -40,7 +36,7 @@ namespace OnlineExam.Application.Services.SectionServices
 
         public IEnumerable<ShowSectionDTO> GetAllByExamId(int examId, string issuerUserId, int skip, int take)
         {
-            _sectionValidator.ThrowIfUserIsNotExamCreator(issuerUserId, examId);
+            _sectionAccessValidator.ThrowIfUserIsNotExamCreator(issuerUserId, examId);
 
             return _sectionInternalService.GetAllByParentId(examId, skip, take).Select(_sectionMapper.EntityToShowDTO)!;
         }
@@ -49,7 +45,7 @@ namespace OnlineExam.Application.Services.SectionServices
         {
             var section = GetSectionHasExamIncluded(id);
 
-            _sectionValidator.ThrowIfUserIsNotExamCreator(issuerUserId, section.Exam);
+            _sectionAccessValidator.ThrowIfUserIsNotExamCreator(issuerUserId, section.Exam);
 
             _sectionInternalService.Delete(section);
         }
@@ -58,7 +54,7 @@ namespace OnlineExam.Application.Services.SectionServices
         {
             var section = GetSectionHasExamThenExamUsersIncluded(id);
 
-            _sectionValidator.ThrowIfUserIsNotExamCreatorOrExamUserCreator(issuerUserId, section.Exam);
+            _sectionAccessValidator.ThrowIfUserIsNotExamCreatorOrExamUserCreator(issuerUserId, section.Exam);
 
             return _sectionMapper.EntityToShowDTO(section);
         }
@@ -67,7 +63,7 @@ namespace OnlineExam.Application.Services.SectionServices
         {
             var section = GetSectionHasExamIncluded(id);
 
-            _sectionValidator.ThrowIfUserIsNotExamCreatorOrExamUserCreator(issuerUserId, section.Exam);
+            _sectionAccessValidator.ThrowIfUserIsNotExamCreatorOrExamUserCreator(issuerUserId, section.Exam);
 
             _sectionMapper.UpdateEntityByDTO(section, dTO);
 
@@ -82,7 +78,7 @@ namespace OnlineExam.Application.Services.SectionServices
                     .Include(x => x.Exam)
                     .ThenInclude(x => x.ExamUsers));
         }
-        
+
         private Section GetSectionHasExamIncluded(int id)
         {
             return _sectionInternalService.GetById(id,

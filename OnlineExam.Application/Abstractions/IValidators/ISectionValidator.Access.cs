@@ -2,7 +2,7 @@
 
 namespace OnlineExam.Application.Abstractions.IValidators
 {
-    public interface ISectionValidator
+    public interface ISectionAccessValidator
     {
         void ThrowIfUserIsNotExamCreator(string issuerUserId, Exam exam);
         void ThrowIfUserIsNotExamCreator(string issuerUserId, int examId);

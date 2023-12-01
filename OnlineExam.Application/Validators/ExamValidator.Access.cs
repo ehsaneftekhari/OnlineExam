@@ -4,12 +4,11 @@ using OnlineExam.Model.Models;
 
 namespace OnlineExam.Application.Validators
 {
-    internal class ExamValidator : IExamValidator
+    internal class ExamAccessValidator : IExamAccessValidator
     {
-
         public bool IsUserExamCreator(string userId, Exam exam)
         {
-            if(exam == null)
+            if (exam == null)
                 throw new ArgumentNullException(nameof(exam));
 
             return exam.CreatorUserId == userId;

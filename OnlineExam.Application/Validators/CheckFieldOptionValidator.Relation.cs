@@ -7,11 +7,11 @@ using OnlineExam.Model.Models;
 
 namespace OnlineExam.Application.Validators
 {
-    public class DatabaseBasedCheckFieldOptionValidator : IDatabaseBasedCheckFieldOptionValidator
+    public class CheckFieldOptionRelationValidator : ICheckFieldOptionRelationValidator
     {
         readonly ICheckFieldOptionInternalService _checkFieldOptionInternalService;
 
-        public DatabaseBasedCheckFieldOptionValidator(ICheckFieldOptionInternalService checkFieldOptionRepository)
+        public CheckFieldOptionRelationValidator(ICheckFieldOptionInternalService checkFieldOptionRepository)
         {
             _checkFieldOptionInternalService = checkFieldOptionRepository;
         }
