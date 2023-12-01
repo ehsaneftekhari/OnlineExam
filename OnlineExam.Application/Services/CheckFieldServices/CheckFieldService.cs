@@ -3,7 +3,6 @@ using OnlineExam.Application.Abstractions.IInternalService;
 using OnlineExam.Application.Abstractions.IMappers;
 using OnlineExam.Application.Abstractions.IValidators;
 using OnlineExam.Application.Contract.DTOs.CheckFieldDTOs;
-using OnlineExam.Application.Contract.Exceptions;
 using OnlineExam.Application.Contract.IServices;
 using OnlineExam.Model.Models;
 
@@ -13,22 +12,25 @@ namespace OnlineExam.Application.Services.CheckFieldServices
     {
         readonly ICheckFieldInternalService _checkFieldInternalService;
         readonly ICheckFieldMapper _checkFieldMapper;
-        readonly ICheckFieldValidator _checkFieldValidator;
+        readonly ICheckFieldDTOValidator _checkFieldDTOValidator;
+        readonly ICheckFieldAccessValidator _checkFieldAccessValidator;
 
         public CheckFieldService(ICheckFieldInternalService checkFieldInternalService,
                                  ICheckFieldMapper checkFieldMapper,
-                                 ICheckFieldValidator checkFieldValidator)
+                                 ICheckFieldDTOValidator checkFieldValidator,
+                                 ICheckFieldAccessValidator checkFieldAccessValidator)
         {
             _checkFieldInternalService = checkFieldInternalService;
             _checkFieldMapper = checkFieldMapper;
-            _checkFieldValidator = checkFieldValidator;
+            _checkFieldDTOValidator = checkFieldValidator;
+            _checkFieldAccessValidator = checkFieldAccessValidator;
         }
 
         public ShowCheckFieldDTO Add(int questionId, string issuerUserId, AddCheckFieldDTO checkField)
         {
-            _checkFieldValidator.ThrowIfUserIsNotExamCreator(questionId, issuerUserId);
+            _checkFieldAccessValidator.ThrowIfUserIsNotExamCreator(questionId, issuerUserId);
 
-            _checkFieldValidator.ValidateDTO(checkField);
+            _checkFieldDTOValidator.ValidateDTO(checkField);
 
             var newCheckField = _checkFieldMapper.AddDTOToEntity(questionId, checkField)!;
 
@@ -41,14 +43,14 @@ namespace OnlineExam.Application.Services.CheckFieldServices
         {
             var checkField = GetCheckFieldWith_Question_Section_Exam_Included(checkFieldId);
 
-            _checkFieldValidator.ThrowIfUserIsNotExamCreator(issuerUserId, checkField.Question.Section.Exam);
+            _checkFieldAccessValidator.ThrowIfUserIsNotExamCreator(issuerUserId, checkField.Question.Section.Exam);
 
             _checkFieldInternalService.Delete(checkField);
         }
 
         public IEnumerable<ShowCheckFieldDTO> GetAllByQuestionId(int questionId, string issuerUserId, int skip = 0, int take = 20)
         {
-            _checkFieldValidator.ThrowIfUserIsNotExamCreatorOrExamUser(questionId, issuerUserId);
+            _checkFieldAccessValidator.ThrowIfUserIsNotExamCreatorOrExamUser(questionId, issuerUserId);
 
             return _checkFieldInternalService.GetAllByParentId(questionId, skip, take).Select(_checkFieldMapper.EntityToShowDTO);
         }
@@ -57,7 +59,7 @@ namespace OnlineExam.Application.Services.CheckFieldServices
         {
             var checkField = GetCheckFieldWith_Question_Section_Exam_Included(checkFieldId);
 
-            _checkFieldValidator.ThrowIfUserIsNotExamCreatorOrExamUser(issuerUserId, checkField.Question.Section.Exam);
+            _checkFieldAccessValidator.ThrowIfUserIsNotExamCreatorOrExamUser(issuerUserId, checkField.Question.Section.Exam);
 
             return _checkFieldMapper.EntityToShowDTO(checkField);
         }
@@ -66,9 +68,9 @@ namespace OnlineExam.Application.Services.CheckFieldServices
         {
             var checkField = GetCheckFieldWith_Question_Section_Exam_Included(checkFieldId);
 
-            _checkFieldValidator.ThrowIfUserIsNotExamCreator(issuerUserId, checkField.Question.Section.Exam);
+            _checkFieldAccessValidator.ThrowIfUserIsNotExamCreator(issuerUserId, checkField.Question.Section.Exam);
 
-            _checkFieldValidator.ValidateDTO(dTO);
+            _checkFieldDTOValidator.ValidateDTO(dTO);
 
             _checkFieldMapper.UpdateEntityByDTO(checkField, dTO);
 
