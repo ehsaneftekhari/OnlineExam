@@ -50,7 +50,7 @@ namespace OnlineExam.Application.Validators
         public void ThrowIfUserIsNotExamCreatorOrExamUser(string userId, Exam exam)
         {
             if (!_examValidator.IsUserExamCreatorOrExamUser(userId, exam))
-                throw new ApplicationUnAuthorizedException($"User has no access to Question");
+                throw new ApplicationUnAuthorizedException($"User has no access to CheckField");
         }
 
         public void ThrowIfUserIsNotExamCreator(string userId, Exam exam)
