@@ -48,8 +48,9 @@ namespace OnlineExam.Application
             serviceDescriptors.AddScoped<ICheckFieldOptionService, CheckFieldOptionService>();
             serviceDescriptors.AddScoped<ICheckFieldOptionInternalService, CheckFieldOptionInternalService>();
             serviceDescriptors.AddScoped<ICheckFieldOptionMapper, CheckFieldOptionMapper>();
-            serviceDescriptors.AddScoped<ICheckFieldOptionValidator, CheckFieldOptionValidator>();
-            serviceDescriptors.AddScoped<IDatabaseBasedCheckFieldOptionValidator, DatabaseBasedCheckFieldOptionValidator>();
+            serviceDescriptors.AddScoped<ICheckFieldOptionDTOValidator, CheckFieldOptionDTOValidator>();
+            serviceDescriptors.AddScoped<ICheckFieldOptionRelationValidator, CheckFieldOptionRelationValidator>();
+            serviceDescriptors.AddScoped<ICheckFieldOptionAccessValidator, CheckFieldOptionAccessValidator>();
             serviceDescriptors.AddScoped<IAllowedFileTypesFieldService, AllowedFileTypesFieldService>();
             serviceDescriptors.AddScoped<IAllowedFileTypesFieldInternalService, AllowedFileTypesFieldInternalService>();
             serviceDescriptors.AddScoped<IFileFieldMapper, FileFieldMapper>();

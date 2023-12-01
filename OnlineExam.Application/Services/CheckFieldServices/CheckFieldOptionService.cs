@@ -4,7 +4,6 @@ using OnlineExam.Application.Abstractions.IMappers;
 using OnlineExam.Application.Abstractions.IValidators;
 using OnlineExam.Application.Contract.DTOs.CheckFieldDTOs;
 using OnlineExam.Application.Contract.IServices;
-using OnlineExam.Application.Validators;
 using OnlineExam.Model.Models;
 
 namespace OnlineExam.Application.Services.CheckFieldServices
@@ -13,27 +12,30 @@ namespace OnlineExam.Application.Services.CheckFieldServices
     {
         readonly ICheckFieldOptionInternalService _checkFieldOptionInternalService;
         readonly ICheckFieldOptionMapper _checkFieldOptionMapper;
-        readonly ICheckFieldOptionValidator _checkFieldOptionValidator;
-        readonly IDatabaseBasedCheckFieldOptionValidator _databaseBasedCheckFieldOptionValidator;
+        readonly ICheckFieldOptionDTOValidator _checkFieldOptionDTOValidator;
+        readonly ICheckFieldOptionRelationValidator _heckFieldOptionRelationValidator;
+        readonly ICheckFieldOptionAccessValidator _checkFieldOptionAccessValidator;
 
         public CheckFieldOptionService(ICheckFieldOptionInternalService checkFieldOptionInternalService,
                                        ICheckFieldOptionMapper checkFieldOptionMapper,
-                                       ICheckFieldOptionValidator checkFieldOptionValidator,
-                                       IDatabaseBasedCheckFieldOptionValidator databaseBasedCheckFieldOptionValidator)
+                                       ICheckFieldOptionDTOValidator checkFieldOptionValidator,
+                                       ICheckFieldOptionRelationValidator databaseBasedCheckFieldOptionValidator,
+                                       ICheckFieldOptionAccessValidator checkFieldOptionAccessValidator)
         {
             _checkFieldOptionInternalService = checkFieldOptionInternalService;
             _checkFieldOptionMapper = checkFieldOptionMapper;
-            _checkFieldOptionValidator = checkFieldOptionValidator;
-            _databaseBasedCheckFieldOptionValidator = databaseBasedCheckFieldOptionValidator;
+            _checkFieldOptionDTOValidator = checkFieldOptionValidator;
+            _heckFieldOptionRelationValidator = databaseBasedCheckFieldOptionValidator;
+            _checkFieldOptionAccessValidator = checkFieldOptionAccessValidator;
         }
 
         public ShowCheckFieldOptionDTO Add(int checkFieldId, string issuerUserId, AddCheckFieldOptionDTO CheckFieldOption)
         {
-            _checkFieldOptionValidator.ThrowIfUserIsNotExamCreator(checkFieldId, issuerUserId);
+            _checkFieldOptionAccessValidator.ThrowIfUserIsNotExamCreator(checkFieldId, issuerUserId);
 
-            _checkFieldOptionValidator.ValidateDTO(CheckFieldOption);
+            _checkFieldOptionDTOValidator.ValidateDTO(CheckFieldOption);
 
-            _databaseBasedCheckFieldOptionValidator.DatabaseBasedValidate(checkFieldId, CheckFieldOption);
+            _heckFieldOptionRelationValidator.DatabaseBasedValidate(checkFieldId, CheckFieldOption);
 
             var checkFieldOption = _checkFieldOptionMapper.AddDTOToEntity(checkFieldId, CheckFieldOption)!;
 
@@ -46,14 +48,14 @@ namespace OnlineExam.Application.Services.CheckFieldServices
         {
             var checkFieldOption = GetCheckFieldOptionWith_CheckField_Question_Section_Exam_Included(CheckFieldOptionId);
 
-            _checkFieldOptionValidator.ThrowIfUserIsNotExamCreator(issuerUserId, checkFieldOption.CheckField.Question.Section.Exam);
+            _checkFieldOptionAccessValidator.ThrowIfUserIsNotExamCreator(issuerUserId, checkFieldOption.CheckField.Question.Section.Exam);
 
             _checkFieldOptionInternalService.Delete(checkFieldOption);
         }
 
         public IEnumerable<ShowCheckFieldOptionDTO> GetAllByCheckFieldId(int checkFieldId, string issuerUserId, int skip = 0, int take = 20)
         {
-            _checkFieldOptionValidator.ThrowIfUserIsNotExamCreatorOrExamUser(checkFieldId, issuerUserId);
+            _checkFieldOptionAccessValidator.ThrowIfUserIsNotExamCreatorOrExamUser(checkFieldId, issuerUserId);
 
             return _checkFieldOptionInternalService.GetAllByParentId(checkFieldId, skip, take).Select(_checkFieldOptionMapper.EntityToShowDTO);
         }
@@ -62,7 +64,7 @@ namespace OnlineExam.Application.Services.CheckFieldServices
         {
             var checkFieldOption = GetCheckFieldOptionWith_CheckField_Question_Section_Exam_Included(checkFieldOptionId);
 
-            _checkFieldOptionValidator.ThrowIfUserIsNotExamCreatorOrExamUser(issuerUserId, checkFieldOption.CheckField.Question.Section.Exam);
+            _checkFieldOptionAccessValidator.ThrowIfUserIsNotExamCreatorOrExamUser(issuerUserId, checkFieldOption.CheckField.Question.Section.Exam);
 
             return _checkFieldOptionMapper.EntityToShowDTO(_checkFieldOptionInternalService.GetById(checkFieldOptionId));
         }
@@ -71,11 +73,11 @@ namespace OnlineExam.Application.Services.CheckFieldServices
         {
             var checkFieldOption = GetCheckFieldOptionWith_CheckField_Question_Section_Exam_Included(checkFieldOptionId);
 
-            _checkFieldOptionValidator.ThrowIfUserIsNotExamCreator(issuerUserId, checkFieldOption.CheckField.Question.Section.Exam);
+            _checkFieldOptionAccessValidator.ThrowIfUserIsNotExamCreator(issuerUserId, checkFieldOption.CheckField.Question.Section.Exam);
 
-            _checkFieldOptionValidator.ValidateDTO(dTO);
+            _checkFieldOptionDTOValidator.ValidateDTO(dTO);
 
-            _databaseBasedCheckFieldOptionValidator.DatabaseBasedValidate(checkFieldOption.CheckFieldId, checkFieldOptionId, dTO);
+            _heckFieldOptionRelationValidator.DatabaseBasedValidate(checkFieldOption.CheckFieldId, checkFieldOptionId, dTO);
 
             _checkFieldOptionMapper.UpdateEntityByDTO(checkFieldOption, dTO);
 
