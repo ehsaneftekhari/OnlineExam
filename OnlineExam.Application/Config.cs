@@ -22,7 +22,7 @@ namespace OnlineExam.Application
         public static void RegisterServices(IServiceCollection serviceDescriptors)
         {
             serviceDescriptors.AddScoped<IExamService, ExamService>();
-            serviceDescriptors.AddScoped<IExamValidator, ExamValidator>();
+            serviceDescriptors.AddScoped<IExamAccessValidator, ExamAccessValidator>();
             serviceDescriptors.AddScoped<IExamInternalService, ExamInternalService>();
             serviceDescriptors.AddScoped<IExamMapper, ExamMapper>();
             serviceDescriptors.AddScoped<IdentityTokenService>();

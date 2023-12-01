@@ -8,27 +8,27 @@ namespace OnlineExam.Application.Validators
     public class SectionAccessValidator : ISectionAccessValidator
     {
         readonly IExamInternalService _examInternalService;
-        readonly IExamValidator _examValidator;
+        readonly IExamAccessValidator _examAccessValidator;
 
-        public SectionAccessValidator(IExamInternalService examInternalService, IExamValidator examValidator)
+        public SectionAccessValidator(IExamInternalService examInternalService, IExamAccessValidator examAccessValidator)
         {
             _examInternalService = examInternalService;
-            _examValidator = examValidator;
+            _examAccessValidator = examAccessValidator;
         }
 
         public void ThrowIfUserIsNotExamCreator(string issuerUserId, int examId)
         {
-            _examValidator.ThrowIfUserIsNotExamCreator(issuerUserId, _examInternalService.GetById(examId));
+            _examAccessValidator.ThrowIfUserIsNotExamCreator(issuerUserId, _examInternalService.GetById(examId));
         }
 
         public void ThrowIfUserIsNotExamCreator(string issuerUserId, Exam exam)
         {
-            _examValidator.ThrowIfUserIsNotExamCreator(issuerUserId, exam);
+            _examAccessValidator.ThrowIfUserIsNotExamCreator(issuerUserId, exam);
         }
 
         public void ThrowIfUserIsNotExamCreatorOrExamUserCreator(string userId, Exam exam)
         {
-            if (!_examValidator.IsUserExamCreatorOrExamUser(userId, exam))
+            if (!_examAccessValidator.IsUserExamCreatorOrExamUser(userId, exam))
                 throw new ApplicationUnAuthorizedException("User has no access to Section");
         }
     }

@@ -9,13 +9,13 @@ namespace OnlineExam.Application.Validators
     public class CheckFieldOptionAccessValidator : ICheckFieldOptionAccessValidator
     {
         readonly ICheckFieldInternalService _checkFieldInternalService;
-        readonly IExamValidator _examValidator;
+        readonly IExamAccessValidator _examAccessValidator;
 
         public CheckFieldOptionAccessValidator(ICheckFieldInternalService checkFieldInternalService,
-                                               IExamValidator examValidator)
+                                               IExamAccessValidator examAccessValidator)
         {
             _checkFieldInternalService = checkFieldInternalService;
-            _examValidator = examValidator;
+            _examAccessValidator = examAccessValidator;
         }
 
         public void ThrowIfUserIsNotExamCreator(int checkFieldId, string userId)
@@ -32,13 +32,13 @@ namespace OnlineExam.Application.Validators
 
         public void ThrowIfUserIsNotExamCreatorOrExamUser(string userId, Exam exam)
         {
-            if (!_examValidator.IsUserExamCreatorOrExamUser(userId, exam))
+            if (!_examAccessValidator.IsUserExamCreatorOrExamUser(userId, exam))
                 throw new ApplicationUnAuthorizedException($"User has no access to Question");
         }
 
         public void ThrowIfUserIsNotExamCreator(string userId, Exam exam)
         {
-            _examValidator.ThrowIfUserIsNotExamCreator(userId, exam);
+            _examAccessValidator.ThrowIfUserIsNotExamCreator(userId, exam);
         }
         private CheckField GetCheckFieldWith_Question_Section_Exam_Included(int questionId)
         {
