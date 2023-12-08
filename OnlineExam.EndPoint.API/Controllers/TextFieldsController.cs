@@ -14,13 +14,16 @@ namespace OnlineExam.EndPoint.API.Controllers
     public class TextFieldsController : ControllerBase
     {
         readonly ITextFieldService _textFieldService;
+        readonly ITextFieldUiTypeService _textFieldUiTypeService;
         readonly ScopeDataContainer _scopeDataContainer;
 
         public TextFieldsController(ITextFieldService textFieldService,
-                                    ScopeDataContainer scopeDataContainer)
+                                    ScopeDataContainer scopeDataContainer,
+                                    ITextFieldUiTypeService textFieldUiTypeService)
         {
             _textFieldService = textFieldService;
             _scopeDataContainer = scopeDataContainer;
+            _textFieldUiTypeService = textFieldUiTypeService;
         }
 
         [HttpGet("[controller]/{id}")]
@@ -67,6 +70,12 @@ namespace OnlineExam.EndPoint.API.Controllers
         {
             _textFieldService.Delete(id, _scopeDataContainer.IdentityUserId);
             return Ok();
+        }
+
+        [HttpGet("[controller]/TextFiledUiTypes")]
+        public IActionResult GetTextFieldUiTypes()
+        {
+            return Ok(_textFieldUiTypeService.GetAll());
         }
     }
 }
