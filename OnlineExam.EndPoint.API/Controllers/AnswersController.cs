@@ -1,11 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OnlineExam.Application.Contract.DTOs.AnswerDTOs;
 using OnlineExam.Application.Contract.IServices;
+using OnlineExam.EndPoint.API.Attributes;
 using OnlineExam.EndPoint.API.DTOs.AnswerDTOs;
 using OnlineExam.EndPoint.API.Exceptions;
+using OnlineExam.Model.Constants;
 
 namespace OnlineExam.EndPoint.API.Controllers
 {
+    [AuthorizeActionFilter(IdentityRoleNames.ExamUser, IdentityRoleNames.ExamCreator)]
     [Route("api/")]
     [ApiController]
     public class AnswersController : ControllerBase

@@ -5,6 +5,6 @@ namespace OnlineExam.Infrastructure.Contract.IRepositories
 {
     public interface IExamRepository : IBaseRepository<Exam>
     {
-        Exam? GetWithSectionsLoaded(int id);
+        Exam? GetFullyLoaded(int id);
     }
 }

@@ -1,4 +1,5 @@
-﻿using OnlineExam.Application.Abstractions.IMappers;
+﻿using OnlineExam.Application.Abstractions.IInternalService;
+using OnlineExam.Application.Abstractions.IMappers;
 using OnlineExam.Application.Abstractions.IValidators;
 using OnlineExam.Application.Contract.DTOs.ExamUserDTOs;
 using OnlineExam.Application.Contract.IServices;
@@ -7,32 +8,72 @@ namespace OnlineExam.Application.Services.ExamUserServices
 {
     public sealed class ExamUserService : IExamUserService
     {
-        readonly ExamUserInternalService _examUserService;
+        readonly IExamUserInternalService _examUserInternalService;
         readonly IExamUserMapper _mapper;
-        readonly IDatabaseBasedExamUserValidator _validator;
+        readonly IExamUserDTOValidator _examUserDTOValidator;
+        readonly IExamUserAccessValidator _examUserAccessValidator;
+        readonly IExamUserActionValidator _examUserActionValidator;
 
-        public ExamUserService(ExamUserInternalService examUserService, IExamUserMapper mapper, IDatabaseBasedExamUserValidator validator)
+        public ExamUserService(IExamUserInternalService examUserService,
+                               IExamUserMapper mapper,
+                               IExamUserDTOValidator examUserDTOValidator,
+                               IExamUserAccessValidator examUserAccessValidator,
+                               IExamUserActionValidator examUserActionValidator)
         {
-            _examUserService = examUserService;
+            _examUserInternalService = examUserService;
             _mapper = mapper;
-            _validator = validator;
+            _examUserDTOValidator = examUserDTOValidator;
+            _examUserAccessValidator = examUserAccessValidator;
+            _examUserActionValidator = examUserActionValidator;
         }
 
         public ShowExamUserDTO Add(AddExamUserDTO dTO)
         {
-            _validator.DatabaseBasedValidate(dTO);
+            _examUserDTOValidator.ValidateDTO(dTO);
+
             var newExamUser = _mapper.AddDTOToEntity(dTO, DateTime.Now)!;
-            _examUserService.Add(newExamUser);
+
+            _examUserInternalService.Add(newExamUser);
+
             return _mapper.EntityToShowDTO(newExamUser)!;
         }
 
-        public void Delete(int examUserId)
-            => _examUserService.Delete(examUserId);
+        public void Delete(int examUserId, string issuerUserId)
+        {
+            var examUser = _examUserInternalService.GetById(examUserId);
 
-        public IEnumerable<ShowExamUserDTO> GetAllByExamId(int examId, int skip = 0, int take = 20)
-            => _examUserService.GetAllByParentId(examId, skip, take).Select(_mapper.EntityToShowDTO)!;
+            _examUserAccessValidator.ThrowIfUserIsNotCreatorOfExamUser(issuerUserId, examUser);
 
-        public ShowExamUserDTO? GetById(int examUserId)
-            => _mapper.EntityToShowDTO(_examUserService.GetById(examUserId));
+            _examUserInternalService.Delete(examUser);
+        }
+
+        public void Finish(int id, string issuerUserId)
+        {
+            var examUser = _examUserInternalService.GetById(id);
+
+            _examUserAccessValidator.ThrowIfUserIsNotCreatorOfExamUser(issuerUserId, examUser);
+
+            _examUserActionValidator.ValidateIfExamUserCanFinish(examUser);
+
+            examUser.End = DateTime.Now;
+
+            _examUserInternalService.Update(examUser);
+        }
+
+        public IEnumerable<ShowExamUserDTO> GetAllByExamId(int examId, string issuerUserId, int skip = 0, int take = 20)
+        {
+            _examUserAccessValidator.ThrowIfUserIsNotCreatorOfExam(examId, issuerUserId);
+
+            return _examUserInternalService.GetAllByParentId(examId, skip, take).Select(_mapper.EntityToShowDTO)!;
+        }
+
+        public ShowExamUserDTO? GetById(int examUserId, string issuerUserId)
+        {
+            var examUser = _examUserInternalService.GetById(examUserId);
+
+            _examUserAccessValidator.ThrowIfUserIsNotCreatorOfExamUserOrExam(issuerUserId, examUser);
+
+            return _mapper.EntityToShowDTO(examUser);
+        }
     }
 }

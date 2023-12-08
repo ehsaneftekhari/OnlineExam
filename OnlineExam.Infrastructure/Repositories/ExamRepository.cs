@@ -10,9 +10,12 @@ namespace OnlineExam.Infrastructure.Repositories
     {
         public ExamRepository(OnlineExamContext context) : base(context) { }
 
-        public Exam? GetWithSectionsLoaded(int id)
+        public Exam? GetFullyLoaded(int id)
         {
-            return _context.Exam.Include(x => x.Sections).FirstOrDefault(x => x.Id == id);
+            return _context.Exam
+                .Include(x => x.Sections)
+                .Include(x => x.ExamUsers)
+                .FirstOrDefault(x => x.Id == id);
         }
     }
 }

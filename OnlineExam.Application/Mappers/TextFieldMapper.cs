@@ -6,6 +6,13 @@ namespace OnlineExam.Application.Mappers
 {
     internal class TextFieldMapper : ITextFieldMapper
     {
+        readonly ITextFieldUiTypeMapper _typeMapper;
+
+        public TextFieldMapper(ITextFieldUiTypeMapper typeMapper)
+        {
+            _typeMapper = typeMapper;
+        }
+
         public TextField? AddDTOToEntity(int questionId, AddTextFieldDTO? addTextFieldDTO)
         {
             if (addTextFieldDTO != null)
@@ -13,7 +20,7 @@ namespace OnlineExam.Application.Mappers
                 return new()
                 {
                     QuestionId = questionId,
-                    TextFieldUIType = (TextFieldUIType)addTextFieldDTO.TextFieldUIType,
+                    TextFieldUIType = _typeMapper.IdToEnum(addTextFieldDTO.TextFieldUITypeId),
                     AnswerLength = addTextFieldDTO.AnswerLength,
                     RegEx = addTextFieldDTO.RegEx
                 };
@@ -28,8 +35,7 @@ namespace OnlineExam.Application.Mappers
                 return new()
                 {
                     Id = entity.Id,
-                    TextFieldUIType = (int)entity.TextFieldUIType,
-                    TextFieldUITypeName = Enum.GetName(typeof(TextFieldUIType), entity.TextFieldUIType)!,
+                    UIType = _typeMapper.EnumToShowDTO(entity.TextFieldUIType),
                     QuestionId = entity.QuestionId,
                     AnswerLength = entity.AnswerLength,
                     RegEx = entity.RegEx
@@ -49,8 +55,8 @@ namespace OnlineExam.Application.Mappers
                 if (@new!.AnswerLength != null)
                     old.AnswerLength = @new.AnswerLength;
 
-                if (@new!.TextFieldUIType != null)
-                    old.TextFieldUIType = (TextFieldUIType)@new.TextFieldUIType;
+                if (@new!.TextFieldUITypeId != null)
+                    old.TextFieldUIType = (TextFieldUIType)@new.TextFieldUITypeId;
             }
         }
     }

@@ -1,20 +1,23 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using OnlineExam.Application.Abstractions.BaseInternalServices;
+using OnlineExam.Application.Abstractions.IInternalService;
 using OnlineExam.Application.Abstractions.IValidators;
 using OnlineExam.Application.Contract.DTOs.AnswerDTOs;
 using OnlineExam.Application.Contract.Exceptions;
-using OnlineExam.Application.Services.AnswerServices;
-using OnlineExam.Application.Services.ExamUserServices;
-using OnlineExam.Application.Services.QuestionServices;
+using OnlineExam.Model.Models;
 
 namespace OnlineExam.Application.Validators
 {
     internal class DatabaseBasedAnswerValidator : IDatabaseBasedAnswerValidator
     {
-        readonly AnswerInternalService _answerInternalService;
-        readonly ExamUserInternalService _examUserInternalService;
-        readonly QuestionInternalService _questionInternalService;
+        readonly IAnswerInternalService _answerInternalService;
+        readonly IExamUserInternalService _examUserInternalService;
+        readonly IQuestionInternalService _questionInternalService;
 
-        public DatabaseBasedAnswerValidator(AnswerInternalService answerInternalService, ExamUserInternalService examUserInternalService, QuestionInternalService questionInternalService)
+        public DatabaseBasedAnswerValidator(
+            IAnswerInternalService answerInternalService
+            , IExamUserInternalService examUserInternalService
+            , IQuestionInternalService questionInternalService)
         {
             _answerInternalService = answerInternalService;
             _examUserInternalService = examUserInternalService;
@@ -26,7 +29,7 @@ namespace OnlineExam.Application.Validators
             var examUser = _examUserInternalService.GetById(dTO.ExamUserId,
                 _examUserInternalService.GetIQueryable().Include(x => x.Exam));
 
-            var question = _questionInternalService.GetById(dTO.QuestionId, 
+            var question = _questionInternalService.GetById(dTO.QuestionId,
                 _questionInternalService.GetIQueryable().Include(x => x.Section));
 
 
@@ -46,7 +49,7 @@ namespace OnlineExam.Application.Validators
 
         public void ValidateBeforeUpdate(UpdateAnswerDTO dTO)
         {
-            var answer = _answerInternalService.GetById(dTO.Id, 
+            var answer = _answerInternalService.GetById(dTO.Id,
                 _answerInternalService.GetIQueryable().Include(x => x.Question));
 
             if (answer.Question.Score < dTO.EarnedScore)

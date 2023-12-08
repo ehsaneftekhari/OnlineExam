@@ -1,17 +1,18 @@
-﻿using OnlineExam.Application.Abstractions.InternalService;
-using OnlineExam.Application.Services.ExamServices;
+﻿using OnlineExam.Application.Abstractions.BaseInternalServices;
+using OnlineExam.Application.Abstractions.IInternalService;
 using OnlineExam.Infrastructure.Contract.IRepositories;
 using OnlineExam.Model.Models;
 using System.Linq.Expressions;
 
 namespace OnlineExam.Application.Services.ExamUserServices
 {
-    public sealed class ExamUserInternalService : BaseInternalService<ExamUser, IExamUserRepository, Exam, IExamRepository>
+    public sealed class ExamUserInternalService 
+        : BaseInternalService<ExamUser, IExamUserRepository, Exam, IExamRepository>
+        , IExamUserInternalService
     {
-        public ExamUserInternalService(IExamUserRepository repository, ExamInternalService parentInternalService) : base(repository, parentInternalService) { }
+        public ExamUserInternalService(IExamUserRepository repository,
+            IExamInternalService parentInternalService) : base(repository, parentInternalService) { }
 
         protected override Expression<Func<ExamUser, int>> ParentIdProvider => x => x.ExamId;
-
-        internal override void Update(ExamUser record) => throw new NotImplementedException();
     }
 }

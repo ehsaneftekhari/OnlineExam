@@ -1,25 +1,31 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OnlineExam.Application.Contract.DTOs.CheckFieldDTOs;
 using OnlineExam.Application.Contract.IServices;
+using OnlineExam.EndPoint.API.Attributes;
+using OnlineExam.EndPoint.API.DTOs;
 using OnlineExam.EndPoint.API.Exceptions;
+using OnlineExam.Model.Constants;
 
 namespace OnlineExam.EndPoint.API.Controllers
 {
+    [AuthorizeActionFilter(IdentityRoleNames.ExamUser, IdentityRoleNames.ExamCreator)]
     [Route("api")]
     [ApiController]
     public class CheckFieldOptionsController : ControllerBase
     {
         readonly ICheckFieldOptionService _CheckOptionService;
+        readonly ScopeDataContainer _scopeDataContainer;
 
-        public CheckFieldOptionsController(ICheckFieldOptionService checkOptionService)
+        public CheckFieldOptionsController(ICheckFieldOptionService checkOptionService, ScopeDataContainer scopeDataContainer)
         {
             _CheckOptionService = checkOptionService;
+            _scopeDataContainer = scopeDataContainer;
         }
 
         [HttpGet("[controller]/{id}")]
         public IActionResult GetById(int id)
         {
-            var dto = _CheckOptionService.GetById(id);
+            var dto = _CheckOptionService.GetById(id, _scopeDataContainer.IdentityUserId);
             return Ok(dto);
         }
 
@@ -32,7 +38,7 @@ namespace OnlineExam.EndPoint.API.Controllers
             if (pageSize < 1)
                 throw new APIValidationException("pageSize can not be less than 1");
 
-            var dto = _CheckOptionService.GetAllByCheckFieldId(id, (pageNumber - 1) * pageSize, pageSize);
+            var dto = _CheckOptionService.GetAllByCheckFieldId(id, _scopeDataContainer.IdentityUserId, (pageNumber - 1) * pageSize, pageSize);
             return Ok(dto);
         }
 
@@ -42,7 +48,7 @@ namespace OnlineExam.EndPoint.API.Controllers
             if (checkFieldOption == null)
                 throw new APIValidationException("checkFieldOption can not be null");
 
-            return Ok(_CheckOptionService.Add(id, checkFieldOption));
+            return Ok(_CheckOptionService.Add(id, _scopeDataContainer.IdentityUserId, checkFieldOption));
         }
 
         [HttpPatch("[controller]/{id}")]
@@ -51,14 +57,14 @@ namespace OnlineExam.EndPoint.API.Controllers
             if (textField == null)
                 throw new APIValidationException("checkFieldOption can not be null");
 
-            _CheckOptionService.Update(id, textField);
+            _CheckOptionService.Update(id, _scopeDataContainer.IdentityUserId, textField);
             return Ok();
         }
 
         [HttpDelete("[controller]/{id}")]
         public IActionResult Delete(int id)
         {
-            _CheckOptionService.Delete(id);
+            _CheckOptionService.Delete(id, _scopeDataContainer.IdentityUserId);
             return Ok();
         }
     }

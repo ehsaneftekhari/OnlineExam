@@ -1,15 +1,18 @@
-﻿using OnlineExam.Application.Abstractions.InternalService;
-using OnlineExam.Application.Services.SectionServices;
+﻿using OnlineExam.Application.Abstractions.BaseInternalServices;
+using OnlineExam.Application.Abstractions.IInternalService;
 using OnlineExam.Infrastructure.Contract.IRepositories;
 using OnlineExam.Model.Models;
 using System.Linq.Expressions;
 
 namespace OnlineExam.Application.Services.QuestionServices
 {
-    public sealed class QuestionInternalService : BaseInternalService<Question, IQuestionRepository, Section, ISectionRepository>
+    public sealed class QuestionInternalService 
+        : BaseInternalService<Question, IQuestionRepository, Section, ISectionRepository>
+        , IQuestionInternalService
     {
         protected override Expression<Func<Question, int>> ParentIdProvider => x => x.SectionId;
 
-        public QuestionInternalService(IQuestionRepository repository, SectionInternalService parentInternalService) : base(repository, parentInternalService){}
+        public QuestionInternalService(IQuestionRepository repository
+            , ISectionInternalService parentInternalService) : base(repository, parentInternalService) { }
     }
 }

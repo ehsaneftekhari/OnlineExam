@@ -16,7 +16,7 @@ namespace OnlineExam.Infrastructure.Mappings
                 .HasColumnType<string>(nameof(SqlDbType.NVarChar));
 
             builder.Property(p => p.Order)
-               .IsRequired()               
+               .IsRequired()
                .HasColumnType<int>(nameof(SqlDbType.Int))
                .HasDefaultValue(0);
 

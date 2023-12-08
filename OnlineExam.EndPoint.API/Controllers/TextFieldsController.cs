@@ -1,25 +1,35 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OnlineExam.Application.Contract.DTOs.TextFieldDTOs;
 using OnlineExam.Application.Contract.IServices;
+using OnlineExam.EndPoint.API.Attributes;
+using OnlineExam.EndPoint.API.DTOs;
 using OnlineExam.EndPoint.API.Exceptions;
+using OnlineExam.Model.Constants;
 
 namespace OnlineExam.EndPoint.API.Controllers
 {
+    [AuthorizeActionFilter(IdentityRoleNames.ExamUser, IdentityRoleNames.ExamCreator)]
     [Route("api")]
     [ApiController]
     public class TextFieldsController : ControllerBase
     {
         readonly ITextFieldService _textFieldService;
+        readonly ITextFieldUiTypeService _textFieldUiTypeService;
+        readonly ScopeDataContainer _scopeDataContainer;
 
-        public TextFieldsController(ITextFieldService textFieldService)
+        public TextFieldsController(ITextFieldService textFieldService,
+                                    ScopeDataContainer scopeDataContainer,
+                                    ITextFieldUiTypeService textFieldUiTypeService)
         {
             _textFieldService = textFieldService;
+            _scopeDataContainer = scopeDataContainer;
+            _textFieldUiTypeService = textFieldUiTypeService;
         }
 
         [HttpGet("[controller]/{id}")]
         public IActionResult GetById(int id)
         {
-            var dto = _textFieldService.GetById(id);
+            var dto = _textFieldService.GetById(id, _scopeDataContainer.IdentityUserId);
             return Ok(dto);
         }
 
@@ -32,7 +42,7 @@ namespace OnlineExam.EndPoint.API.Controllers
             if (pageSize < 1)
                 throw new APIValidationException("pageSize can not be less than 1");
 
-            var dto = _textFieldService.GetAllByQuestionId(id, (pageNumber - 1) * pageSize, pageSize);
+            var dto = _textFieldService.GetAllByQuestionId(id, _scopeDataContainer.IdentityUserId, (pageNumber - 1) * pageSize, pageSize);
             return Ok(dto);
         }
 
@@ -42,7 +52,7 @@ namespace OnlineExam.EndPoint.API.Controllers
             if (textField == null)
                 throw new APIValidationException("TextField can not be null");
 
-            return Ok(_textFieldService.Add(id, textField));
+            return Ok(_textFieldService.Add(id, _scopeDataContainer.IdentityUserId, textField));
         }
 
         [HttpPatch("[controller]/{id}")]
@@ -51,15 +61,21 @@ namespace OnlineExam.EndPoint.API.Controllers
             if (textField == null)
                 throw new APIValidationException("textField can not be null");
 
-            _textFieldService.Update(id, textField);
+            _textFieldService.Update(id, _scopeDataContainer.IdentityUserId, textField);
             return Ok();
         }
 
         [HttpDelete("[controller]/{id}")]
         public IActionResult Delete(int id)
         {
-            _textFieldService.Delete(id);
+            _textFieldService.Delete(id, _scopeDataContainer.IdentityUserId);
             return Ok();
+        }
+
+        [HttpGet("[controller]/TextFiledUiTypes")]
+        public IActionResult GetTextFieldUiTypes()
+        {
+            return Ok(_textFieldUiTypeService.GetAll());
         }
     }
 }

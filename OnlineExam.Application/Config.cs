@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using OnlineExam.Application.Abstractions.IInternalService;
 using OnlineExam.Application.Abstractions.IMappers;
 using OnlineExam.Application.Abstractions.IValidators;
 using OnlineExam.Application.Contract.IServices;
@@ -11,6 +12,7 @@ using OnlineExam.Application.Services.FileFieldServices;
 using OnlineExam.Application.Services.QuestionServices;
 using OnlineExam.Application.Services.SectionServices;
 using OnlineExam.Application.Services.TextFieldServices;
+using OnlineExam.Application.Services.UserServices;
 using OnlineExam.Application.Validators;
 
 namespace OnlineExam.Application
@@ -20,45 +22,67 @@ namespace OnlineExam.Application
         public static void RegisterServices(IServiceCollection serviceDescriptors)
         {
             serviceDescriptors.AddScoped<IExamService, ExamService>();
-            serviceDescriptors.AddScoped<ExamInternalService>();
+            serviceDescriptors.AddScoped<IExamAccessValidator, ExamAccessValidator>();
+            serviceDescriptors.AddScoped<IExamInternalService, ExamInternalService>();
             serviceDescriptors.AddScoped<IExamMapper, ExamMapper>();
+            serviceDescriptors.AddScoped<IdentityTokenService>();
+
+            serviceDescriptors.AddScoped<IUserService, UserService>();
+            serviceDescriptors.AddScoped<IUserInternalService, UserInternalService>();
+
             serviceDescriptors.AddScoped<ISectionMapper, SectionMapper>();
+            serviceDescriptors.AddScoped<ISectionAccessValidator, SectionAccessValidator>();
             serviceDescriptors.AddScoped<ISectionService, SectionService>();
-            serviceDescriptors.AddScoped<SectionInternalService>();
+            serviceDescriptors.AddScoped<ISectionInternalService, SectionInternalService>();
+
             serviceDescriptors.AddScoped<IQuestionService, QuestionService>();
-            serviceDescriptors.AddScoped<QuestionInternalService>();
+            serviceDescriptors.AddScoped<IQuestionInternalService, QuestionInternalService>();
+            serviceDescriptors.AddScoped<IQuestionAccessValidator, QuestionAccessValidator>();
             serviceDescriptors.AddScoped<IQuestionMapper, QuestionMapper>();
+
             serviceDescriptors.AddScoped<ITextFieldMapper, TextFieldMapper>();
             serviceDescriptors.AddScoped<ITextFieldService, TextFieldService>();
-            serviceDescriptors.AddScoped<TextFieldInternalService>();
-            serviceDescriptors.AddScoped<ITextFieldValidator, TextFieldValidator>();
+            serviceDescriptors.AddScoped<ITextFieldInternalService, TextFieldInternalService>();
+            serviceDescriptors.AddScoped<ITextFieldDTOValidator, TextFieldDTOValidator>();
+            serviceDescriptors.AddScoped<ITextFieldUiTypeService, TextFieldUiTypeService>();
+            serviceDescriptors.AddScoped<ITextFieldUiTypeMapper, TextFieldUiTypeMapper>();
+            serviceDescriptors.AddScoped<ITextFieldUiTypeDTOValidator, TextFieldUiTypeDTOValidator>();
+
             serviceDescriptors.AddScoped<ICheckFieldMapper, CheckFieldMapper>();
             serviceDescriptors.AddScoped<ICheckFieldService, CheckFieldService>();
-            serviceDescriptors.AddScoped<CheckFieldInternalService>();
-            serviceDescriptors.AddScoped<ICheckFieldValidator, CheckFieldValidator>();
+            serviceDescriptors.AddScoped<ICheckFieldInternalService, CheckFieldInternalService>();
+            serviceDescriptors.AddScoped<ICheckFieldDTOValidator, CheckFieldDTOValidator>();
+            serviceDescriptors.AddScoped<IQuestionComponentAccessValidator, QuestionComponentAccessValidator>();
+
             serviceDescriptors.AddScoped<ICheckFieldOptionService, CheckFieldOptionService>();
-            serviceDescriptors.AddScoped<CheckFieldOptionInternalService>();
+            serviceDescriptors.AddScoped<ICheckFieldOptionInternalService, CheckFieldOptionInternalService>();
             serviceDescriptors.AddScoped<ICheckFieldOptionMapper, CheckFieldOptionMapper>();
-            serviceDescriptors.AddScoped<ICheckFieldOptionValidator, CheckFieldOptionValidator>();
-            serviceDescriptors.AddScoped<IDatabaseBasedCheckFieldOptionValidator, DatabaseBasedCheckFieldOptionValidator>();
+            serviceDescriptors.AddScoped<ICheckFieldOptionDTOValidator, CheckFieldOptionDTOValidator>();
+            serviceDescriptors.AddScoped<ICheckFieldOptionRelationValidator, CheckFieldOptionRelationValidator>();
+            serviceDescriptors.AddScoped<ICheckFieldOptionAccessValidator, CheckFieldOptionAccessValidator>();
+
             serviceDescriptors.AddScoped<IAllowedFileTypesFieldService, AllowedFileTypesFieldService>();
-            serviceDescriptors.AddScoped<AllowedFileTypesFieldInternalService>();
+            serviceDescriptors.AddScoped<IAllowedFileTypesFieldInternalService, AllowedFileTypesFieldInternalService>();
             serviceDescriptors.AddScoped<IFileFieldMapper, FileFieldMapper>();
             serviceDescriptors.AddScoped<IAllowedFileTypesFieldMapper, AllowedFileTypesFieldMapper>();
-            serviceDescriptors.AddScoped<IDatabaseBasedAllowedFileTypesFieldValidator, DatabaseBasedAllowedFileTypesFieldValidator>();
-            serviceDescriptors.AddScoped<IAllowedFileTypesFieldValidator, AllowedFileTypesFieldValidator>();
-            serviceDescriptors.AddScoped<IFileFieldValidator, FileFieldValidator>();
+            serviceDescriptors.AddScoped<IAllowedFileTypesFieldRelationValidator, AllowedFileTypesFieldRelationValidator>();
+            serviceDescriptors.AddScoped<IAllowedFileTypesFieldDTOValidator, AllowedFileTypesFieldDTOValidator>();
+            serviceDescriptors.AddScoped<IFileFieldDTOValidator, FileFieldDTOValidator>();
             serviceDescriptors.AddScoped<IFileFieldService, FileFieldService>();
-            serviceDescriptors.AddScoped<FileFieldInternalService>();
-            serviceDescriptors.AddScoped<IDatabaseBasedExamUserValidator, DatabaseBasedExamUserValidator>();
+            serviceDescriptors.AddScoped<IFileFieldInternalService, FileFieldInternalService>();
+
             serviceDescriptors.AddScoped<IExamUserMapper, ExamUserMapper>();
             serviceDescriptors.AddScoped<IExamUserService, ExamUserService>();
-            serviceDescriptors.AddScoped<ExamUserInternalService>();
+            serviceDescriptors.AddScoped<IExamUserInternalService, ExamUserInternalService>();
+            serviceDescriptors.AddScoped<IExamUserDTOValidator, ExamUserDTOValidator>();
+            serviceDescriptors.AddScoped<IExamUserAccessValidator, ExamUserAccessValidator>();
+            serviceDescriptors.AddScoped<IExamUserActionValidator, ExamUserActionValidator>();
+            
             serviceDescriptors.AddScoped<IAnswerMapper, AnswerMapper>();
             serviceDescriptors.AddScoped<IAnswerValidator, AnswerValidator>();
             serviceDescriptors.AddScoped<IDatabaseBasedAnswerValidator, DatabaseBasedAnswerValidator>();
             serviceDescriptors.AddScoped<IAnswerService, AnswerService>();
-            serviceDescriptors.AddScoped<AnswerInternalService>();
+            serviceDescriptors.AddScoped<IAnswerInternalService, AnswerInternalService>();
         }
     }
 }

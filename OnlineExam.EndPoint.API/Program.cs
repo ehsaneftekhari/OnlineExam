@@ -1,3 +1,4 @@
+using OnlineExam.EndPoint.API.Builders;
 using OnlineExam.EndPoint.API.Middlewares;
 
 namespace OnlineExam.EndPoint.API
@@ -8,26 +9,27 @@ namespace OnlineExam.EndPoint.API
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddCors(options =>
-            {
-                options.AddPolicy("AllowedLocalHostOrigin", builder =>
-                {
-                    builder.WithOrigins("http://localhost")
-                           .AllowAnyHeader()
-                           .AllowAnyMethod();
-                });
-            });
-
             builder.Services.AddControllers();
             builder.Services.AddSwaggerGen();
 
             // Add services to the container.
-            Application.Config.RegisterServices(builder.Services);
-            Infrastructure.Config.RegisterServices(builder.Services, builder.Configuration.GetConnectionString("OnlineExamConnectionStrings"));
-            //builder.Services.AddAuthorization();
 
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json")
+                .Build();
+
+            var fluentConfigurator = FluentConfigurator.Create(builder.Services, configuration);
+
+            fluentConfigurator.AddCors();
+            fluentConfigurator.AddMyIdentityConfiguration();
+            fluentConfigurator.AddApiCustomServices();
+            fluentConfigurator.AddApplication();
+            fluentConfigurator.AddInfrastructure();
 
             var app = builder.Build();
+
+            var appFluentConfigurator = fluentConfigurator.OnApp(app);
 
             // Configure the HTTP request pipeline.
 
@@ -36,7 +38,10 @@ namespace OnlineExam.EndPoint.API
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-            app.UseCors("AllowedLocalHostOrigin");
+
+            appFluentConfigurator.UseCors();
+
+            //app.UseAuthentication();
             //app.UseAuthorization();
 
             app.MapControllers();
