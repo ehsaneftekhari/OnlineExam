@@ -5,11 +5,11 @@ using OnlineExam.Application.Contract.Exceptions;
 
 namespace OnlineExam.Application.Validators
 {
-    public class DatabaseBasedAllowedFileTypesFieldValidator : IDatabaseBasedAllowedFileTypesFieldValidator
+    public class AllowedFileTypesFieldRelationValidator : IAllowedFileTypesFieldRelationValidator
     {
         readonly IAllowedFileTypesFieldInternalService _internalService;
 
-        public DatabaseBasedAllowedFileTypesFieldValidator(IAllowedFileTypesFieldInternalService repository)
+        public AllowedFileTypesFieldRelationValidator(IAllowedFileTypesFieldInternalService repository)
         {
             _internalService = repository;
         }

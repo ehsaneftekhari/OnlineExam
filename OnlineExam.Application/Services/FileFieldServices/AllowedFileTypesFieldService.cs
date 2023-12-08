@@ -10,13 +10,13 @@ namespace OnlineExam.Application.Services.FileFieldServices
     {
         readonly IAllowedFileTypesFieldInternalService _internalService;
         readonly IAllowedFileTypesFieldMapper _mapper;
-        readonly IAllowedFileTypesFieldValidator _validator;
-        readonly IDatabaseBasedAllowedFileTypesFieldValidator _databaseBasedValidator;
+        readonly IAllowedFileTypesFieldDTOValidator _validator;
+        readonly IAllowedFileTypesFieldRelationValidator _databaseBasedValidator;
 
         public AllowedFileTypesFieldService(IAllowedFileTypesFieldInternalService internalService,
                                             IAllowedFileTypesFieldMapper mapper,
-                                            IAllowedFileTypesFieldValidator validator,
-                                            IDatabaseBasedAllowedFileTypesFieldValidator databaseBasedValidator)
+                                            IAllowedFileTypesFieldDTOValidator validator,
+                                            IAllowedFileTypesFieldRelationValidator databaseBasedValidator)
         {
             _internalService = internalService;
             _mapper = mapper;

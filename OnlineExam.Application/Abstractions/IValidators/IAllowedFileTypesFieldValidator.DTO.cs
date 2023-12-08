@@ -2,7 +2,7 @@
 
 namespace OnlineExam.Application.Abstractions.IValidators
 {
-    public interface IAllowedFileTypesFieldValidator
+    public interface IAllowedFileTypesFieldDTOValidator
     {
         void ValidateDTO(AddAllowedFileTypesFieldDTO dTO);
         void ValidateDTO(UpdateAllowedFileTypesFieldDTO dTO);
