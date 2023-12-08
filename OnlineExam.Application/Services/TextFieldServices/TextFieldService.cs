@@ -1,4 +1,5 @@
-﻿using OnlineExam.Application.Abstractions.IInternalService;
+using Microsoft.EntityFrameworkCore;
+using OnlineExam.Application.Abstractions.IInternalService;
 using OnlineExam.Application.Abstractions.IMappers;
 using OnlineExam.Application.Abstractions.IValidators;
 using OnlineExam.Application.Contract.DTOs.TextFieldDTOs;
@@ -47,5 +48,14 @@ namespace OnlineExam.Application.Services.TextFieldServices
 
         public void Delete(int textFieldId)
             => _textFieldInternalService.Delete(textFieldId);
+
+        private TextField GetTextFieldWith_Question_Section_Exam_Included(int textFieldId)
+        {
+            return _textFieldInternalService.GetById(textFieldId,
+                _textFieldInternalService.GetIQueryable()
+                .Include(x => x.Question)
+                .ThenInclude(x => x.Section)
+                .ThenInclude(x => x.Exam));
+        }
     }
 }
