@@ -21,7 +21,7 @@ namespace OnlineExam.Application.Services.TextFieldServices
             _textFieldValidator = textFieldValidator;
         }
 
-        public ShowTextFieldDTO Add(int questionId, AddTextFieldDTO dTO)
+        public ShowTextFieldDTO Add(int questionId, string issuerUserId, AddTextFieldDTO dTO)
         {
             _textFieldValidator.ValidateDTO(dTO);
             var newTextField = _textFieldMapper.AddDTOToEntity(questionId, dTO)!;
@@ -29,13 +29,13 @@ namespace OnlineExam.Application.Services.TextFieldServices
             return _textFieldMapper.EntityToShowDTO(newTextField)!;
         }
 
-        public ShowTextFieldDTO? GetById(int textFieldId)
+        public ShowTextFieldDTO? GetById(int textFieldId, string issuerUserId)
              => _textFieldMapper.EntityToShowDTO(_textFieldInternalService.GetById(textFieldId));
 
-        public IEnumerable<ShowTextFieldDTO> GetAllByQuestionId(int questionId, int skip = 0, int take = 20)
+        public IEnumerable<ShowTextFieldDTO> GetAllByQuestionId(int questionId, string issuerUserId, int skip = 0, int take = 20)
             => _textFieldInternalService.GetAllByParentId(questionId, skip, take).Select(_textFieldMapper.EntityToShowDTO);
 
-        public void Update(int textFieldId, UpdateTextFieldDTO dTO)
+        public void Update(int textFieldId, string issuerUserId, UpdateTextFieldDTO dTO)
         {
             _textFieldValidator.ValidateDTO(dTO);
 
@@ -46,7 +46,7 @@ namespace OnlineExam.Application.Services.TextFieldServices
             _textFieldInternalService.Update(textField);
         }
 
-        public void Delete(int textFieldId)
+        public void Delete(int textFieldId, string issuerUserId)
             => _textFieldInternalService.Delete(textFieldId);
 
         private TextField GetTextFieldWith_Question_Section_Exam_Included(int textFieldId)
