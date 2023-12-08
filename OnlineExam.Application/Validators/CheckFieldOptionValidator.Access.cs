@@ -40,18 +40,19 @@ namespace OnlineExam.Application.Validators
         {
             _examAccessValidator.ThrowIfUserIsNotExamCreator(userId, exam);
         }
-        private CheckField GetCheckFieldWith_Question_Section_Exam_Included(int questionId)
+
+        private CheckField GetCheckFieldWith_Question_Section_Exam_Included(int checkFieldId)
         {
-            return _checkFieldInternalService.GetById(questionId,
+            return _checkFieldInternalService.GetById(checkFieldId,
                             _checkFieldInternalService.GetIQueryable()
                             .Include(x => x.Question)
                             .ThenInclude(x => x.Section)
                             .ThenInclude(x => x.Exam));
         }
 
-        private CheckField GetCheckFieldWith_Question_Section_Exam_ExamUser_Included(int questionId)
+        private CheckField GetCheckFieldWith_Question_Section_Exam_ExamUser_Included(int checkFieldId)
         {
-            return _checkFieldInternalService.GetById(questionId,
+            return _checkFieldInternalService.GetById(checkFieldId,
                             _checkFieldInternalService.GetIQueryable()
                             .Include(x => x.Question)
                             .ThenInclude(x => x.Section)

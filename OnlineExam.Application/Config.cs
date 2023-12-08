@@ -43,13 +43,13 @@ namespace OnlineExam.Application
             serviceDescriptors.AddScoped<ITextFieldMapper, TextFieldMapper>();
             serviceDescriptors.AddScoped<ITextFieldService, TextFieldService>();
             serviceDescriptors.AddScoped<ITextFieldInternalService, TextFieldInternalService>();
-            serviceDescriptors.AddScoped<ITextFieldValidator, TextFieldValidator>();
+            serviceDescriptors.AddScoped<ITextFieldDTOValidator, TextFieldDTOValidator>();
 
             serviceDescriptors.AddScoped<ICheckFieldMapper, CheckFieldMapper>();
             serviceDescriptors.AddScoped<ICheckFieldService, CheckFieldService>();
             serviceDescriptors.AddScoped<ICheckFieldInternalService, CheckFieldInternalService>();
             serviceDescriptors.AddScoped<ICheckFieldDTOValidator, CheckFieldDTOValidator>();
-            serviceDescriptors.AddScoped<ICheckFieldAccessValidator, CheckFieldAccessValidator>();
+            serviceDescriptors.AddScoped<IQuestionComponentAccessValidator, QuestionComponentAccessValidator>();
 
             serviceDescriptors.AddScoped<ICheckFieldOptionService, CheckFieldOptionService>();
             serviceDescriptors.AddScoped<ICheckFieldOptionInternalService, CheckFieldOptionInternalService>();
@@ -64,7 +64,7 @@ namespace OnlineExam.Application
             serviceDescriptors.AddScoped<IAllowedFileTypesFieldMapper, AllowedFileTypesFieldMapper>();
             serviceDescriptors.AddScoped<IDatabaseBasedAllowedFileTypesFieldValidator, DatabaseBasedAllowedFileTypesFieldValidator>();
             serviceDescriptors.AddScoped<IAllowedFileTypesFieldValidator, AllowedFileTypesFieldValidator>();
-            serviceDescriptors.AddScoped<IFileFieldValidator, FileFieldValidator>();
+            serviceDescriptors.AddScoped<IFileFieldDTOValidator, FileFieldDTOValidator>();
             serviceDescriptors.AddScoped<IFileFieldService, FileFieldService>();
             serviceDescriptors.AddScoped<IFileFieldInternalService, FileFieldInternalService>();
 

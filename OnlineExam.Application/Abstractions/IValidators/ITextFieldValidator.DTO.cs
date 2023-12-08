@@ -2,7 +2,7 @@
 
 namespace OnlineExam.Application.Abstractions.IValidators
 {
-    public interface ITextFieldValidator
+    public interface ITextFieldDTOValidator
     {
         public void ValidateDTO(AddTextFieldDTO dTO);
 
