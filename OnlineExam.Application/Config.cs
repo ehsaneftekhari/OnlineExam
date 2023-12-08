@@ -49,7 +49,7 @@ namespace OnlineExam.Application
             serviceDescriptors.AddScoped<ICheckFieldService, CheckFieldService>();
             serviceDescriptors.AddScoped<ICheckFieldInternalService, CheckFieldInternalService>();
             serviceDescriptors.AddScoped<ICheckFieldDTOValidator, CheckFieldDTOValidator>();
-            serviceDescriptors.AddScoped<ICheckFieldAccessValidator, CheckFieldAccessValidator>();
+            serviceDescriptors.AddScoped<IQuestionComponentAccessValidator, QuestionComponentAccessValidator>();
 
             serviceDescriptors.AddScoped<ICheckFieldOptionService, CheckFieldOptionService>();
             serviceDescriptors.AddScoped<ICheckFieldOptionInternalService, CheckFieldOptionInternalService>();
