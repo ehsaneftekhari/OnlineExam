@@ -2,7 +2,7 @@
 {
     public class UpdateTextFieldDTO
     {
-        public int? TextFieldUIType { get; set; }
+        public int? TextFieldUITypeId { get; set; }
         public int? AnswerLength { get; set; }
         public string? RegEx { get; set; }
     }
