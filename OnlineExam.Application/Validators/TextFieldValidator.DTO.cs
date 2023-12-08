@@ -5,7 +5,7 @@ using OnlineExam.Model.Models;
 
 namespace OnlineExam.Application.Validators
 {
-    public class TextFieldValidator : ITextFieldValidator
+    public class TextFieldDTOValidator : ITextFieldValidator
     {
         public void ValidateDTO(AddTextFieldDTO dTO)
             => ValidateValues(dTO.AnswerLength, dTO.TextFieldUIType);

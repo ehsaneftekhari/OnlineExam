@@ -43,7 +43,7 @@ namespace OnlineExam.Application
             serviceDescriptors.AddScoped<ITextFieldMapper, TextFieldMapper>();
             serviceDescriptors.AddScoped<ITextFieldService, TextFieldService>();
             serviceDescriptors.AddScoped<ITextFieldInternalService, TextFieldInternalService>();
-            serviceDescriptors.AddScoped<ITextFieldValidator, TextFieldValidator>();
+            serviceDescriptors.AddScoped<ITextFieldValidator, TextFieldDTOValidator>();
 
             serviceDescriptors.AddScoped<ICheckFieldMapper, CheckFieldMapper>();
             serviceDescriptors.AddScoped<ICheckFieldService, CheckFieldService>();
