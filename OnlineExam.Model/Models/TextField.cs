@@ -8,10 +8,4 @@
         public int? AnswerLength { get; set; }
         public string? RegEx { get; set; }
     }
-
-    public enum TextFieldUIType
-    {
-        TextField = 1,
-        TextArea = 2
-    }
 }
