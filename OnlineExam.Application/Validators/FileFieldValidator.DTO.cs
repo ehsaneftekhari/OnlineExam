@@ -4,10 +4,10 @@ using OnlineExam.Application.Contract.Exceptions;
 
 namespace OnlineExam.Application.Validators
 {
-    internal class FileFieldValidator : IFileFieldValidator
+    internal class FileFieldDTOValidator : IFileFieldDTOValidator
     {
         public void ValidateDTO(AddFileFieldDTO dTO)
-        => DatabaseBasedValidateValues(dTO.KiloByteMaximumSize);
+            => DatabaseBasedValidateValues(dTO.KiloByteMaximumSize);
 
         public void ValidateDTO(UpdateFileFieldDTO dTO)
             => DatabaseBasedValidateValues(dTO.KiloByteMaximumSize);

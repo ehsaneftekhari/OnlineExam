@@ -13,22 +13,22 @@ namespace OnlineExam.Application.Services.CheckFieldServices
         readonly ICheckFieldInternalService _checkFieldInternalService;
         readonly ICheckFieldMapper _checkFieldMapper;
         readonly ICheckFieldDTOValidator _checkFieldDTOValidator;
-        readonly ICheckFieldAccessValidator _checkFieldAccessValidator;
+        readonly IQuestionComponentAccessValidator _questionComponentAccessValidator;
 
         public CheckFieldService(ICheckFieldInternalService checkFieldInternalService,
                                  ICheckFieldMapper checkFieldMapper,
                                  ICheckFieldDTOValidator checkFieldValidator,
-                                 ICheckFieldAccessValidator checkFieldAccessValidator)
+                                 IQuestionComponentAccessValidator questionComponentAccessValidator)
         {
             _checkFieldInternalService = checkFieldInternalService;
             _checkFieldMapper = checkFieldMapper;
             _checkFieldDTOValidator = checkFieldValidator;
-            _checkFieldAccessValidator = checkFieldAccessValidator;
+            _questionComponentAccessValidator = questionComponentAccessValidator;
         }
 
         public ShowCheckFieldDTO Add(int questionId, string issuerUserId, AddCheckFieldDTO checkField)
         {
-            _checkFieldAccessValidator.ThrowIfUserIsNotExamCreator(questionId, issuerUserId);
+            _questionComponentAccessValidator.ThrowIfUserIsNotExamCreator(questionId, issuerUserId);
 
             _checkFieldDTOValidator.ValidateDTO(checkField);
 
@@ -43,14 +43,14 @@ namespace OnlineExam.Application.Services.CheckFieldServices
         {
             var checkField = GetCheckFieldWith_Question_Section_Exam_Included(checkFieldId);
 
-            _checkFieldAccessValidator.ThrowIfUserIsNotExamCreator(issuerUserId, checkField.Question.Section.Exam);
+            _questionComponentAccessValidator.ThrowIfUserIsNotExamCreator(issuerUserId, checkField.Question.Section.Exam);
 
             _checkFieldInternalService.Delete(checkField);
         }
 
         public IEnumerable<ShowCheckFieldDTO> GetAllByQuestionId(int questionId, string issuerUserId, int skip = 0, int take = 20)
         {
-            _checkFieldAccessValidator.ThrowIfUserIsNotExamCreatorOrExamUser(questionId, issuerUserId);
+            _questionComponentAccessValidator.ThrowIfUserIsNotExamCreatorOrExamUser(questionId, issuerUserId);
 
             return _checkFieldInternalService.GetAllByParentId(questionId, skip, take).Select(_checkFieldMapper.EntityToShowDTO);
         }
@@ -59,7 +59,7 @@ namespace OnlineExam.Application.Services.CheckFieldServices
         {
             var checkField = GetCheckFieldWith_Question_Section_Exam_Included(checkFieldId);
 
-            _checkFieldAccessValidator.ThrowIfUserIsNotExamCreatorOrExamUser(issuerUserId, checkField.Question.Section.Exam);
+            _questionComponentAccessValidator.ThrowIfUserIsNotExamCreatorOrExamUser(issuerUserId, checkField.Question.Section.Exam);
 
             return _checkFieldMapper.EntityToShowDTO(checkField);
         }
@@ -68,7 +68,7 @@ namespace OnlineExam.Application.Services.CheckFieldServices
         {
             var checkField = GetCheckFieldWith_Question_Section_Exam_Included(checkFieldId);
 
-            _checkFieldAccessValidator.ThrowIfUserIsNotExamCreator(issuerUserId, checkField.Question.Section.Exam);
+            _questionComponentAccessValidator.ThrowIfUserIsNotExamCreator(issuerUserId, checkField.Question.Section.Exam);
 
             _checkFieldDTOValidator.ValidateDTO(dTO);
 

@@ -6,12 +6,12 @@ using OnlineExam.Model.Models;
 
 namespace OnlineExam.Application.Validators
 {
-    public class CheckFieldAccessValidator : ICheckFieldAccessValidator
+    public class QuestionComponentAccessValidator : IQuestionComponentAccessValidator
     {
         readonly IQuestionInternalService _questionInternalService;
         readonly IExamAccessValidator _examAccessValidator;
 
-        public CheckFieldAccessValidator(IQuestionInternalService questionInternalService,
+        public QuestionComponentAccessValidator(IQuestionInternalService questionInternalService,
                                    IExamAccessValidator examAccessValidator)
         {
             _questionInternalService = questionInternalService;
@@ -33,7 +33,7 @@ namespace OnlineExam.Application.Validators
         public void ThrowIfUserIsNotExamCreatorOrExamUser(string userId, Exam exam)
         {
             if (!_examAccessValidator.IsUserExamCreatorOrExamUser(userId, exam))
-                throw new ApplicationUnAuthorizedException($"User has no access to CheckField");
+                throw new ApplicationUnAuthorizedException($"User has no access to Question");
         }
 
         public void ThrowIfUserIsNotExamCreator(string userId, Exam exam)
