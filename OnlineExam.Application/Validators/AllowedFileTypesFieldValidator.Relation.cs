@@ -14,10 +14,10 @@ namespace OnlineExam.Application.Validators
             _internalService = repository;
         }
 
-        public void DatabaseBasedValidate(AddAllowedFileTypesFieldDTO dTO)
+        public void Validate(AddAllowedFileTypesFieldDTO dTO)
             => DatabaseBasedValidateValues(dTO.Extension);
 
-        public void DatabaseBasedValidate(int allowedFileTypesField, UpdateAllowedFileTypesFieldDTO dTO)
+        public void Validate(int allowedFileTypesField, UpdateAllowedFileTypesFieldDTO dTO)
             => DatabaseBasedValidateValues(dTO.Extension, allowedFileTypesField);
 
         private void DatabaseBasedValidateValues(string extension, int? id = null)

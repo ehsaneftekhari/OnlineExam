@@ -4,7 +4,7 @@ namespace OnlineExam.Application.Abstractions.IValidators
 {
     public interface IAllowedFileTypesFieldRelationValidator
     {
-        void DatabaseBasedValidate(AddAllowedFileTypesFieldDTO dTO);
-        void DatabaseBasedValidate(int allowedFileTypesField, UpdateAllowedFileTypesFieldDTO dTO);
+        void Validate(AddAllowedFileTypesFieldDTO dTO);
+        void Validate(int allowedFileTypesField, UpdateAllowedFileTypesFieldDTO dTO);
     }
 }
