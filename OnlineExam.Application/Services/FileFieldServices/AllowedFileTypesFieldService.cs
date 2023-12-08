@@ -3,6 +3,8 @@ using OnlineExam.Application.Abstractions.IInternalService;
 using OnlineExam.Application.Abstractions.IValidators;
 using OnlineExam.Application.Contract.DTOs.AllowedFileTypesFieldDTOs;
 using OnlineExam.Application.Contract.IServices;
+using OnlineExam.Application.Validators;
+using OnlineExam.Model.Models;
 
 namespace OnlineExam.Application.Services.FileFieldServices
 {
@@ -10,24 +12,25 @@ namespace OnlineExam.Application.Services.FileFieldServices
     {
         readonly IAllowedFileTypesFieldInternalService _internalService;
         readonly IAllowedFileTypesFieldMapper _mapper;
-        readonly IAllowedFileTypesFieldDTOValidator _validator;
-        readonly IAllowedFileTypesFieldRelationValidator _databaseBasedValidator;
+        readonly IAllowedFileTypesFieldDTOValidator _dTOValidator;
+        readonly IAllowedFileTypesFieldRelationValidator _relationValidator;
 
         public AllowedFileTypesFieldService(IAllowedFileTypesFieldInternalService internalService,
                                             IAllowedFileTypesFieldMapper mapper,
-                                            IAllowedFileTypesFieldDTOValidator validator,
-                                            IAllowedFileTypesFieldRelationValidator databaseBasedValidator)
+                                            IAllowedFileTypesFieldDTOValidator dTOValidator,
+                                            IAllowedFileTypesFieldRelationValidator relationValidator)
         {
             _internalService = internalService;
             _mapper = mapper;
-            _validator = validator;
-            _databaseBasedValidator = databaseBasedValidator;
+            _dTOValidator = dTOValidator;
+            _relationValidator = relationValidator;
         }
 
         public ShowAllowedFileTypesFieldDTO Add(AddAllowedFileTypesFieldDTO dTO)
         {
-            _validator.ValidateDTO(dTO);
-            _databaseBasedValidator.Validate(dTO);
+            _dTOValidator.ValidateDTO(dTO);
+            _relationValidator.Validate(dTO);
+
             var allowedFileTypesField = _mapper.AddDTOToEntity(dTO)!;
             _internalService.Add(allowedFileTypesField);
             return _mapper.EntityToShowDTO(allowedFileTypesField)!;
@@ -44,11 +47,11 @@ namespace OnlineExam.Application.Services.FileFieldServices
 
         public void Update(int id, UpdateAllowedFileTypesFieldDTO dTO)
         {
-            _validator.ValidateDTO(dTO);
+            _dTOValidator.ValidateDTO(dTO);
 
             var allowedFileTypesField = _internalService.GetById(id);
 
-            _databaseBasedValidator.Validate(id, dTO);
+            _relationValidator.Validate(id, dTO);
 
             _mapper.UpdateEntityByDTO(allowedFileTypesField, dTO);
 

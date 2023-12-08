@@ -7,7 +7,7 @@ using OnlineExam.Model.Constants;
 
 namespace OnlineExam.EndPoint.API.Controllers
 {
-    [AuthorizeActionFilter(IdentityRoleNames.ExamUser, IdentityRoleNames.ExamCreator)]
+    [AuthorizeActionFilter(IdentityRoleNames.Admin)]
     [Route("api/[controller]")]
     [ApiController]
     public class AllowedFileTypesFieldsController : ControllerBase
