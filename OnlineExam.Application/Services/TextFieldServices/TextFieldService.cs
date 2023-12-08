@@ -13,35 +13,52 @@ namespace OnlineExam.Application.Services.TextFieldServices
         readonly ITextFieldInternalService _textFieldInternalService;
         readonly ITextFieldMapper _textFieldMapper;
         readonly ITextFieldDTOValidator _textFieldDTOValidator;
+        readonly IQuestionComponentAccessValidator _questionComponentAccessValidator;
 
         public TextFieldService(ITextFieldInternalService textFieldInternalService,
                                 ITextFieldMapper textFieldMapper,
-                                ITextFieldDTOValidator textFieldDTOValidator)
+                                ITextFieldDTOValidator textFieldDTOValidator,
+                                IQuestionComponentAccessValidator questionComponentAccessValidator)
         {
             _textFieldInternalService = textFieldInternalService;
             _textFieldMapper = textFieldMapper;
             _textFieldDTOValidator = textFieldDTOValidator;
+            _questionComponentAccessValidator = questionComponentAccessValidator;
         }
 
         public ShowTextFieldDTO Add(int questionId, string issuerUserId, AddTextFieldDTO dTO)
         {
+            _questionComponentAccessValidator.ThrowIfUserIsNotExamCreator(questionId, issuerUserId);
             _textFieldDTOValidator.ValidateDTO(dTO);
+
             var newTextField = _textFieldMapper.AddDTOToEntity(questionId, dTO)!;
             _textFieldInternalService.Add(newTextField);
             return _textFieldMapper.EntityToShowDTO(newTextField)!;
         }
 
         public ShowTextFieldDTO? GetById(int textFieldId, string issuerUserId)
-             => _textFieldMapper.EntityToShowDTO(_textFieldInternalService.GetById(textFieldId));
+        {
+            var textField = GetTextFieldWith_Question_Section_Exam_Included(textFieldId);
+
+            _questionComponentAccessValidator.ThrowIfUserIsNotExamCreatorOrExamUser(issuerUserId, textField.Question.Section.Exam);
+
+            return _textFieldMapper.EntityToShowDTO(textField);
+        }
 
         public IEnumerable<ShowTextFieldDTO> GetAllByQuestionId(int questionId, string issuerUserId, int skip = 0, int take = 20)
-            => _textFieldInternalService.GetAllByParentId(questionId, skip, take).Select(_textFieldMapper.EntityToShowDTO);
+        {
+            _questionComponentAccessValidator.ThrowIfUserIsNotExamCreatorOrExamUser(questionId, issuerUserId);
+
+            return _textFieldInternalService.GetAllByParentId(questionId, skip, take).Select(_textFieldMapper.EntityToShowDTO);
+        }
 
         public void Update(int textFieldId, string issuerUserId, UpdateTextFieldDTO dTO)
         {
-            _textFieldDTOValidator.ValidateDTO(dTO);
+            var textField = GetTextFieldWith_Question_Section_Exam_Included(textFieldId);
 
-            var textField = _textFieldInternalService.GetById(textFieldId);
+            _questionComponentAccessValidator.ThrowIfUserIsNotExamCreator(issuerUserId, textField.Question.Section.Exam);
+
+            _textFieldDTOValidator.ValidateDTO(dTO);
 
             _textFieldMapper.UpdateEntityByDTO(textField, dTO);
 
@@ -49,7 +66,13 @@ namespace OnlineExam.Application.Services.TextFieldServices
         }
 
         public void Delete(int textFieldId, string issuerUserId)
-            => _textFieldInternalService.Delete(textFieldId);
+        {
+            var textField = GetTextFieldWith_Question_Section_Exam_Included(textFieldId);
+
+            _questionComponentAccessValidator.ThrowIfUserIsNotExamCreator(issuerUserId, textField.Question.Section.Exam);
+
+            _textFieldInternalService.Delete(textFieldId);
+        }
 
         private TextField GetTextFieldWith_Question_Section_Exam_Included(int textFieldId)
         {
