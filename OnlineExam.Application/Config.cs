@@ -62,8 +62,8 @@ namespace OnlineExam.Application
             serviceDescriptors.AddScoped<IAllowedFileTypesFieldInternalService, AllowedFileTypesFieldInternalService>();
             serviceDescriptors.AddScoped<IFileFieldMapper, FileFieldMapper>();
             serviceDescriptors.AddScoped<IAllowedFileTypesFieldMapper, AllowedFileTypesFieldMapper>();
-            serviceDescriptors.AddScoped<IDatabaseBasedAllowedFileTypesFieldValidator, DatabaseBasedAllowedFileTypesFieldValidator>();
-            serviceDescriptors.AddScoped<IAllowedFileTypesFieldValidator, AllowedFileTypesFieldValidator>();
+            serviceDescriptors.AddScoped<IAllowedFileTypesFieldRelationValidator, AllowedFileTypesFieldRelationValidator>();
+            serviceDescriptors.AddScoped<IAllowedFileTypesFieldDTOValidator, AllowedFileTypesFieldDTOValidator>();
             serviceDescriptors.AddScoped<IFileFieldDTOValidator, FileFieldDTOValidator>();
             serviceDescriptors.AddScoped<IFileFieldService, FileFieldService>();
             serviceDescriptors.AddScoped<IFileFieldInternalService, FileFieldInternalService>();

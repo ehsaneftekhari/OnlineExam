@@ -5,19 +5,19 @@ using OnlineExam.Application.Contract.Exceptions;
 
 namespace OnlineExam.Application.Validators
 {
-    public class DatabaseBasedAllowedFileTypesFieldValidator : IDatabaseBasedAllowedFileTypesFieldValidator
+    public class AllowedFileTypesFieldRelationValidator : IAllowedFileTypesFieldRelationValidator
     {
         readonly IAllowedFileTypesFieldInternalService _internalService;
 
-        public DatabaseBasedAllowedFileTypesFieldValidator(IAllowedFileTypesFieldInternalService repository)
+        public AllowedFileTypesFieldRelationValidator(IAllowedFileTypesFieldInternalService repository)
         {
             _internalService = repository;
         }
 
-        public void DatabaseBasedValidate(AddAllowedFileTypesFieldDTO dTO)
+        public void Validate(AddAllowedFileTypesFieldDTO dTO)
             => DatabaseBasedValidateValues(dTO.Extension);
 
-        public void DatabaseBasedValidate(int allowedFileTypesField, UpdateAllowedFileTypesFieldDTO dTO)
+        public void Validate(int allowedFileTypesField, UpdateAllowedFileTypesFieldDTO dTO)
             => DatabaseBasedValidateValues(dTO.Extension, allowedFileTypesField);
 
         private void DatabaseBasedValidateValues(string extension, int? id = null)

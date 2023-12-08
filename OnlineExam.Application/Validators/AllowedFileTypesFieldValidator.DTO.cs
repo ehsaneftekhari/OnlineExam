@@ -4,7 +4,7 @@ using OnlineExam.Application.Contract.Exceptions;
 
 namespace OnlineExam.Application.Validators
 {
-    internal class AllowedFileTypesFieldValidator : IAllowedFileTypesFieldValidator
+    internal class AllowedFileTypesFieldDTOValidator : IAllowedFileTypesFieldDTOValidator
     {
         public void ValidateDTO(AddAllowedFileTypesFieldDTO dTO)
         => DatabaseBasedValidateValues(dTO.Name, dTO.Extension);
