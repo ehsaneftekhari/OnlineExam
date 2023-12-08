@@ -2,6 +2,7 @@
 using OnlineExam.Application.Contract.DTOs.FileFieldDTOs;
 using OnlineExam.Application.Contract.IServices;
 using OnlineExam.EndPoint.API.Attributes;
+using OnlineExam.EndPoint.API.DTOs;
 using OnlineExam.EndPoint.API.Exceptions;
 using OnlineExam.Model.Constants;
 
@@ -13,16 +14,19 @@ namespace OnlineExam.EndPoint.API.Controllers
     public class FileFieldsController : ControllerBase
     {
         readonly IFileFieldService _fileFieldService;
+        readonly ScopeDataContainer _scopeDataContainer;
 
-        public FileFieldsController(IFileFieldService fileFieldService)
+        public FileFieldsController(IFileFieldService fileFieldService,
+                                    ScopeDataContainer scopeDataContainer)
         {
             _fileFieldService = fileFieldService;
+            _scopeDataContainer = scopeDataContainer;
         }
 
         [HttpGet("[controller]/{id}")]
         public IActionResult GetById(int id)
         {
-            var dto = _fileFieldService.GetById(id);
+            var dto = _fileFieldService.GetById(id, _scopeDataContainer.IdentityUserId);
             return Ok(dto);
         }
 
@@ -35,7 +39,7 @@ namespace OnlineExam.EndPoint.API.Controllers
             if (pageSize < 1)
                 throw new APIValidationException("pageSize can not be less than 1");
 
-            var dto = _fileFieldService.GetAllByQuestionId(id, (pageNumber - 1) * pageSize, pageSize);
+            var dto = _fileFieldService.GetAllByQuestionId(id, _scopeDataContainer.IdentityUserId, (pageNumber - 1) * pageSize, pageSize);
             return Ok(dto);
         }
 
@@ -45,7 +49,7 @@ namespace OnlineExam.EndPoint.API.Controllers
             if (dto == null)
                 throw new APIValidationException("dto can not be null");
 
-            return Ok(_fileFieldService.Add(id, dto));
+            return Ok(_fileFieldService.Add(id, _scopeDataContainer.IdentityUserId, dto));
         }
 
         [HttpPatch("[controller]/{id}")]
@@ -54,14 +58,14 @@ namespace OnlineExam.EndPoint.API.Controllers
             if (textField == null)
                 throw new APIValidationException("CheckField can not be null");
 
-            _fileFieldService.Update(id, textField);
+            _fileFieldService.Update(id, _scopeDataContainer.IdentityUserId, textField);
             return Ok();
         }
 
         [HttpDelete("[controller]/{id}")]
         public IActionResult Delete(int id)
         {
-            _fileFieldService.Delete(id);
+            _fileFieldService.Delete(id, _scopeDataContainer.IdentityUserId);
             return Ok();
         }
     }
