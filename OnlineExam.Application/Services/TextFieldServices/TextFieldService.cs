@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using OnlineExam.Application.Abstractions.IInternalService;
 using OnlineExam.Application.Abstractions.IMappers;
 using OnlineExam.Application.Abstractions.IValidators;
@@ -12,18 +12,20 @@ namespace OnlineExam.Application.Services.TextFieldServices
     {
         readonly ITextFieldInternalService _textFieldInternalService;
         readonly ITextFieldMapper _textFieldMapper;
-        readonly ITextFieldValidator _textFieldValidator;
+        readonly ITextFieldDTOValidator _textFieldDTOValidator;
 
-        public TextFieldService(ITextFieldInternalService textFieldInternalService, ITextFieldMapper textFieldMapper, ITextFieldValidator textFieldValidator)
+        public TextFieldService(ITextFieldInternalService textFieldInternalService,
+                                ITextFieldMapper textFieldMapper,
+                                ITextFieldDTOValidator textFieldDTOValidator)
         {
             _textFieldInternalService = textFieldInternalService;
             _textFieldMapper = textFieldMapper;
-            _textFieldValidator = textFieldValidator;
+            _textFieldDTOValidator = textFieldDTOValidator;
         }
 
         public ShowTextFieldDTO Add(int questionId, string issuerUserId, AddTextFieldDTO dTO)
         {
-            _textFieldValidator.ValidateDTO(dTO);
+            _textFieldDTOValidator.ValidateDTO(dTO);
             var newTextField = _textFieldMapper.AddDTOToEntity(questionId, dTO)!;
             _textFieldInternalService.Add(newTextField);
             return _textFieldMapper.EntityToShowDTO(newTextField)!;
@@ -37,7 +39,7 @@ namespace OnlineExam.Application.Services.TextFieldServices
 
         public void Update(int textFieldId, string issuerUserId, UpdateTextFieldDTO dTO)
         {
-            _textFieldValidator.ValidateDTO(dTO);
+            _textFieldDTOValidator.ValidateDTO(dTO);
 
             var textField = _textFieldInternalService.GetById(textFieldId);
 
