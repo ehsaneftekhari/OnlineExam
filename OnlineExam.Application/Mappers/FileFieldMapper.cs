@@ -1,15 +1,15 @@
 ﻿using OnlineExam.Application.Abstractions.IMappers;
+using OnlineExam.Application.Abstractions.IInternalService;
 using OnlineExam.Application.Contract.DTOs.FileFieldDTOs;
-using OnlineExam.Application.Services.FileFieldServices;
 using OnlineExam.Model.Models;
 
 namespace OnlineExam.Application.Mappers
 {
     internal class FileFieldMapper : IFileFieldMapper
     {
-        readonly AllowedFileTypesFieldInternalService _allowedFileTypesFieldInternalService;
+        readonly IAllowedFileTypesFieldInternalService _allowedFileTypesFieldInternalService;
 
-        public FileFieldMapper(AllowedFileTypesFieldInternalService allowedFileTypesFieldService)
+        public FileFieldMapper(IAllowedFileTypesFieldInternalService allowedFileTypesFieldService)
         {
             _allowedFileTypesFieldInternalService = allowedFileTypesFieldService;
         }
@@ -35,7 +35,7 @@ namespace OnlineExam.Application.Mappers
             if (fileField != null)
             {
 
-                Dictionary<int, string> allowedFileTypesNameIdPairs = new Dictionary<int, string>();
+                Dictionary<int, string> allowedFileTypesNameIdPairs = new();
                 foreach (var item in fileField.AllowedFileTypes)
                 {
                     allowedFileTypesNameIdPairs.Add(item.Id, item.Name);

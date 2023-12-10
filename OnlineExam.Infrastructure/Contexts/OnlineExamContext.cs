@@ -1,10 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using OnlineExam.Infrastructure.Mappings;
+using OnlineExam.Infrastructure.SeedData;
 using OnlineExam.Model.Models;
 
 namespace OnlineExam.Infrastructure.Contexts
 {
-    public class OnlineExamContext : DbContext
+    public class OnlineExamContext : IdentityDbContext
     {
         public OnlineExamContext(DbContextOptions<OnlineExamContext> options) : base(options)
         {
@@ -29,7 +32,7 @@ namespace OnlineExam.Infrastructure.Contexts
         public DbSet<ExamUser> ExamUser { get; set; }
 
         public DbSet<Answer> Answer { get; set; }
-        
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder
@@ -43,6 +46,8 @@ namespace OnlineExam.Infrastructure.Contexts
                 .ApplyConfiguration(new AllowedFileTypesEntityTypeConfiguration())
                 .ApplyConfiguration(new ExamUserEntityTypeConfiguration())
                 .ApplyConfiguration(new AnswerEntityTypeConfiguration());
+
+            modelBuilder.Entity<IdentityRole>().HasData(IdentitySeedData.IdentityRoles);
 
             base.OnModelCreating(modelBuilder);
         }

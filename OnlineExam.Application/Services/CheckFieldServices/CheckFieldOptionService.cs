@@ -1,61 +1,97 @@
-﻿using OnlineExam.Application.Abstractions.IMappers;
+﻿using Microsoft.EntityFrameworkCore;
+using OnlineExam.Application.Abstractions.IInternalService;
+using OnlineExam.Application.Abstractions.IMappers;
 using OnlineExam.Application.Abstractions.IValidators;
 using OnlineExam.Application.Contract.DTOs.CheckFieldDTOs;
 using OnlineExam.Application.Contract.IServices;
+using OnlineExam.Model.Models;
 
 namespace OnlineExam.Application.Services.CheckFieldServices
 {
     public sealed class CheckFieldOptionService : ICheckFieldOptionService
     {
-        readonly CheckFieldOptionInternalService _checkFieldOptionInternalService;
+        readonly ICheckFieldOptionInternalService _checkFieldOptionInternalService;
         readonly ICheckFieldOptionMapper _checkFieldOptionMapper;
-        readonly ICheckFieldOptionValidator _checkFieldOptionValidator;
-        readonly IDatabaseBasedCheckFieldOptionValidator _databaseBasedCheckFieldOptionValidator;
+        readonly ICheckFieldOptionDTOValidator _checkFieldOptionDTOValidator;
+        readonly ICheckFieldOptionRelationValidator _heckFieldOptionRelationValidator;
+        readonly ICheckFieldOptionAccessValidator _checkFieldOptionAccessValidator;
 
-        public CheckFieldOptionService(CheckFieldOptionInternalService checkFieldOptionInternalService,
+        public CheckFieldOptionService(ICheckFieldOptionInternalService checkFieldOptionInternalService,
                                        ICheckFieldOptionMapper checkFieldOptionMapper,
-                                       ICheckFieldOptionValidator checkFieldOptionValidator,
-                                       IDatabaseBasedCheckFieldOptionValidator databaseBasedCheckFieldOptionValidator)
+                                       ICheckFieldOptionDTOValidator checkFieldOptionValidator,
+                                       ICheckFieldOptionRelationValidator databaseBasedCheckFieldOptionValidator,
+                                       ICheckFieldOptionAccessValidator checkFieldOptionAccessValidator)
         {
             _checkFieldOptionInternalService = checkFieldOptionInternalService;
             _checkFieldOptionMapper = checkFieldOptionMapper;
-            _checkFieldOptionValidator = checkFieldOptionValidator;
-            _databaseBasedCheckFieldOptionValidator = databaseBasedCheckFieldOptionValidator;
+            _checkFieldOptionDTOValidator = checkFieldOptionValidator;
+            _heckFieldOptionRelationValidator = databaseBasedCheckFieldOptionValidator;
+            _checkFieldOptionAccessValidator = checkFieldOptionAccessValidator;
         }
 
-        public ShowCheckFieldOptionDTO Add(int checkFieldId, AddCheckFieldOptionDTO CheckFieldOption)
+        public ShowCheckFieldOptionDTO Add(int checkFieldId, string issuerUserId, AddCheckFieldOptionDTO CheckFieldOption)
         {
-            _checkFieldOptionValidator.ValidateDTO(CheckFieldOption);
+            _checkFieldOptionAccessValidator.ThrowIfUserIsNotExamCreator(checkFieldId, issuerUserId);
 
-            _databaseBasedCheckFieldOptionValidator.DatabaseBasedValidate(checkFieldId, CheckFieldOption);
+            _checkFieldOptionDTOValidator.ValidateDTO(CheckFieldOption);
 
-            var checkField = _checkFieldOptionMapper.AddDTOToEntity(checkFieldId, CheckFieldOption)!;
+            _heckFieldOptionRelationValidator.DatabaseBasedValidate(checkFieldId, CheckFieldOption);
 
-            _checkFieldOptionInternalService.Add(checkField);
+            var checkFieldOption = _checkFieldOptionMapper.AddDTOToEntity(checkFieldId, CheckFieldOption)!;
 
-            return _checkFieldOptionMapper.EntityToShowDTO(checkField)!;
+            _checkFieldOptionInternalService.Add(checkFieldOption);
+
+            return _checkFieldOptionMapper.EntityToShowDTO(checkFieldOption)!;
         }
 
-        public void Delete(int CheckFieldOptionId)
-            => _checkFieldOptionInternalService.Delete(CheckFieldOptionId);
-
-        public IEnumerable<ShowCheckFieldOptionDTO> GetAllByCheckFieldId(int checkFieldId, int skip = 0, int take = 20)
-            => _checkFieldOptionInternalService.GetAllByParentId(checkFieldId, skip, take).Select(_checkFieldOptionMapper.EntityToShowDTO);
-
-        public ShowCheckFieldOptionDTO? GetById(int CheckFieldOptionId)
-            => _checkFieldOptionMapper.EntityToShowDTO(_checkFieldOptionInternalService.GetById(CheckFieldOptionId));
-
-        public void Update(int id, UpdateCheckFieldOptionDTO dTO)
+        public void Delete(int CheckFieldOptionId, string issuerUserId)
         {
-            _checkFieldOptionValidator.ValidateDTO(dTO);
+            var checkFieldOption = GetCheckFieldOptionWith_CheckField_Question_Section_Exam_Included(CheckFieldOptionId);
 
-            var checkFieldOption = _checkFieldOptionInternalService.GetById(id);
+            _checkFieldOptionAccessValidator.ThrowIfUserIsNotExamCreator(issuerUserId, checkFieldOption.CheckField.Question.Section.Exam);
 
-            _databaseBasedCheckFieldOptionValidator.DatabaseBasedValidate(checkFieldOption.CheckFieldId, id, dTO);
+            _checkFieldOptionInternalService.Delete(checkFieldOption);
+        }
+
+        public IEnumerable<ShowCheckFieldOptionDTO> GetAllByCheckFieldId(int checkFieldId, string issuerUserId, int skip = 0, int take = 20)
+        {
+            _checkFieldOptionAccessValidator.ThrowIfUserIsNotExamCreatorOrExamUser(checkFieldId, issuerUserId);
+
+            return _checkFieldOptionInternalService.GetAllByParentId(checkFieldId, skip, take).Select(_checkFieldOptionMapper.EntityToShowDTO);
+        }
+
+        public ShowCheckFieldOptionDTO? GetById(int checkFieldOptionId, string issuerUserId)
+        {
+            var checkFieldOption = GetCheckFieldOptionWith_CheckField_Question_Section_Exam_Included(checkFieldOptionId);
+
+            _checkFieldOptionAccessValidator.ThrowIfUserIsNotExamCreatorOrExamUser(issuerUserId, checkFieldOption.CheckField.Question.Section.Exam);
+
+            return _checkFieldOptionMapper.EntityToShowDTO(_checkFieldOptionInternalService.GetById(checkFieldOptionId));
+        }
+
+        public void Update(int checkFieldOptionId, string issuerUserId, UpdateCheckFieldOptionDTO dTO)
+        {
+            var checkFieldOption = GetCheckFieldOptionWith_CheckField_Question_Section_Exam_Included(checkFieldOptionId);
+
+            _checkFieldOptionAccessValidator.ThrowIfUserIsNotExamCreator(issuerUserId, checkFieldOption.CheckField.Question.Section.Exam);
+
+            _checkFieldOptionDTOValidator.ValidateDTO(dTO);
+
+            _heckFieldOptionRelationValidator.DatabaseBasedValidate(checkFieldOption.CheckFieldId, checkFieldOptionId, dTO);
 
             _checkFieldOptionMapper.UpdateEntityByDTO(checkFieldOption, dTO);
 
             _checkFieldOptionInternalService.Update(checkFieldOption);
+        }
+
+        private CheckFieldOption GetCheckFieldOptionWith_CheckField_Question_Section_Exam_Included(int checkFieldId)
+        {
+            return _checkFieldOptionInternalService.GetById(checkFieldId,
+                _checkFieldOptionInternalService.GetIQueryable()
+                .Include(x => x.CheckField)
+                .ThenInclude(x => x.Question)
+                .ThenInclude(x => x.Section)
+                .ThenInclude(x => x.Exam));
         }
     }
 }

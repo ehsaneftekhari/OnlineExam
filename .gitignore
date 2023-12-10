@@ -366,5 +366,6 @@ FodyWeavers.xsd
 OnlineExam.EndPoint.API/appsettings.Development.json
 OnlineExam.EndPoint.API/appsettings.json
 
-# SQL EntityFrameworkCore migrations
+# SQL EntityFrameworke
 OnlineExam.Infrastructure/Migrations
+OnlineExam.Infrastructure/Contexts/DesignTimeDbContextFactory.cs

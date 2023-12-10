@@ -1,43 +1,80 @@
-﻿using OnlineExam.Application.Abstractions.IMappers;
+﻿using Microsoft.EntityFrameworkCore;
+using OnlineExam.Application.Abstractions.IInternalService;
+using OnlineExam.Application.Abstractions.IMappers;
+using OnlineExam.Application.Abstractions.IValidators;
 using OnlineExam.Application.Contract.DTOs.QuestionDTOs;
 using OnlineExam.Application.Contract.IServices;
+using OnlineExam.Model.Models;
 
 namespace OnlineExam.Application.Services.QuestionServices
 {
     public sealed class QuestionService : IQuestionService
     {
-        readonly QuestionInternalService _questionInternalService;
+        readonly IQuestionInternalService _questionInternalService;
         readonly IQuestionMapper _questionMapper;
+        readonly IQuestionAccessValidator _questionAccessValidator;
 
-        public QuestionService(QuestionInternalService questionInternalService, IQuestionMapper questionMapper)
+
+        public QuestionService(IQuestionInternalService questionInternalService,
+                               IQuestionMapper questionMapper,
+                               IQuestionAccessValidator questionAccessValidator)
         {
             _questionInternalService = questionInternalService;
             _questionMapper = questionMapper;
+            _questionAccessValidator = questionAccessValidator;
         }
 
-        public ShowQuestionDTO Add(int sectionId, AddQuestionDTO dTO)
+        public ShowQuestionDTO Add(int sectionId, string issuerUserId, AddQuestionDTO dTO)
         {
+            _questionAccessValidator.ThrowIfUserIsNotExamCreator(sectionId, issuerUserId);
+
             var newQuestion = _questionMapper.AddDTOToEntity(sectionId, dTO);
             _questionInternalService.Add(newQuestion!);
             return _questionMapper.EntityToShowDTO(newQuestion)!;
         }
 
-        public IEnumerable<ShowQuestionDTO> GetAllBySectionId(int sectionId, int skip, int take)
-            => _questionInternalService.GetAllByParentId(sectionId, skip, take).Select(_questionMapper.EntityToShowDTO)!;
-
-        public ShowQuestionDTO? GetById(int questionId)
-            => _questionMapper.EntityToShowDTO(_questionInternalService.GetById(questionId));
-
-        public void Update(int questionId, UpdateQuestionDTO dTO)
+        public IEnumerable<ShowQuestionDTO> GetAllBySectionId(int sectionId, string issuerUserId, int skip, int take)
         {
-            var question = _questionInternalService.GetById(questionId);
+            _questionAccessValidator.ThrowIfUserIsNotExamCreatorOrExamUser(sectionId, issuerUserId);
+
+            return _questionInternalService.GetAllByParentId(sectionId, skip, take).Select(_questionMapper.EntityToShowDTO)!;
+        }
+
+        public ShowQuestionDTO? GetById(int questionId, string issuerUserId)
+        {
+            var question = GetQuestionWith_Section_Exam_ExamUser_Included(questionId);
+
+            _questionAccessValidator.ThrowIfUserIsNotExamCreatorOrExamUser(issuerUserId, question.Section.Exam);
+
+            return _questionMapper.EntityToShowDTO(question);
+        }
+
+        public void Update(int questionId, string issuerUserId, UpdateQuestionDTO dTO)
+        {
+            var question = GetQuestionWith_Section_Exam_ExamUser_Included(questionId);
+
+            _questionAccessValidator.ThrowIfUserIsNotExamCreator(issuerUserId, question.Section.Exam);
 
             _questionMapper.UpdateEntityByDTO(question, dTO);
 
             _questionInternalService.Update(question);
         }
 
-        public void Delete(int questionId)
-            => _questionInternalService.Delete(questionId);
+        public void Delete(int questionId, string issuerUserId)
+        {
+            var question = GetQuestionWith_Section_Exam_ExamUser_Included(questionId);
+
+            _questionAccessValidator.ThrowIfUserIsNotExamCreator(issuerUserId, question.Section.Exam);
+
+            _questionInternalService.Delete(question);
+        }
+
+        private Question GetQuestionWith_Section_Exam_ExamUser_Included(int questionId)
+        {
+            return _questionInternalService.GetById(questionId, _questionInternalService.GetIQueryable()
+                                        .Include(x => x.Section)
+                                        .ThenInclude(x => x.Exam)
+                                        .ThenInclude(x => x.ExamUsers));
+        }
     }
 }

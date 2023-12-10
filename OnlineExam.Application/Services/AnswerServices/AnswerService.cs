@@ -1,4 +1,5 @@
 ﻿using OnlineExam.Application.Abstractions.IMappers;
+using OnlineExam.Application.Abstractions.IInternalService;
 using OnlineExam.Application.Abstractions.IValidators;
 using OnlineExam.Application.Contract.DTOs.AnswerDTOs;
 using OnlineExam.Application.Contract.IServices;
@@ -7,12 +8,12 @@ namespace OnlineExam.Application.Services.AnswerServices
 {
     public sealed class AnswerService : IAnswerService
     {
-        readonly AnswerInternalService _answerInternalService;
+        readonly IAnswerInternalService _answerInternalService;
         readonly IAnswerMapper _answerMapper;
         readonly IAnswerValidator _answerValidator;
         readonly IDatabaseBasedAnswerValidator _databaseBasedAnswerValidator;
 
-        public AnswerService(AnswerInternalService answerInternalService,
+        public AnswerService(IAnswerInternalService answerInternalService,
                              IAnswerMapper answerMapper,
                              IAnswerValidator answerValidator,
                              IDatabaseBasedAnswerValidator databaseBasedAnswerValidator)

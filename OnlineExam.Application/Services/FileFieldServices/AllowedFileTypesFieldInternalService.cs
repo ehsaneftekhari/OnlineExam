@@ -1,11 +1,14 @@
-﻿using OnlineExam.Application.Abstractions.InternalService;
+﻿using OnlineExam.Application.Abstractions.BaseInternalServices;
+using OnlineExam.Application.Abstractions.IInternalService;
 using OnlineExam.Application.Contract.Exceptions;
 using OnlineExam.Infrastructure.Contract.IRepositories;
 using OnlineExam.Model.Models;
 
 namespace OnlineExam.Application.Services.FileFieldServices
 {
-    public sealed class AllowedFileTypesFieldInternalService : BaseInternalService<AllowedFileTypesField, IAllowedFileTypesFieldOptionRepository>
+    public sealed class AllowedFileTypesFieldInternalService
+        : BaseInternalService<AllowedFileTypesField, IAllowedFileTypesFieldOptionRepository>
+        , IAllowedFileTypesFieldInternalService
     {
         public AllowedFileTypesFieldInternalService(IAllowedFileTypesFieldOptionRepository repository) : base(repository) { }
 
@@ -45,5 +48,8 @@ namespace OnlineExam.Application.Services.FileFieldServices
 
             return fetched;
         }
+
+        IEnumerable<AllowedFileTypesField> IAllowedFileTypesFieldInternalService.GetByIds(IEnumerable<int> allowedFileTypesFieldIds)
+            => GetByIds(allowedFileTypesFieldIds);
     }
 }

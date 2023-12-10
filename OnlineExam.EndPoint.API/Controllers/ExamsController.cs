@@ -1,22 +1,30 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OnlineExam.Application.Contract.DTOs.ExamDTOs;
 using OnlineExam.Application.Contract.IServices;
+using OnlineExam.EndPoint.API.Attributes;
+using OnlineExam.EndPoint.API.DTOs;
+using OnlineExam.EndPoint.API.DTOs.ExamDTOs;
 using OnlineExam.EndPoint.API.Exceptions;
+using OnlineExam.Model.Constants;
 
 namespace OnlineExam.EndPoint.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [AuthorizeActionFilter]
     public class ExamsController : ControllerBase
     {
         readonly IExamService _examService;
+        readonly ScopeDataContainer _scopeDataContainer;
 
-        public ExamsController(IExamService examService)
+        public ExamsController(IExamService examService, ScopeDataContainer scopeDataContainer)
         {
             _examService = examService;
+            _scopeDataContainer = scopeDataContainer;
         }
 
         [HttpGet]
+        [AuthorizeActionFilter]
         public IActionResult GetAll(int pageNumber, int pageSize)
         {
             if (pageNumber < 1)
@@ -30,6 +38,7 @@ namespace OnlineExam.EndPoint.API.Controllers
         }
 
         [HttpGet("{id}")]
+        [AuthorizeActionFilter]
         public IActionResult GetById(int id)
         {
             var dto = _examService.GetById(id);
@@ -37,28 +46,40 @@ namespace OnlineExam.EndPoint.API.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(AddExamDTO exam)
+        [AuthorizeActionFilter(IdentityRoleNames.ExamCreator)]
+        public IActionResult Create(AddExamApiDTO exam)
         {
             if (exam == null)
                 throw new APIValidationException("exam can not be null");
 
-            return Ok(_examService.Add(exam));
+            var newExam = new AddExamDTO()
+            {
+                CreatorUserId = _scopeDataContainer.IdentityUserId,
+                Title = exam.Title,
+                Start = exam.Start,
+                End = exam.End,
+                Published = exam.Published
+            };
+
+            return Ok(_examService.Add(newExam));
         }
 
         [HttpPatch("{id}")]
+        [AuthorizeActionFilter(IdentityRoleNames.ExamCreator)]
         public IActionResult Update(int id, UpdateExamDTO exam)
         {
             if (exam == null)
                 throw new APIValidationException("exam can not be null");
 
-            _examService.Update(id, exam);
+            _examService.Update(id, _scopeDataContainer.IdentityUserId, exam);
             return Ok();
         }
 
         [HttpDelete("{id}")]
+        [AuthorizeActionFilter(IdentityRoleNames.ExamCreator)]
         public IActionResult Delete(int id)
         {
-            _examService.Delete(id);
+            _examService.Delete(id, _scopeDataContainer.IdentityUserId);
             return Ok();
         }
     }
