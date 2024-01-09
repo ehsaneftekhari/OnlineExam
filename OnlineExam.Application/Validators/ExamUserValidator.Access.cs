@@ -24,7 +24,7 @@ namespace OnlineExam.Application.Validators
 
         public void ThrowIfUserIsNotCreatorOfExamUser(string issuerUserId, ExamUser examUser)
         {
-            if (IsCreatorOfExamUser(examUser, issuerUserId))
+            if (!IsCreatorOfExamUser(examUser, issuerUserId))
                 throw new ApplicationUnAuthorizedException(
                 string.Empty,
                 new ApplicationValidationException(GenerateUnAuthorizedExceptionMessage(issuerUserId)));

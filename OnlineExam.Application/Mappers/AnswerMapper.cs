@@ -6,12 +6,12 @@ namespace OnlineExam.Application.Mappers
 {
     internal class AnswerMapper : IAnswerMapper
     {
-        public Answer? AddDTOToEntity(AddAnswerDTO? dTO, DateTime dateTime)
+        public Answer? AddDTOToEntity(AddAnswerDTO? dTO, int ExamUserId, DateTime dateTime)
         {
             if (dTO != null)
                 return new()
                 {
-                    ExamUserId = dTO.ExamUserId,
+                    ExamUserId = ExamUserId,
                     QuestionId = dTO.QuestionId,
                     Content = dTO.Content,
                     DateTime = dateTime

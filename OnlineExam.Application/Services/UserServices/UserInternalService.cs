@@ -2,6 +2,7 @@
 using OnlineExam.Application.Abstractions.BaseInternalServices;
 using OnlineExam.Application.Abstractions.IInternalService;
 using OnlineExam.Application.Contract.Exceptions;
+using System.Linq;
 using System.Security.Claims;
 
 namespace OnlineExam.Application.Services.UserServices
@@ -30,9 +31,9 @@ namespace OnlineExam.Application.Services.UserServices
             => _userManager.Users;
 
         internal IdentityUser GetById(string id)
-            => GetById(id, null);
+            => GetById(id, externQueryProvider : null);
 
-        internal IdentityUser GetById(string id, IQueryable<IdentityUser> queryable)
+        internal IdentityUser GetById(string id, IQueryable<IdentityUser>? queryable)
         {
             ThrowIfdIsNotValid(id);
 
@@ -42,6 +43,23 @@ namespace OnlineExam.Application.Services.UserServices
                 record = _userManager.FindByIdAsync(id).GetAwaiter().GetResult();
             else
                 record = queryable.FirstOrDefault(x => x.Id == id);
+
+            if (record == null)
+                throw IsNotExistsException(id);
+
+            return record;
+        }
+
+        internal IdentityUser GetById(string id, Func<IQueryable<IdentityUser>, IQueryable<IdentityUser>>? externQueryProvider)
+        {
+            ThrowIfdIsNotValid(id);
+
+            IdentityUser? record;
+
+            if (externQueryProvider == null)
+                record = _userManager.FindByIdAsync(id).GetAwaiter().GetResult();
+            else
+                record = externQueryProvider.Invoke(GetIQueryable()).FirstOrDefault(x => x.Id == id);
 
             if (record == null)
                 throw IsNotExistsException(id);
@@ -141,7 +159,7 @@ namespace OnlineExam.Application.Services.UserServices
         IdentityUser IBaseInternalService<IdentityUser, string>.GetById(string id)
             => GetById(id);
 
-        IdentityUser IBaseInternalService<IdentityUser, string>.GetById(string id, IQueryable<IdentityUser> queryable)
+        IdentityUser IBaseInternalService<IdentityUser, string>.GetById(string id, IQueryable<IdentityUser>? queryable)
             => GetById(id, queryable);
 
         IEnumerable<IdentityUser> IBaseInternalService<IdentityUser, string>.GetAll(int skip, int take)
@@ -173,6 +191,17 @@ namespace OnlineExam.Application.Services.UserServices
 
         bool IUserInternalService.TryGetByName(string name, out IdentityUser result, out Exception exception)
             => TryGetByName(name, out result, out exception);
+
+        OEApplicationException IBaseInternalService<IdentityUser, string>.IsNotExistsException(string id)
+            => IsNotExistsException(id);
+
+        OEApplicationException IBaseInternalService<IdentityUser, string>.IsNotExistsException()
+            => IsNotExistsException();
+
+        IdentityUser IBaseInternalService<IdentityUser, string>.GetById(
+            string id,
+            Func<IQueryable<IdentityUser>, IQueryable<IdentityUser>>? externQueryProvider)
+            => GetById(id, externQueryProvider);
 
         private IList<string> GetErrorMessages(IEnumerable<IdentityError> errors)
         {

@@ -8,13 +8,13 @@ using OnlineExam.Model.Models;
 
 namespace OnlineExam.Application.Validators
 {
-    internal class DatabaseBasedAnswerValidator : IDatabaseBasedAnswerValidator
+    internal class AnswerRalationValidator : IAnswerRalationValidator
     {
         readonly IAnswerInternalService _answerInternalService;
         readonly IExamUserInternalService _examUserInternalService;
         readonly IQuestionInternalService _questionInternalService;
 
-        public DatabaseBasedAnswerValidator(
+        public AnswerRalationValidator(
             IAnswerInternalService answerInternalService
             , IExamUserInternalService examUserInternalService
             , IQuestionInternalService questionInternalService)
@@ -24,27 +24,9 @@ namespace OnlineExam.Application.Validators
             _questionInternalService = questionInternalService;
         }
 
-        public void ValidateBeforeAdd(AddAnswerDTO dTO)
+        public void ValidateBeforeAdd(Exam exam, IEnumerable<ExamUser> examUsers)
         {
-            var examUser = _examUserInternalService.GetById(dTO.ExamUserId,
-                _examUserInternalService.GetIQueryable().Include(x => x.Exam));
 
-            var question = _questionInternalService.GetById(dTO.QuestionId,
-                _questionInternalService.GetIQueryable().Include(x => x.Section));
-
-
-            if (examUser.ExamId != question.Section.ExamId)
-                throw new ApplicationValidationException($"ExamUser by id: {dTO.ExamUserId} is not meant for Exam by id: {question.Section.ExamId}");
-
-
-            if (!examUser.Exam.Published)
-                throw new ApplicationValidationException($"Exam by id: {examUser.Exam.Id} is not published yet");
-
-            if (examUser.Exam.Start > DateTime.Now)
-                throw new ApplicationValidationException($"Exam by id: {examUser.Exam.Id} is not Started yet");
-
-            if (examUser.Exam.End < DateTime.Now)
-                throw new ApplicationValidationException($"Exam by id: {examUser.Exam.Id} has ended");
         }
 
         public void ValidateBeforeUpdate(UpdateAnswerDTO dTO)

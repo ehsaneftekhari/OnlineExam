@@ -42,7 +42,7 @@ namespace OnlineExam.Application.Services.QuestionServices
 
         public ShowQuestionDTO? GetById(int questionId, string issuerUserId)
         {
-            var question = GetQuestionWith_Section_Exam_ExamUser_Included(questionId);
+            var question = _questionInternalService.GetWith_Section_Exam_ExamUser_Included(questionId);
 
             _questionAccessValidator.ThrowIfUserIsNotExamCreatorOrExamUser(issuerUserId, question.Section.Exam);
 
@@ -51,7 +51,7 @@ namespace OnlineExam.Application.Services.QuestionServices
 
         public void Update(int questionId, string issuerUserId, UpdateQuestionDTO dTO)
         {
-            var question = GetQuestionWith_Section_Exam_ExamUser_Included(questionId);
+            var question = _questionInternalService.GetWith_Section_Exam_ExamUser_Included(questionId);
 
             _questionAccessValidator.ThrowIfUserIsNotExamCreator(issuerUserId, question.Section.Exam);
 
@@ -62,19 +62,11 @@ namespace OnlineExam.Application.Services.QuestionServices
 
         public void Delete(int questionId, string issuerUserId)
         {
-            var question = GetQuestionWith_Section_Exam_ExamUser_Included(questionId);
+            var question = _questionInternalService.GetWith_Section_Exam_ExamUser_Included(questionId);
 
             _questionAccessValidator.ThrowIfUserIsNotExamCreator(issuerUserId, question.Section.Exam);
 
             _questionInternalService.Delete(question);
-        }
-
-        private Question GetQuestionWith_Section_Exam_ExamUser_Included(int questionId)
-        {
-            return _questionInternalService.GetById(questionId, _questionInternalService.GetIQueryable()
-                                        .Include(x => x.Section)
-                                        .ThenInclude(x => x.Exam)
-                                        .ThenInclude(x => x.ExamUsers));
         }
     }
 }

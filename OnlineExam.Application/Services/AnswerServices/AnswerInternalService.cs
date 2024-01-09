@@ -26,11 +26,17 @@ namespace OnlineExam.Application.Services.AnswerServices
         internal IEnumerable<Answer> GetAllByExamUserId(int examUserId, int skip = 0, int take = 20)
             => GetAllByFirstParentId(examUserId, skip, take);
 
+        internal IEnumerable<Answer> GetAllByExamUserId(int examUserId, Func<IQueryable<Answer>, IQueryable<Answer>> externQueryProvider, int skip, int take)
+            => GetAllByFirstParentId(examUserId, externQueryProvider, skip, take);
+
         internal IEnumerable<Answer> GetAllByExamUserIdAndQuestionId(int examUserId, int QuestionId, int skip = 0, int take = 20)
             => GetAllByParentsIds(examUserId, QuestionId, skip, take);
 
         IEnumerable<Answer> IAnswerInternalService.GetAllByExamUserId(int examUserId, int skip, int take)
             => GetAllByExamUserId(examUserId, skip, take);
+
+        IEnumerable<Answer> IAnswerInternalService.GetAllByExamUserId(int examUserId, Func<IQueryable<Answer>, IQueryable<Answer>> externQueryProvider, int skip, int take)
+            => GetAllByExamUserId(examUserId, externQueryProvider, skip, take);
 
         IEnumerable<Answer> IAnswerInternalService.GetAllByExamUserIdAndQuestionId(int examUserId, int QuestionId, int skip, int take)
             => GetAllByExamUserIdAndQuestionId(examUserId, QuestionId, skip, take);

@@ -9,9 +9,12 @@ namespace OnlineExam.Application.Validators
     {
         readonly ITextFieldUiTypeDTOValidator _uiTypeValidator;
 
+        public int AnswerMaxLength { get; init; }
+
         public TextFieldDTOValidator(ITextFieldUiTypeDTOValidator uiTypeValidator)
         {
             _uiTypeValidator = uiTypeValidator;
+            AnswerMaxLength = 4000;
         }
 
         public void ValidateDTO(AddTextFieldDTO dTO)
@@ -22,8 +25,8 @@ namespace OnlineExam.Application.Validators
 
         private void ValidateValues(int? answerLength, int? textFieldUIType)
         {
-            if (answerLength.HasValue && (answerLength < 1 || answerLength > 8000))
-                throw new ApplicationValidationException("valid AnswerLength is from 1 to 8000");
+            if (answerLength.HasValue && (answerLength < 1 || answerLength > AnswerMaxLength))
+                throw new ApplicationValidationException($"valid AnswerLength is from 1 to {AnswerMaxLength}");
 
             if (textFieldUIType.HasValue)
                 _uiTypeValidator.ThrowIfIdIsNotValid(textFieldUIType.Value);

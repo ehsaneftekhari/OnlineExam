@@ -1,4 +1,5 @@
-﻿using OnlineExam.Application.Abstractions.BaseInternalServices;
+﻿using Microsoft.EntityFrameworkCore;
+using OnlineExam.Application.Abstractions.BaseInternalServices;
 using OnlineExam.Application.Abstractions.IInternalService;
 using OnlineExam.Infrastructure.Contract.IRepositories;
 using OnlineExam.Model.Models;
@@ -14,5 +15,14 @@ namespace OnlineExam.Application.Services.QuestionServices
 
         public QuestionInternalService(IQuestionRepository repository
             , ISectionInternalService parentInternalService) : base(repository, parentInternalService) { }
+
+
+        public Question GetWith_Section_Exam_ExamUser_Included(int questionId)
+        {
+            return GetById(questionId, GetIQueryable()
+                                        .Include(x => x.Section)
+                                        .ThenInclude(x => x.Exam)
+                                        .ThenInclude(x => x.ExamUsers));
+        }
     }
 }

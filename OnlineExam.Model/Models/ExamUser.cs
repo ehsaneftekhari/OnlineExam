@@ -10,6 +10,7 @@ namespace OnlineExam.Model.Models
         public Exam Exam { get; set; }
         public DateTime Start { get; set; }
         public DateTime? End { get; set; }
+        public ICollection<Answer> Answers { get; set; } = new List<Answer>();
         public int? EarnedScore { get; set; }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace OnlineExam.Application.Abstractions.BaseInternalServices
+﻿using OnlineExam.Application.Contract.Exceptions;
+
+namespace OnlineExam.Application.Abstractions.BaseInternalServices
 {
     public interface IBaseInternalService<TEntity, TKey>
     {
@@ -6,13 +8,19 @@
 
         internal string EntityIdName { get; }
 
+        internal OEApplicationException IsNotExistsException(TKey id);
+
+        internal OEApplicationException IsNotExistsException();
+
         internal IQueryable<TEntity> GetIQueryable();
 
         internal TEntity Add(TEntity record);
 
         internal TEntity GetById(TKey id);
 
-        internal TEntity GetById(TKey id, IQueryable<TEntity> queryable);
+        internal TEntity GetById(TKey id, IQueryable<TEntity>? queryable);
+
+        internal TEntity GetById(TKey id, Func<IQueryable<TEntity>, IQueryable<TEntity>>? externQueryProvider);
 
         internal void ThrowExceptionIfEntityIsNotExists(TKey entityId);
 
@@ -40,6 +48,10 @@
     {
         internal IEnumerable<TEntity> GetAllByFirstParentId(TFirstParentKey firstParentId, int skip = 0, int take = 20);
 
+        internal IEnumerable<TEntity> GetAllByFirstParentId(int firstParentId, Func<IQueryable<TEntity>, IQueryable<TEntity>>? externQueryProvider, int skip = 0, int take = 20);
+
         internal IEnumerable<TEntity> GetAllByParentsIds(TSecondParentKey firstParentId, TSecondParentKey secondParentId, int skip = 0, int take = 20);
+
+        internal IEnumerable<TEntity> GetAllByParentsIds(int firstParentId, int secondParentId, Func<IQueryable<TEntity>, IQueryable<TEntity>>? externLINQ, int skip = 0, int take = 20);
     }
 }

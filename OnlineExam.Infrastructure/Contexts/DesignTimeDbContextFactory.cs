@@ -8,7 +8,7 @@ namespace OnlineExam.Infrastructure.Contexts
         public OnlineExamContext CreateDbContext(string[] args)
         {
             var builder = new DbContextOptionsBuilder<OnlineExamContext>();
-            builder.UseSqlServer("data source=<data source>;initial catalog=data source=<name>;initial catalog=OnlineExam;integrated security=true;integrated security=true");
+            builder.UseSqlServer("data source=.;initial catalog=data source=EHSANROGSTRIX;initial catalog=OnlineExam;integrated security=true;integrated security=true");
             return new OnlineExamContext(builder.Options);
         }
     }

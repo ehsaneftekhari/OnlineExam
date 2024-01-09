@@ -79,10 +79,11 @@ namespace OnlineExam.Application
             serviceDescriptors.AddScoped<IExamUserActionValidator, ExamUserActionValidator>();
             
             serviceDescriptors.AddScoped<IAnswerMapper, AnswerMapper>();
-            serviceDescriptors.AddScoped<IAnswerValidator, AnswerValidator>();
-            serviceDescriptors.AddScoped<IDatabaseBasedAnswerValidator, DatabaseBasedAnswerValidator>();
+            serviceDescriptors.AddScoped<IAnswerDTOValidator, AnswerDTOValidator>();
+            serviceDescriptors.AddScoped<IDatabaseBasedAnswerValidator, AnswerRalationValidator>();
             serviceDescriptors.AddScoped<IAnswerService, AnswerService>();
             serviceDescriptors.AddScoped<IAnswerInternalService, AnswerInternalService>();
+            serviceDescriptors.AddScoped<IAnswerDTOValidator, AnswerDTOValidator>();
         }
     }
 }
