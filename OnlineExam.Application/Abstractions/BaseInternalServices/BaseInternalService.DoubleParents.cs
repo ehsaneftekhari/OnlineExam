@@ -55,6 +55,9 @@ namespace OnlineExam.Application.Abstractions.BaseInternalServices
         }
 
         internal IEnumerable<TEntity> GetAllByFirstParentId(int firstParentId, int skip = 0, int take = 20)
+            => GetAllByFirstParentId(firstParentId, null, skip, take);
+
+        internal IEnumerable<TEntity> GetAllByFirstParentId(int firstParentId, Func<IQueryable<TEntity>, IQueryable<TEntity>>? externQueryProvider,  int skip = 0, int take = 20)
         {
             _firstParentInternalService.ThrowIfdIsNotValid(firstParentId);
 
@@ -67,15 +70,21 @@ namespace OnlineExam.Application.Abstractions.BaseInternalServices
             var firstParentIdComparison = Expression.Equal(Expression.Invoke(FirstParentIdProvider, parameter), Expression.Constant(firstParentId));
             var firstParentPredicate = Expression.Lambda<Func<TEntity, bool>>(firstParentIdComparison, parameter);
 
-            var records = GetIQueryable()
+            var query = GetIQueryable()
                 .Where(firstParentPredicate)
                 .Skip(skip)
-                .Take(take)
-                .ToList();
+                .Take(take);
+
+            var records = externQueryProvider != null
+                ? externQueryProvider.Invoke(query).ToList()
+                : query.ToList();
 
             if (!records.Any())
             {
-                _firstParentInternalService.ThrowExceptionIfEntityIsNotExists(firstParentId);
+                if(externQueryProvider != null)
+                    _firstParentInternalService.ThrowExceptionIfEntityIsNotExists(firstParentId);
+                else
+                    _firstParentInternalService.IsNotExistsException();
 
                 throw ThereIsNoEntityInFirstParentException(firstParentId);
             }
@@ -84,6 +93,10 @@ namespace OnlineExam.Application.Abstractions.BaseInternalServices
         }
 
         internal IEnumerable<TEntity> GetAllByParentsIds(int firstParentId, int secondParentId, int skip = 0, int take = 20)
+            => GetAllByParentsIds(firstParentId, secondParentId, null, skip, take);
+
+
+        internal IEnumerable<TEntity> GetAllByParentsIds(int firstParentId, int secondParentId, Func<IQueryable<TEntity>, IQueryable<TEntity>>? externQueryProvider, int skip = 0, int take = 20)
         {
             _firstParentInternalService.ThrowIfdIsNotValid(firstParentId);
             _secondParentInternalService.ThrowIfdIsNotValid(secondParentId);
@@ -100,12 +113,16 @@ namespace OnlineExam.Application.Abstractions.BaseInternalServices
             var secondParentIdComparison = Expression.Equal(Expression.Invoke(SecondParentIdProvider, parameter), Expression.Constant(secondParentId));
             var secondParentPredicate = Expression.Lambda<Func<TEntity, bool>>(secondParentIdComparison, parameter);
 
-            var records = GetIQueryable()
+
+            var query = GetIQueryable()
                 .Where(firstParentPredicate)
                 .Where(secondParentPredicate)
                 .Skip(skip)
-                .Take(take)
-                .ToList();
+                .Take(take);
+
+            var records = externQueryProvider != null
+                ? externQueryProvider.Invoke(query).ToList()
+                : query.ToList();
 
             if (!records.Any())
             {
@@ -130,7 +147,13 @@ namespace OnlineExam.Application.Abstractions.BaseInternalServices
         IEnumerable<TEntity> IBaseInternalService<TEntity, int, TFirstParentEntity, int, TSecondParentEntity, int>.GetAllByFirstParentId(int firstParentId, int skip, int take)
             => GetAllByFirstParentId(firstParentId, skip, take);
 
+        IEnumerable<TEntity> IBaseInternalService<TEntity, int, TFirstParentEntity, int, TSecondParentEntity, int>.GetAllByFirstParentId(int firstParentId, Func<IQueryable<TEntity>, IQueryable<TEntity>>? externQueryProvider, int skip, int take)
+            => GetAllByFirstParentId(firstParentId, externQueryProvider, skip, take);
+
         IEnumerable<TEntity> IBaseInternalService<TEntity, int, TFirstParentEntity, int, TSecondParentEntity, int>.GetAllByParentsIds(int firstParentId, int secondParentId, int skip, int take)
             => GetAllByParentsIds(firstParentId, firstParentId, skip, take);
+
+        IEnumerable<TEntity> IBaseInternalService<TEntity, int, TFirstParentEntity, int, TSecondParentEntity, int>.GetAllByParentsIds(int firstParentId, int secondParentId, Func<IQueryable<TEntity>, IQueryable<TEntity>>? externLINQ, int skip, int take)
+            => GetAllByParentsIds(firstParentId, secondParentId, externLINQ, skip, take);
     }
 }

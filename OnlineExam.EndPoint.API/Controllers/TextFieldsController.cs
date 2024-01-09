@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using OnlineExam.Application.Abstractions.IValidators;
 using OnlineExam.Application.Contract.DTOs.TextFieldDTOs;
 using OnlineExam.Application.Contract.IServices;
 using OnlineExam.EndPoint.API.Attributes;
 using OnlineExam.EndPoint.API.DTOs;
+using OnlineExam.EndPoint.API.DTOs.TextFieldDTOs;
 using OnlineExam.EndPoint.API.Exceptions;
 using OnlineExam.Model.Constants;
 
@@ -15,15 +17,18 @@ namespace OnlineExam.EndPoint.API.Controllers
     {
         readonly ITextFieldService _textFieldService;
         readonly ITextFieldUiTypeService _textFieldUiTypeService;
+        readonly ITextFieldDTOValidator _textFieldDTOValidator;
         readonly ScopeDataContainer _scopeDataContainer;
 
         public TextFieldsController(ITextFieldService textFieldService,
                                     ScopeDataContainer scopeDataContainer,
-                                    ITextFieldUiTypeService textFieldUiTypeService)
+                                    ITextFieldUiTypeService textFieldUiTypeService,
+                                    ITextFieldDTOValidator textFieldDTOValidator)
         {
             _textFieldService = textFieldService;
             _scopeDataContainer = scopeDataContainer;
             _textFieldUiTypeService = textFieldUiTypeService;
+            _textFieldDTOValidator = textFieldDTOValidator;
         }
 
         [HttpGet("[controller]/{id}")]
@@ -72,10 +77,14 @@ namespace OnlineExam.EndPoint.API.Controllers
             return Ok();
         }
 
-        [HttpGet("[controller]/TextFiledUiTypes")]
+        [HttpOptions("[controller]")]
         public IActionResult GetTextFieldUiTypes()
         {
-            return Ok(_textFieldUiTypeService.GetAll());
+            return Ok(new TextFieldOptionsDTO()
+            {
+                AnswerMaxLength = _textFieldDTOValidator.AnswerMaxLength,
+                TextFieldTypes = _textFieldUiTypeService.GetAll()
+            });
         }
     }
 }

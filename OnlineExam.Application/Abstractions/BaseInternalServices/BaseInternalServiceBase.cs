@@ -18,9 +18,9 @@ namespace OnlineExam.Application.Abstractions.BaseInternalServices
 
         protected virtual OEApplicationException DidNotDeletedException => new($"{EntityName} did not Deleted");
 
-        protected virtual OEApplicationException IsNotExistsException(TKey id) => new ApplicationSourceNotFoundException($"{EntityName} with id:{id} is not exists");
+        public virtual OEApplicationException IsNotExistsException(TKey id) => new ApplicationSourceNotFoundException($"{EntityName} with id:{id} is not exists");
 
-        protected virtual OEApplicationException IsNotExistsException() => new ApplicationSourceNotFoundException($"{EntityName} is not exists");
+        public virtual OEApplicationException IsNotExistsException() => new ApplicationSourceNotFoundException($"{EntityName} is not exists");
 
         internal virtual void ThrowIfEntityIsNull(TEntity entity)
         {

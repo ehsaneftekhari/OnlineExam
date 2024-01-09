@@ -10,7 +10,7 @@ namespace OnlineExam.Infrastructure.Mappings
         public override void ConcreteConfigure(EntityTypeBuilder<Answer> builder)
         {
             builder.HasOne(x => x.ExamUser)
-                .WithMany()
+                .WithMany(x => x.Answers)
                 .HasForeignKey(x => x.ExamUserId)
                 .OnDelete(DeleteBehavior.Restrict);
 

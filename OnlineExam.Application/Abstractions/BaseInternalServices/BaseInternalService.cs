@@ -1,6 +1,7 @@
 ﻿using OnlineExam.Application.Contract.Exceptions;
 using OnlineExam.Infrastructure.Contract.Abstractions;
 using OnlineExam.Model;
+using System.Linq;
 
 namespace OnlineExam.Application.Abstractions.BaseInternalServices
 {
@@ -36,9 +37,9 @@ namespace OnlineExam.Application.Abstractions.BaseInternalServices
         }
 
         internal virtual TEntity GetById(int id)
-            => GetById(id, null);
+            => GetById(id, externQueryProvider: null);
 
-        internal virtual TEntity GetById(int id, IQueryable<TEntity> queryable)
+        internal virtual TEntity GetById(int id, IQueryable<TEntity>? queryable)
         {
             ThrowIfdIsNotValid(id);
 
@@ -49,7 +50,29 @@ namespace OnlineExam.Application.Abstractions.BaseInternalServices
             else
                 record = _repository.GetById(id, queryable);
 
-            if (record == null && queryable == null)
+            if (record == null && queryable != null)
+                throw IsNotExistsException(id);
+
+            if (record == null)
+                throw IsNotExistsException();
+
+            return record;
+        }
+
+        internal virtual TEntity GetById(int id, Func<IQueryable<TEntity>, IQueryable<TEntity>>? externQueryProvider)
+        {
+            ThrowIfdIsNotValid(id);
+
+            TEntity? record;
+
+            if (externQueryProvider == null)
+                record = _repository.GetById(id);
+            else
+                record = externQueryProvider.Invoke(_repository.GetIQueryable())
+                    .Where(x => x.Id == id)
+                    .FirstOrDefault();
+
+            if (record == null && externQueryProvider != null)
                 throw IsNotExistsException(id);
 
             if (record == null)
@@ -59,7 +82,7 @@ namespace OnlineExam.Application.Abstractions.BaseInternalServices
         }
 
         internal virtual void ThrowExceptionIfEntityIsNotExists(int entityId) 
-            => GetById(entityId, null);
+            => GetById(entityId, externQueryProvider: null);
 
         internal virtual IEnumerable<TEntity> GetAll(int skip = 0, int take = 20)
         {
@@ -77,6 +100,7 @@ namespace OnlineExam.Application.Abstractions.BaseInternalServices
 
             return records!;
         }
+
 
         internal virtual void Update(TEntity record)
         {
@@ -124,5 +148,14 @@ namespace OnlineExam.Application.Abstractions.BaseInternalServices
 
         void IBaseInternalService<TEntity, int>.ThrowExceptionIfEntityIsNotExists(int entityId)
             => ThrowExceptionIfEntityIsNotExists (entityId);
+
+        OEApplicationException IBaseInternalService<TEntity, int>.IsNotExistsException(int id)
+            => IsNotExistsException(id);
+
+        OEApplicationException IBaseInternalService<TEntity, int>.IsNotExistsException()
+             => IsNotExistsException();
+
+        TEntity IBaseInternalService<TEntity, int>.GetById(int id, Func<IQueryable<TEntity>, IQueryable<TEntity>> externQueryProvider)
+            => GetById(id, externQueryProvider);
     }
 }

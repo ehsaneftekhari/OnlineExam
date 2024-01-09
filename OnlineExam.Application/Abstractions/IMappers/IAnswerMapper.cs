@@ -5,7 +5,7 @@ namespace OnlineExam.Application.Abstractions.IMappers
 {
     public interface IAnswerMapper
     {
-        Answer? AddDTOToEntity(AddAnswerDTO? dTO, DateTime dateTime);
+        Answer? AddDTOToEntity(AddAnswerDTO? dTO, int ExamUserId, DateTime dateTime);
         ShowAnswerDTO? EntityToShowDTO(Answer? entity);
         void UpdateEntityByDTO(Answer old, UpdateAnswerDTO @new);
     }
